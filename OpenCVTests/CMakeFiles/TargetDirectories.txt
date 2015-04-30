@@ -1,0 +1,1 @@
+/home/users/johnsoms/SD/proj/mind/OpenCVTests/CMakeFiles/DisplayImage.dir
