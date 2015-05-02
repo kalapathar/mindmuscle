@@ -12,31 +12,9 @@
 opencv2/imgproc/imgproc.hpp
 /home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/opencv2/imgproc/imgproc.hpp
 
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/findEyeCorner.cpp
-opencv2/objdetect/objdetect.hpp
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/opencv2/objdetect/objdetect.hpp
-opencv2/highgui/highgui.hpp
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/opencv2/highgui/highgui.hpp
-opencv2/imgproc/imgproc.hpp
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/opencv2/imgproc/imgproc.hpp
-iostream
--
-queue
--
-stdio.h
--
-constants.h
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/constants.h
-helpers.h
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/helpers.h
-findEyeCorner.h
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/findEyeCorner.h
-
 /home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/findEyeCorner.h
 opencv2/imgproc/imgproc.hpp
 /home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/opencv2/imgproc/imgproc.hpp
-
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/helpers.h
 
 /home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/main.cpp
 opencv2/objdetect/objdetect.hpp

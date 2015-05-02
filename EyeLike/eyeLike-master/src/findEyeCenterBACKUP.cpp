@@ -10,7 +10,7 @@
 
 #include "constants.h"
 #include "helpers.h"
-using namespace std;
+
 // Pre-declarations
 cv::Mat floodKillEdges(cv::Mat &mat);
 
@@ -102,7 +102,7 @@ void testPossibleCentersFormula(int x, int y, const cv::Mat &weight,double gx, d
   }
 }
 
-cv::Point findEyeCenter(cv::Mat face, cv::Rect eye) {
+cv::Point findEyeCenter(cv::Mat face, cv::Rect eye, std::string debugWindow) {
   cv::Mat eyeROIUnscaled = face(eye);
   cv::Mat eyeROI;
   scaleToFastSize(eyeROIUnscaled, eyeROI);
@@ -134,8 +134,8 @@ cv::Point findEyeCenter(cv::Mat face, cv::Rect eye) {
       }
     }
   }
-  // imshow(debugWindow,gradientX);
-  // //-- Create a blurred and inverted image for weighting
+  imshow(debugWindow,gradientX);
+  //-- Create a blurred and inverted image for weighting
   cv::Mat weight;
   GaussianBlur( eyeROI, weight, cv::Size( kWeightBlurSize, kWeightBlurSize ), 0, 0 );
   for (int y = 0; y < weight.rows; ++y) {
@@ -187,9 +187,7 @@ cv::Point findEyeCenter(cv::Mat face, cv::Rect eye) {
     // redo max
     cv::minMaxLoc(out, NULL,&maxVal,NULL,&maxP,mask);
   }
-  cv::Point pupil=unscalePoint(maxP,eye);
-  cout<<pupil<<endl;
-  return pupil;
+  return unscalePoint(maxP,eye);
 }
 
 #pragma mark Postprocessing
