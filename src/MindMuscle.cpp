@@ -29,18 +29,14 @@ int HEIGHT = 720;
 double lastLoopTime = 0.0;
 double fps = 1.0/60.0;
 
-int logo = 0;
-double counter = 0;
+
 
 void render(){
 	// clear the buffer
   glClear(GL_COLOR_BUFFER_BIT);
   
-  //Draw everything
-  float alpha = sin(counter);
-  if(alpha < 0) alpha = alpha*-1;
-  drawTexture(logo,  WIDTH/2-250,HEIGHT/2-250, 500,500,alpha);
-  //cout << logo << endl;
+  //Run the active state render function
+  if(fsm.activeState)fsm.activeState->render();
 
   glutSwapBuffers();
 }
@@ -50,13 +46,39 @@ void update(){
 	//Run the game at 60 fps
 	if ((now - lastLoopTime) / 1000.0 > fps){
 		lastLoopTime = now;
-		counter += 0.01;
+
 		//Update your stuff here!
+    if(fsm.activeState) fsm.activeState->update();
+
+    //Render everything
 		render();
 	} 
 }
 
+void keyboard( unsigned char c, int x, int y )
+{
+  if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
+}
 
+void mouse(int button, int state, int x, int y)
+{
+  if(fsm.activeState) fsm.activeState->mouse(button,state,x,y);
+}
+
+void mouse_motion(int x,int y)
+{
+
+  if(fsm.activeState) fsm.activeState->mouse_motion(x,y);
+}
+
+void init(){
+  //Initialize our state machine by registering all of our states
+  MenuState * menu = new MenuState;
+  fsm.registerState(menu);
+
+  //Start menu state
+  fsm.transition("Menu");
+}
 
 void init_gl_window()
 {
@@ -81,12 +103,16 @@ void init_gl_window()
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
 
-  logo = loadTexture("Logo.pam");
+  init();
 
   //glutFullScreen();
 
   glutDisplayFunc(render);
   glutIdleFunc(update);
+  glutKeyboardFunc(keyboard);
+  glutMouseFunc(mouse);
+  glutMotionFunc(mouse_motion);
+  glutPassiveMotionFunc(mouse_motion);
   glutMainLoop();
 
 
@@ -98,17 +124,7 @@ int main(){
 	//Initialize the window
 	init_gl_window();
 
-	
 
-	MenuState menu;
-	GameState game;
-	fsm.registerState(&menu);
-	fsm.registerState(&game);
-
-
-	fsm.transition("Menu");
-	fsm.transition("Game");
-	fsm.transition("Menu");
 
 	return 0;
 }
