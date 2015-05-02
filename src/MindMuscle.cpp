@@ -8,29 +8,39 @@ using namespace std;
 #else
 #include <GL/glut.h>
 #endif
+#include "texture.h"
+
 ///Include all of our states
 #include "StateMachine.h"
 #include "MenuState.h"
 #include "GameState.h"
 
+#include <math.h>
+
 StateMachine fsm;
 
 //Initializing variables
 char programName[] = "Mind Muscle";
-int WIDTH = 720; 
-int HEIGHT = 540;
+int WIDTH = 1024; 
+int HEIGHT = 720;
 
 //Update loop variables
 
 double lastLoopTime = 0.0;
 double fps = 1.0/60.0;
 
+int logo = 0;
+double counter = 0;
 
 void render(){
 	// clear the buffer
   glClear(GL_COLOR_BUFFER_BIT);
   
   //Draw everything
+  float alpha = sin(counter);
+  if(alpha < 0) alpha = alpha*-1;
+  drawTexture(logo,  WIDTH/2-250,HEIGHT/2-250, 500,500,alpha);
+  //cout << logo << endl;
 
   glutSwapBuffers();
 }
@@ -40,9 +50,9 @@ void update(){
 	//Run the game at 60 fps
 	if ((now - lastLoopTime) / 1000.0 > fps){
 		lastLoopTime = now;
-		
+		counter += 0.01;
 		//Update your stuff here!
-		
+		render();
 	} 
 }
 
@@ -59,7 +69,7 @@ void init_gl_window()
   glutCreateWindow(programName);
   
   // clear the window to black
-  glClearColor(0.0, 0.0, 0.0, 1.0);
+  glClearColor(1.0, 1.0, 1.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT);
 
   // set up the coordinate system:  number of pixels along x and y
@@ -67,7 +77,13 @@ void init_gl_window()
   glLoadIdentity();
   glOrtho(0., WIDTH-1, HEIGHT-1, 0., -1.0, 1.0);
 
-  glutFullScreen();
+  // allow blending (for transparent textures)
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glEnable(GL_BLEND);
+
+  logo = loadTexture("Logo.pam");
+
+  //glutFullScreen();
 
   glutDisplayFunc(render);
   glutIdleFunc(update);
@@ -82,6 +98,7 @@ int main(){
 	//Initialize the window
 	init_gl_window();
 
+	
 
 	MenuState menu;
 	GameState game;

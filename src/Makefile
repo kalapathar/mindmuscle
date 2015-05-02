@@ -8,8 +8,8 @@ else
 
 endif
 
-MindMuscle: MindMuscle.o StateMachine.o MenuState.o GameState.o
-	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o MenuState.o GameState.o $(LIBS)
+MindMuscle: MindMuscle.o StateMachine.o MenuState.o GameState.o texture.o
+	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o MenuState.o GameState.o texture.o $(LIBS)
 
 StateMachine.o: StateMachine.cpp StateMachine.h
 	g++ -g -Wall -std=c++11 -c StateMachine.cpp
@@ -20,5 +20,8 @@ MenuState.o: MenuState.h MenuState.cpp
 GameState.o: GameState.h GameState.cpp
 	g++ -g -Wall -std=c++11 -c GameState.cpp
 
+texture.o: texture.cpp texture.h
+	g++ -g -Wall -std=c++11 -c texture.cpp
+	
 clean:
 	rm -f *.o MindMuscle
