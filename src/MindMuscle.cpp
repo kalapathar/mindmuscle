@@ -12,10 +12,13 @@ using namespace std;
 
 ///Include all of our states
 #include "StateMachine.h"
+
+#include "SplashState.h"
 #include "MenuState.h"
 #include "GameState.h"
 
 #include <math.h>
+#include <cstring>
 
 StateMachine fsm;
 
@@ -29,7 +32,29 @@ int HEIGHT = 720;
 double lastLoopTime = 0.0;
 double fps = 1.0/60.0;
 
-
+void MakeShiftMessageSystem(){
+  if(fsm.activeState->sent){
+      //Check if this state is trying to send us a message
+      //Makeshift messaging system for now
+      int i =0;
+      const char * transmitMsg = "trans_";
+      while(fsm.activeState->msg[i] == transmitMsg[i]){
+        i++;
+        if(i == strlen(transmitMsg)){
+          //It's trying to transition to a new state! Get the name
+          char * stateName = new char[fsm.activeState->msg.length() - strlen(transmitMsg)+1];
+          int index = 0;
+          while(fsm.activeState->msg[i]!='\0'){
+            stateName[index++] = fsm.activeState->msg[i++];
+          }
+          stateName[index] = '\0';
+          //Finally, transition!
+          fsm.transition(stateName);
+        }
+      }
+      fsm.activeState->sent = 0;
+    }
+}
 
 void render(){
 	// clear the buffer
@@ -48,7 +73,12 @@ void update(){
 		lastLoopTime = now;
 
 		//Update your stuff here!
-    if(fsm.activeState) fsm.activeState->update();
+    if(fsm.activeState) {
+      fsm.activeState->update();
+      
+      MakeShiftMessageSystem();
+
+    }
 
     //Render everything
 		render();
@@ -74,10 +104,14 @@ void mouse_motion(int x,int y)
 void init(){
   //Initialize our state machine by registering all of our states
   MenuState * menu = new MenuState;
+  SplashState * splash = new SplashState;
   fsm.registerState(menu);
+  fsm.registerState(splash);
 
   //Start menu state
-  fsm.transition("Menu");
+  fsm.transition("Splash");
+  //fsm.transition("Menu");
+
 }
 
 void init_gl_window()

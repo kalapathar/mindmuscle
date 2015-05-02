@@ -16,6 +16,9 @@ bool mouseIsDragging = false;
 
 int menuT, calibrateT, measureT, aboutT, resultsT; // Texture IDs
 
+int OffsetX = -20;
+int OffsetY = 110;
+
 // Button rects
 struct Button {
     int w, h, x, y;
@@ -24,29 +27,29 @@ struct Button {
 Button calibrateB = {
     170,
     56,
-    147,
-    54,
+    147 + OffsetX,
+    54 + OffsetY,
     false
 };
 Button measureB = {
     162,
     56,
-    763,
-    148,
+    763 + OffsetX,
+    148 + OffsetY,
     false
 };
 Button aboutB = {
     118,
     56,
-    157,
-    249,
+    157 + OffsetX,
+    249 + OffsetY,
     false
 };
 Button resultsB = {
     134,
     56,
-    164,
-    361,
+    164 + OffsetX,
+    361 + OffsetY,
     false
 };
 
@@ -104,15 +107,15 @@ void MenuState::update(){
 
 void MenuState::render(){
 	if (calibrateB.active) {
-        drawTexture(calibrateT, 0, 0, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(calibrateT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
     } else if (measureB.active) {
-        drawTexture(measureT, 0, 0, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(measureT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
     } else if (aboutB.active) {
-        drawTexture(aboutT, 0, 0, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(aboutT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
     } else if (resultsB.active) {
-        drawTexture(resultsT, 0, 0, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(resultsT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
     } else {
-        drawTexture(menuT, 0, 0, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(menuT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
     }
 }
 

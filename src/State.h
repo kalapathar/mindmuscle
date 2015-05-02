@@ -15,6 +15,8 @@ class State {
 public:
 	//State variables
 	string name;
+	string msg;//Allows states to communicate with the outside world
+	int sent = 0;
 	//Our transition functions that will be overriden 
 	virtual void onEnter()=0;
 	virtual void onExit()=0;
