@@ -2,6 +2,12 @@
 #include <iostream>
 using namespace std;
 
+#ifdef MACOSX
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
 #include "SplashState.h"
 #include "../texture.h"
 
@@ -44,7 +50,11 @@ void SplashState::keyboard(unsigned char c, int x, int y){
 }
 
 void SplashState::mouse(int button, int state, int x, int y){
-
+	//SKIP SPLASH IF MOUSE PRESSED
+	if ( GLUT_LEFT_BUTTON == button && GLUT_DOWN != state ) {
+        msg = "trans_Menu";
+		sent = 1;
+    }
 }
 
 void SplashState::mouse_motion(int x,int y){

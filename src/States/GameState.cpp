@@ -27,6 +27,11 @@ void GameState::render(){
 
 void GameState::keyboard(unsigned char c, int x, int y){
 
+	if((int)c == 27){//When escape is pressed
+		//Back to the menu
+		 msg = "trans_Menu";
+         sent = 1;
+	}
 }
 
 void GameState::mouse(int button, int state, int x, int y){

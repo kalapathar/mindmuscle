@@ -16,6 +16,9 @@ using namespace std;
 #include "States/SplashState.h"
 #include "States/MenuState.h"
 #include "States/GameState.h"
+#include "States/ResultsState.h"
+#include "States/AboutState.h"
+#include "States/ReadingState.h"
 
 #include <math.h>
 #include <cstring>
@@ -106,9 +109,16 @@ void init(){
   MenuState * menu = new MenuState;
   SplashState * splash = new SplashState;
   GameState * game = new GameState;
+  ReadingState * reading = new ReadingState;
+  AboutState * about = new AboutState;
+  ResultsState * results = new ResultsState;
+
   fsm.registerState(menu);
   fsm.registerState(splash);
   fsm.registerState(game);
+  fsm.registerState(reading);
+  fsm.registerState(about);
+  fsm.registerState(results);
 
   //Start menu state
   fsm.transition("Splash");

@@ -137,6 +137,24 @@ void MenuState::mouse(int button, int state, int x, int y){
                 sent = 1;
             }
 
+            if(measureB.active){
+                //Transition to reading state 
+                msg = "trans_Reading";
+                sent = 1;
+            }
+
+            if(aboutB.active){
+                //Transition to about state 
+                msg = "trans_About";
+                sent = 1;
+            }
+
+            if(resultsB.active){
+                //Transition to game state 
+                msg = "trans_Results";
+                sent = 1;
+            }
+
 
             mouseIsDragging = false;
         }
