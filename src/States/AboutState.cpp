@@ -27,7 +27,7 @@ void AboutState::update(){
 
 void AboutState::render(){
 	double width = 577;
-	double height = 268;
+	double height = 267;
 	drawTexture(about,  1024/2-width/2,720/2-height/2, width,height);
 }
 
