@@ -13,7 +13,7 @@ using namespace std;
 ///Include all of our states
 #include "StateMachine.h"
 
-#include "SplashState.h"
+#include "States/SplashState.h"
 #include "MenuState.h"
 #include "GameState.h"
 

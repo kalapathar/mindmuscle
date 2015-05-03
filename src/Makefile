@@ -1,6 +1,7 @@
 OPTS = -Wall -g -std=c++11
 LIBS = -lGL -lglut -lm libBox2D.a
-STATES = MenuState.o GameState.o SplashState.o
+STATE_PATH = States/
+STATES = $(STATE_PATH)MenuState.o $(STATE_PATH)GameState.o $(STATE_PATH)SplashState.o
 ARCH := $(shell uname)
 ifeq ($(ARCH), Linux)
 else
@@ -15,14 +16,16 @@ MindMuscle: MindMuscle.o StateMachine.o $(STATES) texture.o
 StateMachine.o: StateMachine.cpp StateMachine.h
 	g++ -g -Wall -std=c++11 -c StateMachine.cpp
 
-MenuState.o: MenuState.h MenuState.cpp
-	g++ -g -Wall -std=c++11 -c MenuState.cpp
 
-GameState.o: GameState.h GameState.cpp
-	g++ -g -Wall -std=c++11 -c GameState.cpp
+#All the states
+$(STATE_PATH)MenuState.o: $(STATE_PATH)MenuState.h $(STATE_PATH)MenuState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)MenuState.o -c $(STATE_PATH)MenuState.cpp
 
-SplashState.o: SplashState.h SplashState.cpp
-	g++ -g -Wall -std=c++11 -c SplashState.cpp
+$(STATE_PATH)GameState.o: $(STATE_PATH)GameState.h $(STATE_PATH)GameState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)GameState.o -c $(STATE_PATH)GameState.cpp
+
+$(STATE_PATH)SplashState.o: $(STATE_PATH)SplashState.h $(STATE_PATH)SplashState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)SplashState.o -c $(STATE_PATH)SplashState.cpp
 
 texture.o: texture.cpp texture.h
 	g++ -g -Wall -std=c++11 -c texture.cpp

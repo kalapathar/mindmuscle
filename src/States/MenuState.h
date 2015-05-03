@@ -1,7 +1,7 @@
 #ifndef _MenuState_
 #define _MenuState_
 
-#include "State.h"
+#include "../State.h"
 
 /* 
 Our menu state!

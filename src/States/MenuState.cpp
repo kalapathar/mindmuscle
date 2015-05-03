@@ -10,7 +10,7 @@ using namespace std;
 
 
 #include "MenuState.h"
-#include "texture.h"
+#include "../texture.h"
 
 bool mouseIsDragging = false;
 

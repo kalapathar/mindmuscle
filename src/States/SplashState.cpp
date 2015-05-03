@@ -3,7 +3,7 @@
 using namespace std;
 
 #include "SplashState.h"
-#include "texture.h"
+#include "../texture.h"
 
 int logo;//Texture ID
 float alpha = 0;

@@ -1,20 +1,19 @@
-#ifndef _GameState_
-#define _GameState_
+#ifndef _SplashState_
+#define _SplashState_
 
-#include "State.h"
+#include "../State.h"
 
 /* 
 Our menu state!
 
 */
 
-class GameState: public State {
+class SplashState: public State {
 public:
-	GameState();
+	SplashState();
 	void onEnter();
 	void onExit();
 
-	//Empty states
 	void update();
 	void render();
 	void keyboard(unsigned char c, int x, int y);
@@ -22,4 +21,4 @@ public:
 	void mouse_motion(int x,int y);
 };
 
-#endif // _GameState_
+#endif // _SplashState_
