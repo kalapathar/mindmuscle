@@ -127,9 +127,17 @@ void MenuState::mouse(int button, int state, int x, int y){
 	if ( GLUT_LEFT_BUTTON == button ) {
         if ( GLUT_DOWN == state ) {
             mouseIsDragging = true;
+
             // the user just pressed down on the mouse-- do something
         } else {
-            // the user just let go the mouse-- do something
+            //Handle button pressed
+            if(calibrateB.active){
+                //Transition to game state 
+                msg = "trans_Game";
+                sent = 1;
+            }
+
+
             mouseIsDragging = false;
         }
     } else if ( GLUT_RIGHT_BUTTON == button ) {

@@ -14,8 +14,8 @@ using namespace std;
 #include "StateMachine.h"
 
 #include "States/SplashState.h"
-#include "MenuState.h"
-#include "GameState.h"
+#include "States/MenuState.h"
+#include "States/GameState.h"
 
 #include <math.h>
 #include <cstring>
@@ -105,8 +105,10 @@ void init(){
   //Initialize our state machine by registering all of our states
   MenuState * menu = new MenuState;
   SplashState * splash = new SplashState;
+  GameState * game = new GameState;
   fsm.registerState(menu);
   fsm.registerState(splash);
+  fsm.registerState(game);
 
   //Start menu state
   fsm.transition("Splash");

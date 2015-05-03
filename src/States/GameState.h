@@ -14,7 +14,6 @@ public:
 	void onEnter();
 	void onExit();
 
-	//Empty states
 	void update();
 	void render();
 	void keyboard(unsigned char c, int x, int y);
