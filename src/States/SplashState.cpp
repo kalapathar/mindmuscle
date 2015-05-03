@@ -15,6 +15,7 @@ int logo;//Texture ID
 float alpha = 0;
 int dir = 1;
 
+
 void SplashState::onEnter(){
 	logo = loadTexture("Images/Logo.pam");
 }

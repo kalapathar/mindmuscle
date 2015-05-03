@@ -4,8 +4,12 @@ using namespace std;
 
 #include "ReadingState.h"
 
+#include "../texture.h"
+
+int reading;
+
 void ReadingState::onEnter(){
-	
+	reading = loadTexture("Images/reading.pam");
 }
 
 void ReadingState::onExit(){
@@ -22,7 +26,9 @@ void ReadingState::update(){
 }
 
 void ReadingState::render(){
-
+	double width = 485;
+	double height = 147;
+	drawTexture(reading,  1024/2-width/2,720/2-height/2, width,height);
 }
 
 void ReadingState::keyboard(unsigned char c, int x, int y){
