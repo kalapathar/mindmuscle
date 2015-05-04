@@ -22,6 +22,7 @@ void GameState::onEnter(){
 void GameState::onExit(){
 	delete testobj;
 	delete box;
+	delete box2;
 	delete ground;
 }
 
