@@ -10,12 +10,14 @@ else
 
 endif
 
-MindMuscle: MindMuscle.o StateMachine.o $(STATES) texture.o
-	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o $(STATES) texture.o $(LIBS)
+MindMuscle: MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o
+	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o $(LIBS)
 
 StateMachine.o: StateMachine.cpp StateMachine.h
 	g++ -g -Wall -std=c++11 -c StateMachine.cpp
 
+GameObject.o: GameObject.cpp GameObject.h 
+	g++ -g -Wall -std=c++11 -c GameObject.cpp
 
 #All the states
 $(STATE_PATH)MenuState.o: $(STATE_PATH)MenuState.h $(STATE_PATH)MenuState.cpp
