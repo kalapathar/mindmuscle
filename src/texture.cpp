@@ -188,7 +188,9 @@ struct Texture {
       imgData[i] = t.imgData[i];
     return *this;
   }
-  ~Texture() { delete [] imgData; }
+  ~Texture() { 
+    cout << "Free Texture" << endl;
+    delete [] imgData; }
   int moveImgDataToGraphicsCard();
 };
 

@@ -8,7 +8,16 @@ using namespace std;
 #else
 #include <GL/glut.h>
 #endif
+
+#include "Box2D/Box2D.h"
+
 #include "texture.h"
+#include "Globals.h"
+
+//Declare globals
+int GAME_WIDTH = 1024;
+int GAME_HEIGHT = 720;
+b2World * world;
 
 ///Include all of our states
 #include "StateMachine.h"
@@ -27,13 +36,17 @@ StateMachine fsm;
 
 //Initializing variables
 char programName[] = "Mind Muscle";
-int WIDTH = 1024; 
-int HEIGHT = 720;
+
 
 //Update loop variables
 
 double lastLoopTime = 0.0;
+double box2dLoopTime = 0.0;
 double fps = 1.0/60.0;
+
+float32 timeStep = 1.0f / 60.0f;
+int32 velocityIterations = 6;
+int32 positionIterations = 2;
 
 void MakeShiftMessageSystem(){
   if(fsm.activeState->sent){
@@ -71,11 +84,20 @@ void render(){
 
 void update(){
 	double now = glutGet(GLUT_ELAPSED_TIME);
+  
+  //For some reason I need to update box2d at a different rate otherwise things are super slow?
+  if ((now - box2dLoopTime) / 1000.0 > timeStep * fps){
+    box2dLoopTime = now;
+    world->Step(timeStep, velocityIterations, positionIterations);
+  }
+
 	//Run the game at 60 fps
 	if ((now - lastLoopTime) / 1000.0 > fps){
 		lastLoopTime = now;
 
 		//Update your stuff here!
+
+    
     if(fsm.activeState) {
       fsm.activeState->update();
       
@@ -124,6 +146,9 @@ void init(){
   fsm.transition("Splash");
   //fsm.transition("Menu");
 
+  //Initialize box2d world!
+  b2Vec2 gravity(0.0f,10.0f);
+  world = new b2World(gravity,true);
 }
 
 void init_gl_window()
@@ -132,7 +157,7 @@ void init_gl_window()
   int argc = sizeof(argv) / sizeof(argv[0]);
   glutInit(&argc, argv);
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE );
-  glutInitWindowSize(WIDTH,HEIGHT);
+  glutInitWindowSize(GAME_WIDTH,GAME_HEIGHT);
   glutInitWindowPosition(100,100);
   glutCreateWindow(programName);
   
@@ -143,7 +168,7 @@ void init_gl_window()
   // set up the coordinate system:  number of pixels along x and y
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0., WIDTH-1, HEIGHT-1, 0., -1.0, 1.0);
+  glOrtho(0., GAME_WIDTH-1, GAME_HEIGHT-1, 0., -1.0, 1.0);
 
   // allow blending (for transparent textures)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

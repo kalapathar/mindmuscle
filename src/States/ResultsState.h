@@ -2,7 +2,7 @@
 #define _ResultsState_
 
 #include "../State.h"
-
+#include "../Globals.h"
 /* 
 Our menu state!
 

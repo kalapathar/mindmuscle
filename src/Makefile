@@ -19,6 +19,9 @@ StateMachine.o: StateMachine.cpp StateMachine.h
 GameObject.o: GameObject.cpp GameObject.h 
 	g++ -g -Wall -std=c++11 -c GameObject.cpp
 
+MindMuscle.o: Globals.h MindMuscle.cpp
+	g++ -g -Wall -std=c++11 -c MindMuscle.cpp
+
 #All the states
 $(STATE_PATH)MenuState.o: $(STATE_PATH)MenuState.h $(STATE_PATH)MenuState.cpp
 	g++ -g -Wall -std=c++11 -o $(STATE_PATH)MenuState.o -c $(STATE_PATH)MenuState.cpp

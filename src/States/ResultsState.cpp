@@ -27,7 +27,7 @@ void ResultsState::update(){
 void ResultsState::render(){
 	double width = 427;
 	double height = 147;
-	drawTexture(results,  1024/2-width/2,720/2-height/2, width,height);
+	drawTexture(results,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height);
 }
 
 void ResultsState::keyboard(unsigned char c, int x, int y){

@@ -2,6 +2,7 @@
 #define _AboutState_
 
 #include "../State.h"
+#include "../Globals.h"
 
 /* 
 Our menu state!

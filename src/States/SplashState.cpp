@@ -43,7 +43,7 @@ void SplashState::update(){
 void SplashState::render(){
 	double width = 700;
 	double height = 700;
-	drawTexture(logo,  1024/2-width/2,720/2-height/2, width,height,alpha);
+	drawTexture(logo,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height,alpha);
 }
 
 void SplashState::keyboard(unsigned char c, int x, int y){

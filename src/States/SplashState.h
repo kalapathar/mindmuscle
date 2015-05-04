@@ -2,6 +2,7 @@
 #define _SplashState_
 
 #include "../State.h"
+#include "../Globals.h"
 
 /* 
 Our menu state!

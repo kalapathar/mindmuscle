@@ -9,11 +9,41 @@ using namespace std;
 //Initialize static variable
 int GameObject::numObjects = 0;
 
-//Hardocoded until I can figure out how to make these global
-int GAME_WIDTH = 1024;
-int GAME_HEIGHT = 720;
+b2Body * GameObject::createBox(float w,float h,bool isStatic){
+	// Define the dynamic body. We set its position and call the body factory.
+	w = w / 2;
+	h = h / 2;
 
-GameObject::GameObject(const char * filename,bool isBox2d){
+	b2BodyDef bodyDef;
+	if(!isStatic) bodyDef.type = b2_dynamicBody;
+	bodyDef.position.Set(x,y);
+	b2Body* body = world->CreateBody(&bodyDef);
+
+	// Define another box shape for our dynamic body.
+	b2PolygonShape dynamicBox;
+	dynamicBox.SetAsBox(w,h);
+
+	// Define the dynamic body fixture.
+	b2FixtureDef fixtureDef;
+	fixtureDef.shape = &dynamicBox;
+	if(!isStatic){
+		// Set the box density to be non-zero, so it will be dynamic.
+		fixtureDef.density = 1.0f;
+		fixtureDef.restitution = 0.2f;
+		// Override the default friction.
+		fixtureDef.friction = 0.3f;
+	}
+	else {
+		fixtureDef.density = 0.0f;
+	}
+
+	// Add the shape to the body.
+	body->CreateFixture(&fixtureDef);
+
+	return body;
+}
+
+GameObject::GameObject(const char * filename,bool isBox2d,float w,float h,bool isStatic,float X,float Y) {
 	//Create texture from filename. Create box2d if isBox2d and assign defaults to everything else.
 	char fullname[200];
 	strcpy(fullname,"Images/");
@@ -22,32 +52,45 @@ GameObject::GameObject(const char * filename,bool isBox2d){
 	textureID = loadTexture(fullname);
 	///TODO: Catch error if image is not found and set default image so it doesn't crash
 
-	if(isBox2d){
-		//Create box2d body
-	} else {
-		body = 0;
-	}
-
-	width = 100;
-	height = 100;
-	x = 0; y = 0; angle = 0;
+	width = w;
+	height = h;
+	x = X; y = Y; angle = 0;
 	alpha = 1;
 	depth = numObjects;
 	numObjects++;//Increment object counter
+	initDelay = 0;
 
+
+	if(isBox2d){
+		//Create box2d body
+		body = createBox(w,h,isStatic);
+	} else {
+		body = 0;
+	}
 }
 
 GameObject::~GameObject(){
 	//Destroy texture and box2d body if exists
-
+	cout << "Destroy game object" << endl;
 	if(body != 0){
 		//Destroy box2d body
+		world->DestroyBody(body);
+		body = 0;
 	}
 }
 
 void GameObject::draw(){
+
+	if(initDelay > 0){
+		initDelay --;
+		return;
+	}
 	if(body != 0){
 		//If box2d exists, set x,y and angle to body's coordinates
+		x = body->GetPosition().x;
+		y = body->GetPosition().y;
+		angle = -body->GetAngle() / 2;
 	}
+
 	drawTexture(textureID,  x-width/2,y-height/2, width,height,alpha,angle);
 }

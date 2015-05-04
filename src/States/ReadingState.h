@@ -2,6 +2,7 @@
 #define _ReadingState_
 
 #include "../State.h"
+#include "../Globals.h"
 
 /* 
 Our menu state!
