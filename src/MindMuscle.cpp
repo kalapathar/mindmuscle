@@ -8,55 +8,148 @@ using namespace std;
 #else
 #include <GL/glut.h>
 #endif
+
+#include "Box2D/Box2D.h"
+
 #include "texture.h"
+#include "Globals.h"
+
+//Declare globals
+int GAME_WIDTH = 1024;
+int GAME_HEIGHT = 720;
+b2World * world;
 
 ///Include all of our states
 #include "StateMachine.h"
-#include "MenuState.h"
-#include "GameState.h"
+
+#include "States/SplashState.h"
+#include "States/MenuState.h"
+#include "States/GameState.h"
+#include "States/ResultsState.h"
+#include "States/AboutState.h"
+#include "States/ReadingState.h"
 
 #include <math.h>
+#include <cstring>
 
 StateMachine fsm;
 
 //Initializing variables
 char programName[] = "Mind Muscle";
-int WIDTH = 1024; 
-int HEIGHT = 720;
+
 
 //Update loop variables
 
 double lastLoopTime = 0.0;
+double box2dLoopTime = 0.0;
 double fps = 1.0/60.0;
 
-int logo = 0;
-double counter = 0;
+float32 timeStep = 1.0f / 60.0f;
+int32 velocityIterations = 6;
+int32 positionIterations = 2;
+
+void MakeShiftMessageSystem(){
+  if(fsm.activeState->sent){
+      //Check if this state is trying to send us a message
+      //Makeshift messaging system for now
+      int i =0;
+      const char * transmitMsg = "trans_";
+      while(fsm.activeState->msg[i] == transmitMsg[i]){
+        i++;
+        if(i == strlen(transmitMsg)){
+          //It's trying to transition to a new state! Get the name
+          char * stateName = new char[fsm.activeState->msg.length() - strlen(transmitMsg)+1];
+          int index = 0;
+          while(fsm.activeState->msg[i]!='\0'){
+            stateName[index++] = fsm.activeState->msg[i++];
+          }
+          stateName[index] = '\0';
+          //Finally, transition!
+          fsm.transition(stateName);
+        }
+      }
+      fsm.activeState->sent = 0;
+    }
+}
 
 void render(){
 	// clear the buffer
   glClear(GL_COLOR_BUFFER_BIT);
   
-  //Draw everything
-  float alpha = sin(counter);
-  if(alpha < 0) alpha = alpha*-1;
-  drawTexture(logo,  WIDTH/2-250,HEIGHT/2-250, 500,500,alpha);
-  //cout << logo << endl;
+  //Run the active state render function
+  if(fsm.activeState)fsm.activeState->render();
 
   glutSwapBuffers();
 }
 
 void update(){
 	double now = glutGet(GLUT_ELAPSED_TIME);
+  
+  //For some reason I need to update box2d at a different rate otherwise things are super slow?
+  if ((now - box2dLoopTime) / 1000.0 > timeStep * fps){
+    box2dLoopTime = now;
+    world->Step(timeStep, velocityIterations, positionIterations);
+  }
+
 	//Run the game at 60 fps
 	if ((now - lastLoopTime) / 1000.0 > fps){
 		lastLoopTime = now;
-		counter += 0.01;
+
 		//Update your stuff here!
+
+    
+    if(fsm.activeState) {
+      fsm.activeState->update();
+      
+      MakeShiftMessageSystem();
+
+    }
+
+    //Render everything
 		render();
 	} 
 }
 
+void keyboard( unsigned char c, int x, int y )
+{
+  if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
+}
 
+void mouse(int button, int state, int x, int y)
+{
+  if(fsm.activeState) fsm.activeState->mouse(button,state,x,y);
+}
+
+void mouse_motion(int x,int y)
+{
+
+  if(fsm.activeState) fsm.activeState->mouse_motion(x,y);
+}
+
+void init(){
+  //Initialize our state machine by registering all of our states
+  MenuState * menu = new MenuState;
+  SplashState * splash = new SplashState;
+  GameState * game = new GameState;
+  ReadingState * reading = new ReadingState;
+  AboutState * about = new AboutState;
+  ResultsState * results = new ResultsState;
+
+  fsm.registerState(menu);
+  fsm.registerState(splash);
+  fsm.registerState(game);
+  fsm.registerState(reading);
+  fsm.registerState(about);
+  fsm.registerState(results);
+
+  //Start menu state
+  fsm.transition("Splash");
+  //fsm.transition("Menu");
+
+  //Initialize box2d world!
+  b2Vec2 gravity(0.0f,10.0f);
+  world = new b2World(gravity,true);
+}
 
 void init_gl_window()
 {
@@ -64,7 +157,7 @@ void init_gl_window()
   int argc = sizeof(argv) / sizeof(argv[0]);
   glutInit(&argc, argv);
   glutInitDisplayMode( GLUT_RGB | GLUT_DOUBLE );
-  glutInitWindowSize(WIDTH,HEIGHT);
+  glutInitWindowSize(GAME_WIDTH,GAME_HEIGHT);
   glutInitWindowPosition(100,100);
   glutCreateWindow(programName);
   
@@ -75,18 +168,22 @@ void init_gl_window()
   // set up the coordinate system:  number of pixels along x and y
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0., WIDTH-1, HEIGHT-1, 0., -1.0, 1.0);
+  glOrtho(0., GAME_WIDTH-1, GAME_HEIGHT-1, 0., -1.0, 1.0);
 
   // allow blending (for transparent textures)
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
 
-  logo = loadTexture("Logo.pam");
+  init();
 
   //glutFullScreen();
 
   glutDisplayFunc(render);
   glutIdleFunc(update);
+  glutKeyboardFunc(keyboard);
+  glutMouseFunc(mouse);
+  glutMotionFunc(mouse_motion);
+  glutPassiveMotionFunc(mouse_motion);
   glutMainLoop();
 
 
@@ -98,17 +195,7 @@ int main(){
 	//Initialize the window
 	init_gl_window();
 
-	
 
-	MenuState menu;
-	GameState game;
-	fsm.registerState(&menu);
-	fsm.registerState(&game);
-
-
-	fsm.transition("Menu");
-	fsm.transition("Game");
-	fsm.transition("Menu");
 
 	return 0;
 }

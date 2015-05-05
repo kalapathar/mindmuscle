@@ -1,5 +1,7 @@
 OPTS = -Wall -g -std=c++11
 LIBS = -lGL -lglut -lm libBox2D.a
+STATE_PATH = States/
+STATES = $(STATE_PATH)MenuState.o $(STATE_PATH)GameState.o $(STATE_PATH)SplashState.o $(STATE_PATH)AboutState.o $(STATE_PATH)ResultsState.o $(STATE_PATH)ReadingState.o
 ARCH := $(shell uname)
 ifeq ($(ARCH), Linux)
 else
@@ -8,17 +10,36 @@ else
 
 endif
 
-MindMuscle: MindMuscle.o StateMachine.o MenuState.o GameState.o texture.o
-	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o MenuState.o GameState.o texture.o $(LIBS)
+MindMuscle: MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o
+	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o $(LIBS)
 
 StateMachine.o: StateMachine.cpp StateMachine.h
 	g++ -g -Wall -std=c++11 -c StateMachine.cpp
 
-MenuState.o: MenuState.h MenuState.cpp
-	g++ -g -Wall -std=c++11 -c MenuState.cpp
+GameObject.o: GameObject.cpp GameObject.h 
+	g++ -g -Wall -std=c++11 -c GameObject.cpp
 
-GameState.o: GameState.h GameState.cpp
-	g++ -g -Wall -std=c++11 -c GameState.cpp
+MindMuscle.o: Globals.h MindMuscle.cpp
+	g++ -g -Wall -std=c++11 -c MindMuscle.cpp
+
+#All the states
+$(STATE_PATH)MenuState.o: $(STATE_PATH)MenuState.h $(STATE_PATH)MenuState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)MenuState.o -c $(STATE_PATH)MenuState.cpp
+
+$(STATE_PATH)GameState.o: $(STATE_PATH)GameState.h $(STATE_PATH)GameState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)GameState.o -c $(STATE_PATH)GameState.cpp
+
+$(STATE_PATH)SplashState.o: $(STATE_PATH)SplashState.h $(STATE_PATH)SplashState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)SplashState.o -c $(STATE_PATH)SplashState.cpp
+
+$(STATE_PATH)AboutState.o: $(STATE_PATH)AboutState.h $(STATE_PATH)AboutState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)AboutState.o -c $(STATE_PATH)AboutState.cpp
+
+$(STATE_PATH)ReadingState.o: $(STATE_PATH)ReadingState.h $(STATE_PATH)ReadingState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)ReadingState.o -c $(STATE_PATH)ReadingState.cpp
+
+$(STATE_PATH)ResultsState.o: $(STATE_PATH)ResultsState.h $(STATE_PATH)ResultsState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)ResultsState.o -c $(STATE_PATH)ResultsState.cpp
 
 texture.o: texture.cpp texture.h
 	g++ -g -Wall -std=c++11 -c texture.cpp

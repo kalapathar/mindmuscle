@@ -1,0 +1,1 @@
+~cs251/.bin/xalan < GameObject.xml > GameObject.html
