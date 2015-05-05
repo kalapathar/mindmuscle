@@ -6,8 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/constants.h
-
 /home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/findEyeCenter.h
 opencv2/imgproc/imgproc.hpp
 /home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/opencv2/imgproc/imgproc.hpp
@@ -31,8 +29,6 @@ stdio.h
 -
 math.h
 -
-constants.h
-/home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/constants.h
 findEyeCenter.h
 /home/users/johnsoms/SD/proj/mind/EyeLike/eyeLike-master/src/findEyeCenter.h
 findEyeCorner.h

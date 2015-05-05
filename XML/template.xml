@@ -5,63 +5,115 @@
    type="text/xsl"?>
 
 <spec>
-<title>&sto:ENTRY;</title>
-<header>&sto:ENTRY;</header>
-<credits>&sto:ENTRY;</credits>
+<title>"GazeTracker Specification"</title>
+<header>This class contains the position on the screen where the user is looking, as well as all of the necessary functions for gaze tracking.</header>
+<credits>"Maxwell Johnson.  May 4th 2015.  Richard Allen.  XML version of specification written by Aubrey Barnard, Wednesday, April 10, 2002"</credits>
 
-<class name="&sto:ENTRY;">
+<class name="GazeTracker">
 
 <nosuperclass/>
 
 <variables>
-<var name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</var>
-&sto:ENTRY;<var name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</var>
+<var name="gaze_x" type="public float">"x coordinate of gaze position on screen"</var>
+<var name="gaze_y" type="public float">"y coordinate of gaze position on screen"<</var>
+<var name="pupil_x" type="public float">"x coordinate of pupil position"</var>
+<var name="pupil_y" type="public float">"y coordinate of pupil position"<</var>
+<var name="distance" type="public float">"simulated distance from user's face to screen"</var>
+<var name="eyeOrigin" type="public cv::Point3">"calculated center of the user's eye"</var>
+<var name="eyeVec" type="public float[3]">"simulated vector of user's gaze"</var>
+<var name="defaultFace" type="public float">"initial size of rectangle around user's face"</var>
 </variables>
 
 <constructors-list>
 
 <constructor>
-<desc>&sto:ENTRY;</desc>
+<desc>Default Constructor</desc>
 <arguments>
 <arg name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</arg>
 &sto:ENTRY;<arg name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</arg>
 </arguments>
-<statechange>&sto:ENTRY;</statechange>
+<statechange>Sets initial values for all variables to default</statechange>
 </constructor>
 
-&sto:ENTRY;<constructor>
+<!-- &sto:ENTRY;<constructor>
 <desc>&sto:ENTRY;</desc>
 <arguments>
 <arg name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</arg>
 &sto:ENTRY;<arg name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</arg>
 </arguments>
 <statechange>&sto:ENTRY;</statechange>
-</constructor>
+</constructor> -->
 
 </constructors-list>
 
 <destructor>
-<desc>&sto:ENTRY;</desc>
-<statechange>&sto:ENTRY;</statechange>
+<desc>default destructor</desc>
+<statechange>Deletes all dynamically allocated memory</statechange>
 </destructor>
 
 <methods-list>
 
-<method name="&sto:ENTRY;" returntype="&sto:ENTRY;">
-<desc>&sto:ENTRY;</desc>
+<method name="FindEyeCenter" returntype="void">
+<desc>Calculates position of the pupil and sets values to pupil_x and pupil_y accordingly</desc>
 <arguments>
-<arg name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</arg>
-&sto:ENTRY;<arg name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</arg>
+<arg name="face" type="cv::Mat">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="eye" type="cv::Rect">&sto:ENTRY;</arg>
 </arguments>
-<statechange>&sto:ENTRY;</statechange>
+<statechange>runs EyeLike program and exracts x and y values from returned cv::Point</statechange>
+<return>0</return>
+</method>
+
+&sto:ENTRY;<method name="FindEyeOrigin" returntype="void">
+<desc>Calculates position of the center of the eyeball and sets a value to eyeOrigin accordingly</desc>
+<arguments>
+<arg name="face" type="cv::Mat">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="eye" type="cv::Rect">&sto:ENTRY;</arg>
+</arguments>
+<statechange>calculates center of eyeball using rectangle drawn around the eye area and diameter of iris calculated through edge detection, then combines calculated x, y, and z values into a cv::Point3</statechange>
+<return>"0"</return>
+</method>
+
+&sto:ENTRY;<method name="FindEyeVec" returntype="&sto:ENTRY;">
+<desc>Calculates the vector pointing in the direction that the user is looking and sets a value to eyeVec accordingly</desc>
+<arguments>
+<arg name="x" type="float">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="y" type="float">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="origin" type="cv::Point3">&sto:ENTRY;</arg>
+</arguments>
+<statechange>Calculates z position of pupil based on eyeball radius and equation of a sphere, then subtracts origin from pupil position to calculate vector pointing in direction of user's gaze, then puts the x, y, and z values of this vector in a float array</statechange>
+<return>0</return>
+</method>
+
+&sto:ENTRY;<method name="FindDistance" returntype="void">
+<desc>Calculates simulated distance to user's face and sets a value to distance accordingly</desc>
+<arguments>
+<arg name="face" type="cv::Mat">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="eye" type="cv::Rect">&sto:ENTRY;</arg>
+</arguments>
+<statechange>Estimates percent change in distance via percent size change in rectangle around face from defaultFace, and changes distance factor to this value</statechange>
+<return>"0"</return>
+</method>
+
+&sto:ENTRY;<method name="calibrate" returntype="void">
+<desc>Calibrates system/desc>
+<arguments>
+<arg name="face" type="cv::Mat">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="eye" type="cv::Rect">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="calibPoint1" type="cv::Point">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="calibPoint2" type="cv::Point">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="calibPoint3" type="cv::Point">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="calibPoint4" type="cv::Point">&sto:ENTRY;</arg>
+</arguments>
+<statechange>Calculates size of face rectangle at start, sets it to defaultFace.  Calcluates initial distance value based on detected eyeVec and defined calibPoints </statechange>
 <return>&sto:ENTRY;</return>
 </method>
 
-&sto:ENTRY;<method name="&sto:ENTRY;" returntype="&sto:ENTRY;">
-<desc>&sto:ENTRY;</desc>
+
+&sto:ENTRY;<method name="update" returntype="void">
+<desc>Calculates gaze position using all other variables</desc>
 <arguments>
-<arg name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</arg>
-&sto:ENTRY;<arg name="&sto:ENTRY;" type="&sto:ENTRY;">&sto:ENTRY;</arg>
+<!-- <arg name="face" type="cv::Mat">&sto:ENTRY;</arg>
+&sto:ENTRY;<arg name="eye" type="cv::Rect">&sto:ENTRY;</arg> -->
 </arguments>
 <statechange>&sto:ENTRY;</statechange>
 <return>&sto:ENTRY;</return>

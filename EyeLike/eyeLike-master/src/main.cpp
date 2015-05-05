@@ -7,14 +7,38 @@
 #include <stdio.h>
 #include <math.h>
 
-#include "constants.h"
+
 #include "findEyeCenter.h"
 #include "findEyeCorner.h"
 
 
 /** Constants **/
 
+const bool kPlotVectorField = false;
 
+// Size constants
+const int kEyePercentTop = 25;
+const int kEyePercentSide = 13;
+const int kEyePercentHeight = 30;
+const int kEyePercentWidth = 35;
+
+// Preprocessing
+const bool kSmoothFaceImage = false;
+const float kSmoothFaceFactor = 0.005;
+
+// Algorithm Parameters
+const int kFastEyeWidth = 50;
+const int kWeightBlurSize = 5;
+const bool kEnableWeight = true;
+const float kWeightDivisor = 1.0;
+const double kGradientThreshold = 50.0;
+
+// Postprocessing
+const bool kEnablePostProcess = true;
+const float kPostProcessThreshold = 0.97;
+
+// Eye Corner
+const bool kEnableEyeCorner = false;
 /** Function Headers */
 void detectAndDisplay( cv::Mat frame );
 
@@ -22,8 +46,8 @@ void detectAndDisplay( cv::Mat frame );
 //-- Note, either copy these two files from opencv/data/haarscascades to your current folder, or change these locations
 cv::String face_cascade_name = "../haarcascade_frontalface_alt.xml";
 cv::CascadeClassifier face_cascade;
-std::string main_window_name = "Capture - Face detection";
-std::string face_window_name = "Capture - Face";
+// std::string main_window_name = "Capture - Face detection";
+// std::string face_window_name = "Capture - Face";
 cv::RNG rng(12345);
 cv::Mat debugImage;
 cv::Mat skinCrCbHist = cv::Mat::zeros(cv::Size(256, 256), CV_8UC1);
@@ -31,6 +55,9 @@ cv::Mat skinCrCbHist = cv::Mat::zeros(cv::Size(256, 256), CV_8UC1);
 /**
  * @function main
  */
+
+int counter = 0;
+
 int main( int argc, const char** argv ) {
   CvCapture* capture;
   cv::Mat frame;
@@ -38,10 +65,10 @@ int main( int argc, const char** argv ) {
   // Load the cascades
   if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n"); return -1; };
 
-  cv::namedWindow(main_window_name,CV_WINDOW_NORMAL);
-  cv::moveWindow(main_window_name, 400, 100);
-  cv::namedWindow(face_window_name,CV_WINDOW_NORMAL);
-  cv::moveWindow(face_window_name, 10, 100);
+  // cv::namedWindow(main_window_name,CV_WINDOW_NORMAL);
+  // cv::moveWindow(main_window_name, 400, 100);
+  // cv::namedWindow(face_window_name,CV_WINDOW_NORMAL);
+  // cv::moveWindow(face_window_name, 10, 100);
   // cv::namedWindow("Right Eye",CV_WINDOW_NORMAL);
   // cv::moveWindow("Right Eye", 10, 600);
   // cv::namedWindow("Left Eye",CV_WINDOW_NORMAL);
@@ -63,20 +90,24 @@ int main( int argc, const char** argv ) {
 
       // Apply the classifier to the frame
       if( !frame.empty() ) {
-        detectAndDisplay( frame );
+        counter ++;
+        if(counter > 20){
+          counter = 0;
+          detectAndDisplay( frame );
+        }
       }
       else {
         printf(" --(!) No captured frame -- Break!");
         break;
       }
 
-      imshow(main_window_name,debugImage);
+      // imshow(main_window_name,debugImage);
 
-      int c = cv::waitKey(10);
-      if( (char)c == 'c' ) { break; }
-      if( (char)c == 'f' ) {
-        imwrite("frame.png",frame);
-      }
+      // int c = cv::waitKey(10);
+      // if( (char)c == 'c' ) { break; }
+      // if( (char)c == 'f' ) {
+      //   imwrite("frame.png",frame);
+      // }
 
     }
   }
@@ -158,7 +189,7 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
     circle(faceROI, rightRightCorner, 3, 200);
   }
 
-  imshow(face_window_name, faceROI);
+  // imshow(face_window_name, faceROI);
 //  cv::Rect roi( cv::Point( 0, 0 ), faceROI.size());
 //  cv::Mat destinationROI = debugImage( roi );
 //  faceROI.copyTo( destinationROI );
@@ -191,7 +222,7 @@ cv::Mat findSkin (cv::Mat &frame) {
  */
 void detectAndDisplay( cv::Mat frame ) {
   std::vector<cv::Rect> faces;
-  //cv::Mat frame_gray;
+  // cv::Mat frame_gray;
 
   std::vector<cv::Mat> rgbChannels(3);
   cv::split(frame, rgbChannels);
@@ -202,7 +233,7 @@ void detectAndDisplay( cv::Mat frame ) {
   //cv::pow(frame_gray, CV_64F, frame_gray);
   //-- Detect faces
   face_cascade.detectMultiScale( frame_gray, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE|CV_HAAR_FIND_BIGGEST_OBJECT, cv::Size(150, 150) );
-//  findSkin(debugImage);
+ findSkin(debugImage);
 
   for( int i = 0; i < faces.size(); i++ )
   {
