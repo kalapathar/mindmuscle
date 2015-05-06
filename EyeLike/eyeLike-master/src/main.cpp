@@ -217,6 +217,10 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
 
   leftlook[0]=LeftOrigin.x+LeftU*leftgaze[0];
   leftlook[1]=LeftOrigin.y+LeftU*leftgaze[1];
+
+  screenPos[0]=(rightlook[0]+leftlook[0])/2;
+  screenPos[1]=(rightlook[1]+leftlook[1])/2;
+
   // draw eye centers
   circle(debugFace, rightPupil, 3, 1234);
   circle(debugFace, leftPupil, 3, 1234);
@@ -245,7 +249,7 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
 //  cv::Rect roi( cv::Point( 0, 0 ), faceROI.size());
 //  cv::Mat destinationROI = debugImage( roi );
 //  faceROI.copyTo( destinationROI );
-   // std::cout<<gaze[0]<<" "<<gaze[1]<<" "<<gaze[2];
+    std::cout<<screenPos[0]<<" "<<screenPos[1];
  
 }
 
