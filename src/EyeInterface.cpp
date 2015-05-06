@@ -1,51 +1,46 @@
-#include <opencv2/objdetect/objdetect.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-
+#include <string>
 #include <iostream>
-#include <queue>
-#include <stdio.h>
-#include <math.h>
+using namespace std;
 
-#include "findEyeCenter.h"
-#include "findEyeCorner.h"
-
-/** Constants **/
-#include "constants.h"
+#include "EyeInterface.h"
 
 /** Function Headers */
 void detectAndDisplay( cv::Mat frame );
 
 /** Global variables */
 //-- Note, either copy these two files from opencv/data/haarscascades to your current folder, or change these locations
-cv::String face_cascade_name = "haarcascade_frontalface_alt.xml";
+cv::String face_cascade_name = "OpenCV/haarcascade_frontalface_alt.xml";
 cv::CascadeClassifier face_cascade;
-
 
 cv::RNG rng(12345);
 cv::Mat debugImage;
 cv::Mat skinCrCbHist = cv::Mat::zeros(cv::Size(256, 256), CV_8UC1);
 
-/**
- * @function main
- */
+EyeInterface::EyeInterface(){
+	// Load the cascades
+	if( !face_cascade.load( face_cascade_name ) ){ 
+		printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n");  
+	} else{
 
+		createCornerKernels();
+		ellipse(skinCrCbHist, cv::Point(113, 155.6), cv::Size(23.4, 15.2),
+		      43.0, 0.0, 360.0, cv::Scalar(255, 255, 255), -1);
 
-int main( int argc, const char** argv ) {
-  CvCapture* capture;
-  cv::Mat frame;
+		// Read the video stream
+		capture = cvCaptureFromCAM( -1 );
+    counter = 0;
+	}
+}
 
-  // Load the cascades
-  if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n"); return -1; };
+EyeInterface::~EyeInterface(){
+	releaseCornerKernels();
+}
 
-  createCornerKernels();
-  ellipse(skinCrCbHist, cv::Point(113, 155.6), cv::Size(23.4, 15.2),
-          43.0, 0.0, 360.0, cv::Scalar(255, 255, 255), -1);
-
-   // Read the video stream
-  capture = cvCaptureFromCAM( -1 );
-  if( capture ) {
-    while( true ) {
+void EyeInterface::update(){
+  counter++;
+	if( capture  && counter > 50) {
+    counter = 0;
+    cout << "Reading" << endl;
       frame = cvQueryFrame( capture );
       // mirror it
       cv::flip(frame, frame, 1);
@@ -57,18 +52,12 @@ int main( int argc, const char** argv ) {
       }
       else {
         printf(" --(!) No captured frame -- Break!");
-        break;
       }
 
-    }
   }
-
-  releaseCornerKernels();
-
-  return 0;
 }
 
-void findEyes(cv::Mat frame_gray, cv::Rect face) {
+void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Mat faceROI = frame_gray(face);
   cv::Mat debugFace = faceROI;
 
@@ -88,6 +77,8 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
   //-- Find Eye Centers
   cv::Point leftPupil = findEyeCenter(faceROI,leftEyeRegion);
   cv::Point rightPupil = findEyeCenter(faceROI,rightEyeRegion);
+  x = (leftPupil.x + rightPupil.x)/2;
+  y = (leftPupil.y + rightPupil.y)/2;//Save them in EyeInterface's local variables
   // get corner regions
   cv::Rect leftRightCornerRegion(leftEyeRegion);
   leftRightCornerRegion.width -= leftPupil.x;
@@ -167,7 +158,7 @@ cv::Mat findSkin (cv::Mat &frame) {
 /**
  * @function detectAndDisplay
  */
-void detectAndDisplay( cv::Mat frame ) {
+void EyeInterface::detectAndDisplay( cv::Mat frame ) {
   std::vector<cv::Rect> faces;
 
   std::vector<cv::Mat> rgbChannels(3);
