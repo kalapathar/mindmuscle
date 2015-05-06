@@ -1,6 +1,7 @@
 ///Standard libraries
 #include <iostream>
 #include <string>
+#include <Python.h>
 using namespace std;
 //Include openGL stuff
 #ifdef MACOSX
