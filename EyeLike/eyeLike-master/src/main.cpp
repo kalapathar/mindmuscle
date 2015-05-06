@@ -10,6 +10,7 @@
 
 #include "findEyeCenter.h"
 #include "findEyeCorner.h"
+using namespace std;
 
 
 /** Constants **/
@@ -21,13 +22,7 @@ const int kEyePercentTop = 25;
 const int kEyePercentSide = 13;
 const int kEyePercentHeight = 30;
 const int kEyePercentWidth = 35;
-const double k=100;
-const double radius=25;
-double* rightgaze=new double[3];
-double* leftgaze=new double[3];
-double* rightlook=new double[2];
-double* leftlook=new double[2];
-double* screenPos=new double[2];
+const double d_sens=100;
 
 // Preprocessing
 const bool kSmoothFaceImage = false;
@@ -127,7 +122,7 @@ int main( int argc, const char** argv ) {
 void findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Mat faceROI = frame_gray(face);
   cv::Mat debugFace = faceROI;
-  double d=k/(face.width*face.height);
+  double D=d_sens/face.width;
 
   if (kSmoothFaceImage) {
     double sigma = kSmoothFaceFactor * face.width;
@@ -146,16 +141,6 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Point leftPupil = findEyeCenter(faceROI,leftEyeRegion);
   cv::Point rightPupil = findEyeCenter(faceROI,rightEyeRegion);
   
-  cv::Point3f LeftPupil,RightPupil;
-  cv::Point3f LeftOrigin,RightOrigin;
-
-  LeftPupil.x=leftPupil.x;
-  LeftPupil.y=leftPupil.y;
-
-  RightPupil.x=rightPupil.x;
-  RightPupil.y=rightPupil.y;
-  
-  double pupilDist=sqrt(((RightPupil.x-LeftPupil.x)*(RightPupil.x-LeftPupil.x))+((RightPupil.y-LeftPupil.y)*(RightPupil.y-LeftPupil.y)));
 
  
 
@@ -188,38 +173,21 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
   leftPupil.x += leftEyeRegion.x;
   leftPupil.y += leftEyeRegion.y;
 
-  LeftOrigin.x=leftEyeRegion.x+(leftEyeRegion.width/2);
-  LeftOrigin.y=leftEyeRegion.y+(leftEyeRegion.height/2);
-  LeftOrigin.z=(d+radius)*(LeftPupil.x-leftEyeRegion.x)/(pupilDist);
+  double d_x=rightPupil.x-leftPupil.x;
+  double d_y=rightPupil.y-leftPupil.y;
 
-  LeftPupil.z=d+radius-sqrt(pow(radius,2)-pow(LeftPupil.x-LeftOrigin.x,2)-pow(LeftPupil.y-LeftOrigin.y,2))+LeftOrigin.z;
+  double gaze_x=(leftPupil.x+rightPupil.x)/2;
+  double gaze_y=(leftPupil.y+rightPupil.y)/2;
 
-  RightOrigin.x=rightEyeRegion.x+(leftEyeRegion.width/2);
-  RightOrigin.y=rightEyeRegion.y+(rightEyeRegion.height/2);
-  RightOrigin.z=(d+radius)*(RightPupil.x-rightEyeRegion.x)/(pupilDist);
+  gaze_x+=face.x;
+  gaze_y+=face.y;
 
-  RightPupil.z=d+radius-sqrt(pow(radius,2)-pow(RightPupil.x-RightOrigin.x,2)-pow(RightPupil.y-RightOrigin.y,2))+RightOrigin.z;
-
-  rightgaze[0]=RightPupil.x-RightOrigin.x;
-  rightgaze[1]=RightPupil.y-RightOrigin.y;
-  rightgaze[2]=RightPupil.z-RightOrigin.z;
-
-  leftgaze[0]=LeftPupil.x-LeftOrigin.x;
-  leftgaze[1]=LeftPupil.y-LeftOrigin.y;
-  leftgaze[2]=LeftPupil.z-LeftOrigin.z;
-
-  double RightU=-(RightOrigin.z/rightgaze[2]);
-  double LeftU=-(LeftOrigin.z/leftgaze[2]);
-
-  rightlook[0]=RightOrigin.x+RightU*rightgaze[0];
-  rightlook[1]=RightOrigin.y+RightU*rightgaze[1];
+  gaze_x+=(d_x*D);
+  gaze_y+=(d_y*D);
 
 
-  leftlook[0]=LeftOrigin.x+LeftU*leftgaze[0];
-  leftlook[1]=LeftOrigin.y+LeftU*leftgaze[1];
 
-  screenPos[0]=(rightlook[0]+leftlook[0])/2;
-  screenPos[1]=(rightlook[1]+leftlook[1])/2;
+
 
   // draw eye centers
   circle(debugFace, rightPupil, 3, 1234);
@@ -249,8 +217,9 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
 //  cv::Rect roi( cv::Point( 0, 0 ), faceROI.size());
 //  cv::Mat destinationROI = debugImage( roi );
 //  faceROI.copyTo( destinationROI );
-    std::cout<<screenPos[0]<<" "<<screenPos[1];
  
+cout<<gaze_x<<" "<<gaze_y<<" "<<endl;
+
 }
 
 
@@ -301,4 +270,5 @@ void detectAndDisplay( cv::Mat frame ) {
   if (faces.size() > 0) {
     findEyes(frame_gray, faces[0]);
   }
+
 }

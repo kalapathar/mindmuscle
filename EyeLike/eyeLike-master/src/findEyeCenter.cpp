@@ -163,7 +163,7 @@ cv::Point findEyeCenter(cv::Mat face, cv::Rect eye) {
     cv::minMaxLoc(out, NULL,&maxVal,NULL,&maxP,mask);
   }
   cv::Point pupil=unscalePoint(maxP,eye);
-  cout<<pupil<<endl;
+  // cout<<pupil<<endl;
   return pupil;
 }
 
