@@ -29,6 +29,7 @@ void GameState::onEnter(){
 
 	force = new b2Vec2(0,0);
 	eye2 = new EyeInterface;
+
 }
 
 void GameState::onExit(){
@@ -63,8 +64,10 @@ void GameState::update(){
 	} else {
 		force->y -=1;
 	}
-	cout << eye2->x << endl;
-	if(eye2->x > 45){
+	//cout << eye2->x << endl;
+
+
+	if(eye2->x > 200){//45 is the center for pupil. 200 for the face
 		force->x += 1;
 	} else {
 		force->x -= 1;
@@ -73,8 +76,7 @@ void GameState::update(){
 		force->x = 25 * (abs(force->x)/force->x);
 	}
 
-
-
+	
 	box2->body->SetLinearVelocity(*force);
 
 }

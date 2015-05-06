@@ -89,7 +89,7 @@ void GameObject::draw(){
 		//If box2d exists, set x,y and angle to body's coordinates
 		x = body->GetPosition().x;
 		y = body->GetPosition().y;
-		angle = -body->GetAngle() / 2;
+		angle = -body->GetAngle();
 	}
 
 	drawTexture(textureID,  x-width/2,y-height/2, width,height,alpha,angle);

@@ -8,15 +8,15 @@ using namespace std;
 #include "../texture.h"
 
 int reading;
-EyeInterface * eye;
+//EyeInterface * eye;
 
 void ReadingState::onEnter(){
 	reading = loadTexture("Images/reading.pam");
-	eye = new EyeInterface;
+	//eye = new EyeInterface;
 }
 
 void ReadingState::onExit(){
-	delete eye;
+	//delete eye;
 }
 
 ReadingState::ReadingState(){
@@ -25,12 +25,12 @@ ReadingState::ReadingState(){
 
 
 void ReadingState::update(){
-	eye->update();
-	if(eye->x > 45){
-		cout << "Right!" << endl;
-	} else {
-		cout << "Left!" << endl;
-	}
+	// eye->update();
+	// if(eye->x > 45){
+	// 	cout << "Right!" << endl;
+	// } else {
+	// 	cout << "Left!" << endl;
+	// }
 }
 
 void ReadingState::render(){

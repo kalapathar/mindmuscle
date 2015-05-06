@@ -38,7 +38,7 @@ EyeInterface::~EyeInterface(){
 
 void EyeInterface::update(){
   counter++;
-	if( capture  && counter > 50) {
+	if( capture  && counter > 10) {
     counter = 0;
     cout << "Reading" << endl;
       frame = cvQueryFrame( capture );
@@ -79,6 +79,12 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Point rightPupil = findEyeCenter(faceROI,rightEyeRegion);
   x = (leftPupil.x + rightPupil.x)/2;
   y = (leftPupil.y + rightPupil.y)/2;//Save them in EyeInterface's local variables
+
+  //Get face x and y instead
+  // x = face.x;
+  // y = face.y;
+  x = face.x;
+
   // get corner regions
   cv::Rect leftRightCornerRegion(leftEyeRegion);
   leftRightCornerRegion.width -= leftPupil.x;
