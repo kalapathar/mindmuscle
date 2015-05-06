@@ -1,7 +1,7 @@
 ///Standard libraries
 #include <iostream>
 #include <string>
-#include <Python.h>
+
 using namespace std;
 //Include openGL stuff
 #ifdef MACOSX
@@ -37,7 +37,7 @@ StateMachine fsm;
 
 //Initializing variables
 char programName[] = "Mind Muscle";
-
+int mindPower = 0;
 
 //Update loop variables
 
@@ -95,9 +95,6 @@ void update(){
 	//Run the game at 60 fps
 	if ((now - lastLoopTime) / 1000.0 > fps){
 		lastLoopTime = now;
-
-		//Update your stuff here!
-
     
     if(fsm.activeState) {
       fsm.activeState->update();

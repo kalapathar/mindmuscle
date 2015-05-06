@@ -3,17 +3,20 @@
 using namespace std;
 
 #include "ReadingState.h"
+#include "../EyeInterface.h"
 
 #include "../texture.h"
 
 int reading;
+//EyeInterface * eye;
 
 void ReadingState::onEnter(){
 	reading = loadTexture("Images/reading.pam");
+	//eye = new EyeInterface;
 }
 
 void ReadingState::onExit(){
-	
+	//delete eye;
 }
 
 ReadingState::ReadingState(){
@@ -22,7 +25,12 @@ ReadingState::ReadingState(){
 
 
 void ReadingState::update(){
-
+	// eye->update();
+	// if(eye->x > 45){
+	// 	cout << "Right!" << endl;
+	// } else {
+	// 	cout << "Left!" << endl;
+	// }
 }
 
 void ReadingState::render(){
