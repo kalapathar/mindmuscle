@@ -1,0 +1,12 @@
+|A	|A	|	|
+|A	|	|	|
+|O	|O	|D	|
+|O	|	|	|
+|	|M	|M	|
+|	|M	|	|
+|D	|	|D	|
+
+A = Andrew
+O = Omar
+M = Max
+D = Deepak

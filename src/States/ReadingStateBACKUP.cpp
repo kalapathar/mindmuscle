@@ -26,9 +26,11 @@ ReadingState::ReadingState(){
 
 void ReadingState::update(){
 	eye->update();
-		// cout << gaze_x <<" "<< gaze_y <<endl;
-
-
+	if(eye->x > 45){
+		cout << "Right!" << endl;
+	} else {
+		cout << "Left!" << endl;
+	}
 }
 
 void ReadingState::render(){

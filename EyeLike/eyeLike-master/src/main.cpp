@@ -173,17 +173,20 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
   leftPupil.x += leftEyeRegion.x;
   leftPupil.y += leftEyeRegion.y;
 
-  double d_x=rightPupil.x-leftPupil.x;
-  double d_y=rightPupil.y-leftPupil.y;
+  
 
-  double gaze_x=(leftPupil.x+rightPupil.x)/2;
-  double gaze_y=(leftPupil.y+rightPupil.y)/2;
+  double gaze_x=(((leftPupil.x+rightPupil.x)/2)-125)*10;
+  double gaze_y=(((leftPupil.y+rightPupil.y)/2)-90)*10;
 
-  gaze_x+=face.x;
-  gaze_y+=face.y;
+  gaze_x+=face.x-240;
+  gaze_y+=face.y-150;
 
-  gaze_x+=(d_x*D);
-  gaze_y+=(d_y*D);
+  double d_x=gaze_x-(face.x+face.width/2);
+  double d_y=gaze_y-(face.y+face.height/2);
+
+
+  gaze_x*=(D);
+  gaze_y*=(D);
 
 
 

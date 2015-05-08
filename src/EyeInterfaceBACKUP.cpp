@@ -4,10 +4,6 @@ using namespace std;
 
 #include "EyeInterface.h"
 
-const double d_sens=100;
-double gaze_x;
-double gaze_y;
-
 /** Function Headers */
 void detectAndDisplay( cv::Mat frame );
 
@@ -64,7 +60,6 @@ void EyeInterface::update(){
 void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Mat faceROI = frame_gray(face);
   cv::Mat debugFace = faceROI;
-  double D=d_sens/face.width;
 
   if (kSmoothFaceImage) {
     double sigma = kSmoothFaceFactor * face.width;
@@ -82,9 +77,13 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
   //-- Find Eye Centers
   cv::Point leftPupil = findEyeCenter(faceROI,leftEyeRegion);
   cv::Point rightPupil = findEyeCenter(faceROI,rightEyeRegion);
-  
+  x = (leftPupil.x + rightPupil.x)/2;
+  y = (leftPupil.y + rightPupil.y)/2;//Save them in EyeInterface's local variables
 
- 
+  //Get face x and y instead
+  // x = face.x;
+  // y = face.y;
+  x = face.x;
 
   // get corner regions
   cv::Rect leftRightCornerRegion(leftEyeRegion);
@@ -114,24 +113,6 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
   rightPupil.y += rightEyeRegion.y;
   leftPupil.x += leftEyeRegion.x;
   leftPupil.y += leftEyeRegion.y;
-
-
-   gaze_x=(leftPupil.x+rightPupil.x)/2;
-   gaze_y=(leftPupil.y+rightPupil.y)/2;
-
-  gaze_x+=face.x;
-  gaze_y+=face.y;
-
-  double d_x=gaze_x-(face.x+face.width/2);
-  double d_y=gaze_y-(face.y+face.height/2);
-
-  gaze_x+=(d_x*D);
-  gaze_y+=(d_y*D);
-
-
-
-
-
   // draw eye centers
   circle(debugFace, rightPupil, 3, 1234);
   circle(debugFace, leftPupil, 3, 1234);
@@ -155,13 +136,6 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
     circle(faceROI, rightLeftCorner, 3, 200);
     circle(faceROI, rightRightCorner, 3, 200);
   }
-
-  // imshow(face_window_name, faceROI);
-//  cv::Rect roi( cv::Point( 0, 0 ), faceROI.size());
-//  cv::Mat destinationROI = debugImage( roi );
-//  faceROI.copyTo( destinationROI );
- 
-
 
 }
 
