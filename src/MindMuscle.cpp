@@ -35,6 +35,9 @@ b2World * world;
 
 StateMachine fsm;
 
+#include "MindInterface.h"
+MindInterface * mind;
+
 //Initializing variables
 char programName[] = "Mind Muscle";
 int mindPower = 0;
@@ -124,6 +127,10 @@ void mouse_motion(int x,int y)
   if(fsm.activeState) fsm.activeState->mouse_motion(x,y);
 }
 
+void onClose(){
+  delete mind;
+}
+
 void init(){
   //Initialize our state machine by registering all of our states
   MenuState * menu = new MenuState;
@@ -147,6 +154,8 @@ void init(){
   //Initialize box2d world!
   b2Vec2 gravity(0.0f,10.0f);
   world = new b2World(gravity,true);
+
+  mind = new MindInterface;
 }
 
 void init_gl_window()
@@ -176,6 +185,8 @@ void init_gl_window()
 
   //glutFullScreen();
 
+  atexit(onClose);
+
   glutDisplayFunc(render);
   glutIdleFunc(update);
   glutKeyboardFunc(keyboard);
@@ -183,6 +194,9 @@ void init_gl_window()
   glutMotionFunc(mouse_motion);
   glutPassiveMotionFunc(mouse_motion);
   glutMainLoop();
+
+  
+
 
 
 }
