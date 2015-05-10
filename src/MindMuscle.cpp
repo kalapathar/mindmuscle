@@ -1,3 +1,4 @@
+
 ///Standard libraries
 #include <iostream>
 #include <string>
@@ -18,6 +19,7 @@ using namespace std;
 //Declare globals
 int GAME_WIDTH = 1024;
 int GAME_HEIGHT = 720;
+string FOLDER;
 b2World * world;
 
 ///Include all of our states
@@ -41,6 +43,7 @@ MindInterface * mind;
 //Initializing variables
 char programName[] = "Mind Muscle";
 int mindPower = 0;
+
 
 //Update loop variables
 
@@ -108,11 +111,26 @@ void update(){
 
     //Render everything
 		render();
+
+    mind->update();
 	} 
 }
 
 void keyboard( unsigned char c, int x, int y )
 {
+  // if(c == 'c'){
+  //   mind->init_connect();
+  // }
+  // if(c == 't'){
+  //   mind->attempt_connect();
+  // }
+  // if(c == 's'){
+  //   mind->get_status();
+  // }
+  // if(c == 'd'){
+  //   mind->disconnect();
+  // }
+
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
 
@@ -202,7 +220,8 @@ void init_gl_window()
 }
 
 
-int main(){
+int main(int argc, char *argv[]){
+  FOLDER = argv[0];
 
 	//Initialize the window
 	init_gl_window();

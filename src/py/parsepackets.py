@@ -1,29 +1,49 @@
 import mindwave, time
 
-headset = mindwave.Headset('/dev/ttyUSB0')
-time.sleep(2)
+headset = 0;
+#states = {'None':-1,'standby':0,'scanning':1,'connected':2}
 
-headset.connect()
-print "c" #Connecting
+def init_connect():
+	global headset;
+	headset = mindwave.Headset('/dev/ttyUSB0')
+	print("Initial connect",headset)
 
-while headset.status != 'connected':
-    time.sleep(0.5)
-    if headset.status == 'standby':
-        headset.connect()
-        print "c"#Still connected
-        
-print "success"#Start reading!
+def attempt_connect():
+	global headset;
+	if(headset != 0):
+		headset.connect();
+		print("Connect")
+	else:
+		print("Not connected")
 
-count = 0;
+def get_status():
+	global headset;
+	print(headset.status)
+	if(headset == 0):
+		return -1;
+	if(headset.status == 'standby'):
+		print(headset.status)
+		return 0;
+	if(headset.status == 'scanning'):
+		print(headset.status)
+		return 1;
+	if(headset.status == 'connected'):
+		print(headset.status)
+		return 2;
+	
 
-while True:
-	count += 1;
-	time.sleep(0.2)
-	print "%s %s" % (headset.attention, headset.meditation)#Attention and meditation seperated by space
+def get_focus():
+	global headset;
+	if(headset != 0):
+		print("Attention",headset.attention)
+		return headset.attention;
+	else:
+		return -1;
 
-def cleanDisconnect():
-	headset.disconnect()
-
-import atexit
-atexit.register(cleanDisconnect)
-
+def disconnect():
+	global headset;
+	if(headset != 0):
+		print("Disconnecting")
+		headset.disconnect()
+	else:
+		print("Not connected")

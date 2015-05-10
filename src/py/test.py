@@ -19,6 +19,8 @@ count = 0;
 while True:
 	count += 1;
 	time.sleep(0.2)
+	if(count > 50):
+		break
 	print "Attention: %s, Meditation: %s" % (headset.attention, headset.meditation)
 
 headset.disconnect()
