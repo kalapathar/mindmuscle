@@ -14,8 +14,8 @@ else
 
 endif
 
-MindMuscle: MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o EyeInterface.o MindInterface.o $(EYELIBS)
-	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o EyeInterface.o MindInterface.o $(EYELIBS) $(LIBS) $(PYLIBS)
+MindMuscle: MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o EyeInterface.o MindInterface.o PracticalSocket.o $(EYELIBS)
+	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o EyeInterface.o MindInterface.o PracticalSocket.o $(EYELIBS) $(LIBS) $(PYLIBS)
 StateMachine.o: StateMachine.cpp StateMachine.h
 	g++ -g -Wall -std=c++11 -c StateMachine.cpp
 
@@ -58,8 +58,11 @@ OpenCV/findEyeCenter.o: OpenCV/findEyeCenter.h OpenCV/findEyeCenter.cpp
 	g++ $(OPTS) -o OpenCV/findEyeCenter.o -c OpenCV/findEyeCenter.cpp
 
 #Mind Interface
-MindInterface.o: MindInterface.h MindInterface.cpp
+MindInterface.o: MindInterface.h MindInterface.cpp 
 	g++ $(OPTS) -c MindInterface.cpp
+
+PracticalSocket.o: PracticalSocket.cpp PracticalSocket.h
+	g++ $(OPTS) -c PracticalSocket.cpp
 
 texture.o: texture.cpp texture.h
 	g++ -g -Wall -std=c++11 -c texture.cpp
