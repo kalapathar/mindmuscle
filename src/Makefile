@@ -4,7 +4,7 @@ LIBS = -lGL -lglut -lm libBox2D.a -rdynamic /usr/lib64/libopencv_videostab.so.2.
 STATE_PATH = States/
 STATES = $(STATE_PATH)MenuState.o $(STATE_PATH)GameState.o $(STATE_PATH)SplashState.o $(STATE_PATH)AboutState.o $(STATE_PATH)ResultsState.o $(STATE_PATH)ReadingState.o
 EYELIBS = OpenCV/helpers.o OpenCV/findEyeCorner.o OpenCV/findEyeCenter.o
-PYLIBS = -IPyInstall/include/python2.7 -lpython2.7
+PYLIBS = 
 
 ARCH := $(shell uname)
 ifeq ($(ARCH), Linux)

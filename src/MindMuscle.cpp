@@ -12,15 +12,18 @@ using namespace std;
 #endif
 
 #include "Box2D/Box2D.h"
+#include "MindInterface.h"
 
 #include "texture.h"
 #include "Globals.h"
+
 
 //Declare globals
 int GAME_WIDTH = 1024;
 int GAME_HEIGHT = 720;
 string FOLDER;
 b2World * world;
+MindInterface * mind;
 
 ///Include all of our states
 #include "StateMachine.h"
@@ -37,8 +40,7 @@ b2World * world;
 
 StateMachine fsm;
 
-#include "MindInterface.h"
-MindInterface * mind;
+
 
 //Initializing variables
 char programName[] = "Mind Muscle";
@@ -128,9 +130,9 @@ void keyboard( unsigned char c, int x, int y )
   if(c == 's'){
     mind->sendMSG("get_status");
   }
-  if(c == 'f'){
-    mind->sendMSG("get_focus");
-  }
+  // if(c == 'f'){
+  //   mind->sendMSG("get_focus");
+  // }
   if(c == 'd'){
     mind->sendMSG("disconnect");
   }
