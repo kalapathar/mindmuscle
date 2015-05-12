@@ -58,7 +58,7 @@ OpenCV/findEyeCenter.o: OpenCV/findEyeCenter.h OpenCV/findEyeCenter.cpp
 	g++ $(OPTS) -o OpenCV/findEyeCenter.o -c OpenCV/findEyeCenter.cpp
 
 #Mind Interface
-MindInterface.o: MindInterface.h MindInterface.cpp 
+MindInterface.o: MindInterface.h MindInterface.cpp PracticalSocket.o
 	g++ $(OPTS) -c MindInterface.cpp
 
 PracticalSocket.o: PracticalSocket.cpp PracticalSocket.h

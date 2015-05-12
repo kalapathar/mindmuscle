@@ -118,6 +118,7 @@ void update(){
 
 void keyboard( unsigned char c, int x, int y )
 {
+
   // if(c == 'c'){
   //   mind->init_connect();
   // }
@@ -146,6 +147,7 @@ void mouse_motion(int x,int y)
 }
 
 void onClose(){
+  cout << "NO MIND" << endl;
   delete mind;
 }
 
@@ -174,6 +176,8 @@ void init(){
   world = new b2World(gravity,true);
 
   mind = new MindInterface;
+
+
 }
 
 void init_gl_window()

@@ -296,6 +296,10 @@ throw(SocketException) : CommunicatingSocket(SOCK_DGRAM, IPPROTO_UDP) {
     setBroadcast();
 }
 
+int UDPSocket::getSockDec(){
+    return sockDesc;
+}
+
 void UDPSocket::setBroadcast() {
     // If this fails, we'll hear about it when we try to send.  This will allow
     // system that cannot broadcast to continue if they don't plan to broadcast
