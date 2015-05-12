@@ -1,29 +1,80 @@
-import mindwave, time
+import mindwave
+import socket   #for sockets
+import sys  #for exit
+import time
 
-headset = mindwave.Headset('/dev/ttyUSB0')
-time.sleep(2)
+headset = 0;
 
-headset.connect()
-print "c" #Connecting
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-while headset.status != 'connected':
-    time.sleep(0.5)
-    if headset.status == 'standby':
-        headset.connect()
-        print "c"#Still connected
-        
-print "success"#Start reading!
+host = '127.0.0.1';
+port = 1337;
 
-count = 0;
+s.sendto(b'idle', (host, port))
 
-while True:
-	count += 1;
-	time.sleep(0.2)
-	print "%s %s" % (headset.attention, headset.meditation)#Attention and meditation seperated by space
 
-def cleanDisconnect():
-	headset.disconnect()
 
-import atexit
-atexit.register(cleanDisconnect)
+def init_connect():
+	global headset;
+	headset = mindwave.Headset('/dev/ttyUSB0')
+	print("Initial connect",headset)
 
+def attempt_connect():
+	global headset;
+	if(headset != 0):
+		headset.connect();
+		print("Connect")
+	else:
+		print("Not connected")
+
+def get_status():
+	global headset;
+	return headset.status;
+	
+
+def get_focus():
+	global headset;
+
+	if(headset != 0):
+		print("Attention",headset.attention)
+		return headset.attention;
+	else:
+		return -1;
+
+def disconnect():
+	global headset;
+	if(headset != 0):
+		print("Disconnecting")
+		headset.disconnect()
+	else:
+		print("Not connected")
+
+
+while(True):
+	d = s.recvfrom(1024)
+	data = d[0]
+	print(data,"RECIEVE")
+	if(data == "idle"):
+		#Don't do anything
+		s.sendto(b'idle', (host, port))
+	if(data == "init_connect"):
+		init_connect();
+		s.sendto(b'initialized_connection', (host, port))
+	if(data == "attempt_connect"):
+		attempt_connect();
+		s.sendto(b'attempted_connect', (host, port))
+	if(data == "get_status"):
+		st = get_status();
+		status = "status" + str(st);
+		bites = bytes(status)
+		s.sendto(bites, (host, port))
+	if(data == "get_focus"):
+		f = get_focus();
+		focus = "focus" + str(f);
+		bites = bytes(focus)
+		s.sendto(bites, (host, port))
+	if(data == "disconnect"):
+		disconnect();
+		s.sendto(b'disconnecting', (host, port))
+
+	time.sleep(1);

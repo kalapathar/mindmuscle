@@ -1,3 +1,4 @@
+
 ///Standard libraries
 #include <iostream>
 #include <string>
@@ -18,6 +19,7 @@ using namespace std;
 //Declare globals
 int GAME_WIDTH = 1024;
 int GAME_HEIGHT = 720;
+string FOLDER;
 b2World * world;
 
 ///Include all of our states
@@ -35,9 +37,13 @@ b2World * world;
 
 StateMachine fsm;
 
+#include "MindInterface.h"
+MindInterface * mind;
+
 //Initializing variables
 char programName[] = "Mind Muscle";
 int mindPower = 0;
+
 
 //Update loop variables
 
@@ -105,11 +111,30 @@ void update(){
 
     //Render everything
 		render();
+
+    mind->update();
 	} 
 }
 
 void keyboard( unsigned char c, int x, int y )
 {
+
+  if(c == 'c'){
+    mind->sendMSG("init_connect");
+  }
+  if(c == 't'){
+    mind->sendMSG("attempt_connect");
+  }
+  if(c == 's'){
+    mind->sendMSG("get_status");
+  }
+  if(c == 'f'){
+    mind->sendMSG("get_focus");
+  }
+  if(c == 'd'){
+    mind->sendMSG("disconnect");
+  }
+
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
 
@@ -122,6 +147,11 @@ void mouse_motion(int x,int y)
 {
 
   if(fsm.activeState) fsm.activeState->mouse_motion(x,y);
+}
+
+void onClose(){
+  cout << "NO MIND" << endl;
+  delete mind;
 }
 
 void init(){
@@ -147,6 +177,10 @@ void init(){
   //Initialize box2d world!
   b2Vec2 gravity(0.0f,10.0f);
   world = new b2World(gravity,true);
+
+  mind = new MindInterface;
+
+
 }
 
 void init_gl_window()
@@ -176,6 +210,8 @@ void init_gl_window()
 
   //glutFullScreen();
 
+  atexit(onClose);
+
   glutDisplayFunc(render);
   glutIdleFunc(update);
   glutKeyboardFunc(keyboard);
@@ -184,11 +220,15 @@ void init_gl_window()
   glutPassiveMotionFunc(mouse_motion);
   glutMainLoop();
 
+  
+
+
 
 }
 
 
-int main(){
+int main(int argc, char *argv[]){
+  FOLDER = argv[0];
 
 	//Initialize the window
 	init_gl_window();
