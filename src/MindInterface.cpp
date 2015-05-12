@@ -64,6 +64,9 @@ MindInterface::MindInterface(){
  	messages[3] =  new char[strlen("get_status")+1]; cpy("get_status",messages[3]);
  	messages[4] =  new char[strlen("get_focus")+1]; cpy("get_focus",messages[4]);
  	messages[5] =  new char[strlen("disconnect")+1]; cpy("disconnect",messages[5]);
+
+ 	current_status[0] = 'N';
+ 	current_status[1] = '\0';
  }
 
 MindInterface::~MindInterface(){
@@ -82,7 +85,7 @@ MindInterface::~MindInterface(){
 	msgID = 5;//Go kill yourself! (The server, not you, beautiful grader!)
 	sock->sendTo(messages[msgID], strlen(messages[msgID]), sourceAddress, sourcePort);
 	cout << "C++ dead" << endl;
-	
+
 	for(int i=0;i<6;i++){
 		delete messages[i];
 	}
@@ -108,31 +111,30 @@ void MindInterface::update(){
 	if(counter > 30){
 
 		//If not connected yet, keep trying to connect
-		// if(!connected){
-		// 	cout << current_status << endl;
-		// 	cout << checkStatus << endl;
-		// 	if(goodEnoughCompare(current_status,"connected") ) connected = true;
-		// 	if(!initialConnected){
+		if(!connected){
+			cout << current_status << endl;
+			if(goodEnoughCompare(current_status,"connected") ) connected = true;
+			if(!initialConnected){
 				
-		// 		sendMSG("init_connect");
-		// 	} else {
-		// 		if(checkStatus == 0) {
-		// 			sendMSG("attempt_connect");//Sent attempt connect once
-		// 			checkStatus = 1;
-		// 		}
-		// 		else if(checkStatus == 1){
-		// 			sendMSG("get_status");//And get the status once
-		// 			checkStatus = 0;
-		// 		}
+				sendMSG("init_connect");
+			} else {
+				if(checkStatus == 0) {
+					sendMSG("attempt_connect");//Sent attempt connect once
+					checkStatus = 5;
+				}
+				else if(checkStatus > 0){
+					sendMSG("get_status");
+					checkStatus --;
+				}
 
-		// 	}
-		// }
-		// //If connected, keep reading focus levels and blinks
-		// if(connected){
-		// 	//Keep polling for the focus
-		// 	sendMSG("get_focus");
-		// 	cout << "focus\t" << focusValue << endl;
-		// }
+			}
+		}
+		//If connected, keep reading focus levels and blinks
+		if(connected){
+			//Keep polling for the focus
+			sendMSG("get_focus");
+			cout << "focus\t" << focusValue << endl;
+		}
 
 		counter = 0;
 		try {
