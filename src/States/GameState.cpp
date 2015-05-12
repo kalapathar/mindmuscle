@@ -54,10 +54,12 @@ void GameState::update(){
 	eye2->update();
 
 	gameCounter +=0.05;
-	testobj->x = cos(gameCounter) * 200 + GAME_WIDTH/2.0;
-	testobj->y = GAME_HEIGHT - 100;
+	testobj->x = GAME_WIDTH/2.0;
+	testobj->y = GAME_HEIGHT/2.0;
 	testobj->angle +=0.05;
 
+	testobj->x += (eye2->x-testobj->x);
+	testobj->y += (eye2->y-testobj->y);
 	
 	if(box2-> y < 200){
 		force->y +=1;
