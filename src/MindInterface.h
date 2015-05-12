@@ -16,7 +16,7 @@ python script that reads the mind data
 class MindInterface {
 private:
       int ECHOMAX;
-      const unsigned short echoServPort = 1339;//Port number
+      const unsigned short echoServPort = 1442;//Port number
       UDPSocket * sock;
       char echoBuffer[255];         // Buffer for echo string
      int recvMsgSize;                  // Size of received message

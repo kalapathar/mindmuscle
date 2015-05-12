@@ -61,11 +61,11 @@ void GameState::update(){
 	testobj->x += (eye2->x-testobj->x);
 	testobj->y += (eye2->y-testobj->y);
 	
-	if(box2-> y < 200){
-		force->y +=1;
-	} else {
-		force->y -=1;
-	}
+	// if(box2-> y < 200){
+	// 	force->y +=1;
+	// } else {
+	// 	force->y -=1;
+	// }
 	//cout << eye2->x << endl;
 
 
@@ -74,11 +74,18 @@ void GameState::update(){
 	} else {
 		force->x -= 1;
 	}
+	force->x = 0;
+	double focusValue = (mind->focusValue/100.0) * 10;
+
+	if(mind->focusValue > 30) force->y = box2->body->GetLinearVelocity().y - focusValue;
+	cout << mind->focusValue << endl;
+
 	if(abs(force->x) > 25){
 		force->x = 25 * (abs(force->x)/force->x);
 	}
 
-	
+	if(box2->y <= 0) force->y = box2->body->GetLinearVelocity().y;
+
 	box2->body->SetLinearVelocity(*force);
 
 }

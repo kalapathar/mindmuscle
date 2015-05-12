@@ -121,10 +121,7 @@ void MenuState::render(){
 
 void MenuState::keyboard(unsigned char c, int x, int y){
    
-  if(c == 'f'){
-    mind->sendMSG("get_focus");
-  }
-  
+
 }
 
 void MenuState::mouse(int button, int state, int x, int y){

@@ -8,7 +8,7 @@ headset = 0;
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 host = '127.0.0.1';
-port = 1339;
+port = 1442;
 
 s.sendto(b'idle', (host, port))
 
@@ -36,7 +36,8 @@ def get_focus():
 	global headset;
 
 	if(headset != 0):
-		print("Attention",headset.attention)
+		if(headset.poor_signal > 10):
+			return 0;
 		return headset.attention;
 	else:
 		return -1;
