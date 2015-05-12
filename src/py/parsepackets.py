@@ -1,7 +1,18 @@
-import mindwave, time
+import mindwave
+import socket   #for sockets
+import sys  #for exit
+import time
 
 headset = 0;
-#states = {'None':-1,'standby':0,'scanning':1,'connected':2}
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+host = '127.0.0.1';
+port = 1337;
+
+s.sendto(b'idle', (host, port))
+
+
 
 def init_connect():
 	global headset;
@@ -18,22 +29,12 @@ def attempt_connect():
 
 def get_status():
 	global headset;
-	print(headset.status)
-	if(headset == 0):
-		return -1;
-	if(headset.status == 'standby'):
-		print(headset.status)
-		return 0;
-	if(headset.status == 'scanning'):
-		print(headset.status)
-		return 1;
-	if(headset.status == 'connected'):
-		print(headset.status)
-		return 2;
+	return headset.status;
 	
 
 def get_focus():
 	global headset;
+
 	if(headset != 0):
 		print("Attention",headset.attention)
 		return headset.attention;
@@ -47,3 +48,33 @@ def disconnect():
 		headset.disconnect()
 	else:
 		print("Not connected")
+
+
+while(True):
+	d = s.recvfrom(1024)
+	data = d[0]
+	print(data,"RECIEVE")
+	if(data == "idle"):
+		#Don't do anything
+		s.sendto(b'idle', (host, port))
+	if(data == "init_connect"):
+		init_connect();
+		s.sendto(b'initialized_connection', (host, port))
+	if(data == "attempt_connect"):
+		attempt_connect();
+		s.sendto(b'attempted_connect', (host, port))
+	if(data == "get_status"):
+		st = get_status();
+		status = "status" + str(st);
+		bites = bytes(status)
+		s.sendto(bites, (host, port))
+	if(data == "get_focus"):
+		f = get_focus();
+		focus = "focus" + str(f);
+		bites = bytes(focus)
+		s.sendto(bites, (host, port))
+	if(data == "disconnect"):
+		disconnect();
+		s.sendto(b'disconnecting', (host, port))
+
+	time.sleep(1);

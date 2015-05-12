@@ -119,18 +119,21 @@ void update(){
 void keyboard( unsigned char c, int x, int y )
 {
 
-  // if(c == 'c'){
-  //   mind->init_connect();
-  // }
-  // if(c == 't'){
-  //   mind->attempt_connect();
-  // }
-  // if(c == 's'){
-  //   mind->get_status();
-  // }
-  // if(c == 'd'){
-  //   mind->disconnect();
-  // }
+  if(c == 'c'){
+    mind->sendMSG("init_connect");
+  }
+  if(c == 't'){
+    mind->sendMSG("attempt_connect");
+  }
+  if(c == 's'){
+    mind->sendMSG("get_status");
+  }
+  if(c == 'f'){
+    mind->sendMSG("get_focus");
+  }
+  if(c == 'd'){
+    mind->sendMSG("disconnect");
+  }
 
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
