@@ -53,6 +53,7 @@ void EyeInterface::update(){
       // Apply the classifier to the frame
       if( !frame.empty() ) {
           detectAndDisplay( frame );
+          }
       }
       else {
         printf(" --(!) No captured frame -- Break!");
@@ -110,23 +111,28 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
   rectangle(debugFace,rightLeftCornerRegion,200);
   rectangle(debugFace,rightRightCornerRegion,200);
   // change eye centers to face coordinates
-  rightPupil.x += rightEyeRegion.x;
-  rightPupil.y += rightEyeRegion.y;
-  leftPupil.x += leftEyeRegion.x;
-  leftPupil.y += leftEyeRegion.y;
+  // rightPupil.x += rightEyeRegion.x;
+  // rightPupil.y += rightEyeRegion.y;                                                                                                                                
+  // leftPupil.x += leftEyeRegion.x;                                                                                                                                    
+  // leftPupil.y += leftEyeRegion.y;
+// ((((leftPupil.x-(leftEyeRegion.x+leftEyeRegion.width/2))+(rightPupil.x-(rightEyeRegion.x+rightEyeRegion.width/2)))/2)+57)-
+// (face.x+face.width/2-300)*6
+  gaze_x=((face.x+face.width/2-260)*6)+((((leftPupil.x)+(rightPupil.x))/2)-27)*10;
+  gaze_y=((face.y+face.height/2)-240)*11+100;
+  x = gaze_x;
+  y = gaze_y;
+
+  // double gaze_y=((((leftPupil.y-(leftEyeRegion.y+leftEyeRegion.height/2))+(rightPupil.y-(rightEyeRegion.y+rightEyeRegion.height/2)))/2)+48);
+
+  // gaze_x-=(face.x-240);
+  // gaze_y-=(face.y-150);
+
+  // double d_x=gaze_x-(face.x+face.width/2);
+  // double d_y=gaze_y-(face.y+face.height/2);
 
 
-   gaze_x=(leftPupil.x+rightPupil.x)/2;
-   gaze_y=(leftPupil.y+rightPupil.y)/2;
-
-  gaze_x+=face.x;
-  gaze_y+=face.y;
-
-  double d_x=gaze_x-(face.x+face.width/2);
-  double d_y=gaze_y-(face.y+face.height/2);
-
-  gaze_x+=(d_x*D);
-  gaze_y+=(d_y*D);
+  // gaze_x*=(D);
+  // gaze_y*=(D);
 
 
 
@@ -161,7 +167,7 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
 //  cv::Mat destinationROI = debugImage( roi );
 //  faceROI.copyTo( destinationROI );
  
-
+cout<<gaze_x<<" "<<gaze_y<<" "<<endl;
 
 }
 

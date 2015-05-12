@@ -42,7 +42,7 @@ const float kPostProcessThreshold = 0.97;
 // Eye Corner
 const bool kEnableEyeCorner = false;
 /** Function Headers */
-void detectAndDisplay( cv::Mat frame );
+cv::Point detectAndDisplay( cv::Mat frame );
 
 /** Global variables */
 //-- Note, either copy these two files from opencv/data/haarscascades to your current folder, or change these locations
@@ -63,7 +63,7 @@ int counter = 0;
 int main( int argc, const char** argv ) {
   CvCapture* capture;
   cv::Mat frame;
-
+  cv::Point gaze;
   // Load the cascades
   if( !face_cascade.load( face_cascade_name ) ){ printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n"); return -1; };
 
@@ -93,9 +93,9 @@ int main( int argc, const char** argv ) {
       // Apply the classifier to the frame
       if( !frame.empty() ) {
         counter ++;
-        if(counter > 20){
+        if(counter > 0){
           counter = 0;
-          detectAndDisplay( frame );
+          gaze=detectAndDisplay( frame );
         }
       }
       else {
@@ -119,7 +119,7 @@ int main( int argc, const char** argv ) {
   return 0;
 }
 
-void findEyes(cv::Mat frame_gray, cv::Rect face) {
+cv::Point findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Mat faceROI = frame_gray(face);
   cv::Mat debugFace = faceROI;
   double D=d_sens/face.width;
@@ -168,25 +168,27 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
   rectangle(debugFace,rightLeftCornerRegion,200);
   rectangle(debugFace,rightRightCornerRegion,200);
   // change eye centers to face coordinates
-  rightPupil.x += rightEyeRegion.x;
-  rightPupil.y += rightEyeRegion.y;
-  leftPupil.x += leftEyeRegion.x;
-  leftPupil.y += leftEyeRegion.y;
+  // rightPupil.x += rightEyeRegion.x;
+  // rightPupil.y += rightEyeRegion.y;                                                                                                                                
+  // leftPupil.x += leftEyeRegion.x;                                                                                                                                    
+  // leftPupil.y += leftEyeRegion.y;
 
-  
+  cv::Point gaze;
 
-  double gaze_x=(((leftPupil.x+rightPupil.x)/2)-125)*10;
-  double gaze_y=(((leftPupil.y+rightPupil.y)/2)-90)*10;
+  gaze.x=((((leftPupil.x-(leftEyeRegion.x+leftEyeRegion.width/2))+(rightPupil.x-(rightEyeRegion.x+rightEyeRegion.width/2)))/2)+57)-(face.x+face.width/2-350);
+  gaze.y=-((face.y+face.height/2)-340);
 
-  gaze_x+=face.x-240;
-  gaze_y+=face.y-150;
+  // double gaze_y=((((leftPupil.y-(leftEyeRegion.y+leftEyeRegion.height/2))+(rightPupil.y-(rightEyeRegion.y+rightEyeRegion.height/2)))/2)+48);
 
-  double d_x=gaze_x-(face.x+face.width/2);
-  double d_y=gaze_y-(face.y+face.height/2);
+  // gaze_x-=(face.x-240);
+  // gaze_y-=(face.y-150);
+
+  // double d_x=gaze_x-(face.x+face.width/2);
+  // double d_y=gaze_y-(face.y+face.height/2);
 
 
-  gaze_x*=(D);
-  gaze_y*=(D);
+  // gaze_x*=(D);
+  // gaze_y*=(D);
 
 
 
@@ -221,7 +223,9 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
 //  cv::Mat destinationROI = debugImage( roi );
 //  faceROI.copyTo( destinationROI );
  
-cout<<gaze_x<<" "<<gaze_y<<" "<<endl;
+cout<<gaze.x<<" "<<gaze.y<<" "<<endl;
+return gaze;
+
 
 }
 
@@ -250,10 +254,10 @@ cv::Mat findSkin (cv::Mat &frame) {
 /**
  * @function detectAndDisplay
  */
-void detectAndDisplay( cv::Mat frame ) {
+cv::Point detectAndDisplay( cv::Mat frame ) {
   std::vector<cv::Rect> faces;
   // cv::Mat frame_gray;
-
+  cv::Point gaze;
   std::vector<cv::Mat> rgbChannels(3);
   cv::split(frame, rgbChannels);
   cv::Mat frame_gray = rgbChannels[2];
@@ -271,7 +275,7 @@ void detectAndDisplay( cv::Mat frame ) {
   }
   //-- Show what you got
   if (faces.size() > 0) {
-    findEyes(frame_gray, faces[0]);
+    gaze=findEyes(frame_gray, faces[0]);
   }
-
+return gaze;
 }
