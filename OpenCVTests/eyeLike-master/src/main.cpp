@@ -106,6 +106,9 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Rect rightEyeRegion(face.width - eye_region_width - face.width*(kEyePercentSide/100.0),
                           eye_region_top,eye_region_width,eye_region_height);
 
+  cout << "WTF ANDREW" << endl;
+  cout << leftEyeRegion.height << endl;
+
   //-- Find Eye Centers
   cv::Point leftPupil = findEyeCenter(faceROI,leftEyeRegion,"Left Eye");
   cv::Point rightPupil = findEyeCenter(faceROI,rightEyeRegion,"Right Eye");
@@ -165,6 +168,7 @@ void findEyes(cv::Mat frame_gray, cv::Rect face) {
 //  cv::Rect roi( cv::Point( 0, 0 ), faceROI.size());
 //  cv::Mat destinationROI = debugImage( roi );
 //  faceROI.copyTo( destinationROI );
+  cout<<leftPupil.y<<" "<<rightPupil.y<<" "<<endl;
 }
 
 
