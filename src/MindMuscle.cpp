@@ -128,8 +128,8 @@ void update(){
     //Render everything
 		render();
 
-
     if(MIND_CONNECTED)  mind->update();
+
 	} 
 }
 
