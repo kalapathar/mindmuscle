@@ -21,6 +21,7 @@ using namespace std;
 //Declare globals
 int GAME_WIDTH = 1024;
 int GAME_HEIGHT = 720;
+bool MIND_CONNECTED = true;//Assume true
 string FOLDER;
 b2World * world;
 MindInterface * mind;
@@ -56,6 +57,19 @@ double fps = 1.0/60.0;
 float32 timeStep = 1.0f / 60.0f;
 int32 velocityIterations = 6;
 int32 positionIterations = 2;
+
+string exec(char* cmd) {
+    FILE* pipe = popen(cmd, "r");
+    if (!pipe) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while(!feof(pipe)) {
+      if(fgets(buffer, 128, pipe) != NULL)
+        result += buffer;
+    }
+    pclose(pipe);
+    return result;
+}
 
 void MakeShiftMessageSystem(){
   if(fsm.activeState->sent){
@@ -114,28 +128,14 @@ void update(){
     //Render everything
 		render();
 
-    mind->update();
+    if(MIND_CONNECTED)  mind->update();
 	} 
 }
 
 void keyboard( unsigned char c, int x, int y )
 {
 
-  if(c == 'c'){
-    mind->sendMSG("init_connect");
-  }
-  if(c == 't'){
-    mind->sendMSG("attempt_connect");
-  }
-  if(c == 's'){
-    mind->sendMSG("get_status");
-  }
-  // if(c == 'f'){
-  //   mind->sendMSG("get_focus");
-  // }
-  if(c == 'd'){
-    mind->sendMSG("disconnect");
-  }
+
 
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
@@ -153,7 +153,7 @@ void mouse_motion(int x,int y)
 
 void onClose(){
   cout << "NO MIND" << endl;
-  delete mind;
+  if(MIND_CONNECTED) delete mind;
 }
 
 void init(){
@@ -180,7 +180,12 @@ void init(){
   b2Vec2 gravity(0.0f,10.0f);
   world = new b2World(gravity,true);
 
-  mind = new MindInterface;
+  //Check if the Neurosky usb is connected
+  string output = exec("lsusb");
+  size_t found = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
+  if (found == string::npos) MIND_CONNECTED = false;//dongle not connected!
+
+  if(MIND_CONNECTED) mind = new MindInterface;
 
 
 }
