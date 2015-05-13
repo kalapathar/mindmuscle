@@ -30,6 +30,9 @@ void GameState::onEnter(){
 	force = new b2Vec2(0,0);
 	eye2 = new EyeInterface;
 
+	testobj->x = GAME_WIDTH/2.0;
+	testobj->y = GAME_HEIGHT/2.0;
+
 }
 
 void GameState::onExit(){
@@ -54,38 +57,20 @@ void GameState::update(){
 	eye2->update();
 
 	gameCounter +=0.05;
-	testobj->x = GAME_WIDTH/2.0;
-	testobj->y = GAME_HEIGHT/2.0;
-	testobj->angle +=0.05;
 
-	testobj->x += (eye2->x-testobj->x);
-	testobj->y += (eye2->y-testobj->y);
+	testobj->x += (eye2->x-testobj->x) / 30;
+	testobj->y += (eye2->y-testobj->y) / 30;
+	cout << "(" << testobj->x << "," << testobj->y << ")" << endl;
 	
-	// if(box2-> y < 200){
-	// 	force->y +=1;
-	// } else {
-	// 	force->y -=1;
-	// }
-	//cout << eye2->x << endl;
 
-
-	if(eye2->x > 200){//45 is the center for pupil. 200 for the face
-		force->x += 1;
-	} else {
-		force->x -= 1;
-	}
-	force->x = 0;
 	double focusValue = 0;
 	if(MIND_CONNECTED) focusValue = mind->focusValue;
 	double normalizedFocus = (focusValue/100.0) * 10;
 
 	if(focusValue > 30) force->y = box2->body->GetLinearVelocity().y - normalizedFocus;
-	cout << focusValue << endl;
+	//cout << focusValue << endl;
 
-	if(abs(force->x) > 25){
-		force->x = 25 * (abs(force->x)/force->x);
-	}
-
+	
 	if(box2->y <= 0) force->y = box2->body->GetLinearVelocity().y;
 
 	box2->body->SetLinearVelocity(*force);
