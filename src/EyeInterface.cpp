@@ -7,6 +7,7 @@ using namespace std;
 const double d_sens=100;
 double gaze_x;
 double gaze_y;
+int blinkCount=0;
 
 /** Function Headers */
 void detectAndDisplay( cv::Mat frame );
@@ -44,7 +45,7 @@ void EyeInterface::update(){
   counter++;
 	if( capture  && counter > 10) {
     counter = 0;
-    cout << "Reading" << endl;
+    //cout << "Reading" << endl;
       frame = cvQueryFrame( capture );
       // mirror it
       cv::flip(frame, frame, 1);
@@ -56,7 +57,7 @@ void EyeInterface::update(){
           }
       }
       else {
-        printf(" --(!) No captured frame -- Break!");
+        // printf(" --(!) No captured frame -- Break!");
       }
     }
  
@@ -167,14 +168,14 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
 //  faceROI.copyTo( destinationROI );
 bool blink;
 
-if(rightPupil.y-leftPupil.y>12){
+if(abs(rightPupil.y-leftPupil.y)>12 ){
   blink=true;
+  cout << blinkCount++ << endl;
 } 
 else{
   blink=false;
 }
 
-cout<<blink<<endl;
 
 }
 

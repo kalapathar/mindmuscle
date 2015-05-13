@@ -128,11 +128,8 @@ void update(){
     //Render everything
 		render();
 
-<<<<<<< HEAD
-    //mind->update();
-=======
+
     if(MIND_CONNECTED)  mind->update();
->>>>>>> a7acaa232573629bb1ad02ca31d4def57f87492d
 	} 
 }
 
@@ -184,16 +181,12 @@ void init(){
   b2Vec2 gravity(0.0f,10.0f);
   world = new b2World(gravity,true);
 
-<<<<<<< HEAD
-  //mind = new MindInterface;
-=======
   //Check if the Neurosky usb is connected
   string output = exec("lsusb");
   size_t found = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
   if (found == string::npos) MIND_CONNECTED = false;//dongle not connected!
 
   if(MIND_CONNECTED) mind = new MindInterface;
->>>>>>> a7acaa232573629bb1ad02ca31d4def57f87492d
 
 
 }
