@@ -49,7 +49,7 @@ MindInterface::MindInterface(){
 
 	counter = 0;//Initialize counter
     initPython = 0;
- 
+ 	checkStatus = 0;
  	msgID = 0;//idle is the default message
 
 
@@ -113,6 +113,8 @@ void MindInterface::update(){
 		//If not connected yet, keep trying to connect
 		if(!connected){
 			cout << current_status << endl;
+			cout << initialConnected << endl;
+			cout << checkStatus << endl;
 			if(goodEnoughCompare(current_status,"connected") ) connected = true;
 			if(!initialConnected){
 				

@@ -29,7 +29,11 @@ def attempt_connect():
 
 def get_status():
 	global headset;
-	return headset.status;
+	if(headset != 0):
+		return headset.status;
+	else:
+		print("Not connected")
+		return "None"
 	
 
 def get_focus():
