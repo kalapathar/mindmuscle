@@ -77,13 +77,19 @@ void ResultsState::render(){
    glColor3f(0.0, 0.0, 0.0);
    glBegin(GL_LINES);
 
-   glVertex3f(10,0,0);
-   glVertex3f(10,1020,0);
+   int axisOffsetX = 50;
+   int axisOffsetY = 50;
 
-    float timeAxisY = GAME_HEIGHT-10;
+   int fixY=150;
+   int fixX=150;
 
-   glVertex3f(0,timeAxisY,0);
-   glVertex3f(GAME_WIDTH,timeAxisY,0);
+   glVertex3f(axisOffsetX,fixY,0);
+   glVertex3f(axisOffsetX,GAME_HEIGHT-axisOffsetY,0);
+
+    float timeAxisY = GAME_HEIGHT-axisOffsetY;
+
+   glVertex3f(axisOffsetX,timeAxisY,0);
+   glVertex3f(GAME_WIDTH-fixX,timeAxisY,0);
    int num_points = (array_length/2);
 
    for(int i=0;i<(num_points-1) * 2;i+=2){
@@ -99,16 +105,17 @@ void ResultsState::render(){
  factorY1=data[i+1]/maximumY;
  factorX2=data[i+2]/maximumX;
  factorY2=data[i+3]/maximumY;
-   
+   cout<<"maximumX::"<<maximumX<<endl;
+   cout<<"maximumY::"<<maximumY<<endl;
 
-   float X1 = GAME_WIDTH* factorX1;
-   float Y1 = GAME_HEIGHT* factorY1 * -1 + timeAxisY;
+   float X1 = (GAME_WIDTH)* factorX1;
+   float Y1 = (GAME_HEIGHT-fixY)* factorY1 * -1 + timeAxisY;
 
-   float X2 = GAME_WIDTH* factorX2;
-   float Y2 = GAME_HEIGHT* factorY2 * -1 + timeAxisY;
+   float X2 = (GAME_WIDTH)* factorX2;
+   float Y2 = (GAME_HEIGHT-fixY)* factorY2 * -1 + timeAxisY;
 
-   glVertex3f(X1,Y1,0); cout << "First Point\t (" << X1 << " , " << Y1 << ")" << endl;
-   glVertex3f(X2,Y2,0); cout << "Second Point\t (" << X2<< " , " << Y2 << ")" << endl;
+   glVertex3f(X1+axisOffsetX,Y1,0); cout << "First Point\t (" << X1 << " , " << Y1 << ")" << endl;
+   glVertex3f(X2+axisOffsetX,Y2,0); cout << "Second Point\t (" << X2<< " , " << Y2 << ")" << endl;
    cout << "===========\t" << i << endl;
 	}
 	glEnd();

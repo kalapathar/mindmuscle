@@ -136,7 +136,10 @@ void update(){
 void keyboard( unsigned char c, int x, int y )
 {
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 6b3a20d0e8cb5cb77d77f131c1a47eefdb60a05e
 
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
@@ -154,7 +157,13 @@ void mouse_motion(int x,int y)
 
 void onClose(){
   cout << "NO MIND" << endl;
+<<<<<<< HEAD
+
   if(MIND_CONNECTED) delete mind;
+
+=======
+  if(MIND_CONNECTED) delete mind;
+>>>>>>> 6b3a20d0e8cb5cb77d77f131c1a47eefdb60a05e
 }
 
 void init(){
@@ -181,6 +190,10 @@ void init(){
   b2Vec2 gravity(0.0f,10.0f);
   world = new b2World(gravity,true);
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 6b3a20d0e8cb5cb77d77f131c1a47eefdb60a05e
   //Check if the Neurosky usb is connected
   string output = exec("lsusb");
   size_t found = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
