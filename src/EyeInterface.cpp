@@ -58,9 +58,8 @@ void EyeInterface::update(){
       else {
         printf(" --(!) No captured frame -- Break!");
       }
-
-  }
-}
+    }
+ 
 
 void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Mat faceROI = frame_gray(face);
@@ -166,8 +165,16 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
 //  cv::Rect roi( cv::Point( 0, 0 ), faceROI.size());
 //  cv::Mat destinationROI = debugImage( roi );
 //  faceROI.copyTo( destinationROI );
- 
-cout<<gaze_x<<" "<<gaze_y<<" "<<endl;
+bool blink;
+
+if(rightPupil.y-leftPupil.y>12){
+  blink=true;
+} 
+else{
+  blink=false;
+}
+
+cout<<blink<<endl;
 
 }
 

@@ -112,7 +112,7 @@ void update(){
     //Render everything
 		render();
 
-    mind->update();
+    //mind->update();
 	} 
 }
 
@@ -178,7 +178,7 @@ void init(){
   b2Vec2 gravity(0.0f,10.0f);
   world = new b2World(gravity,true);
 
-  mind = new MindInterface;
+  //mind = new MindInterface;
 
 
 }

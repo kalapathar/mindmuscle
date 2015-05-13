@@ -137,6 +137,9 @@ cv::Point findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Rect rightEyeRegion(face.width - eye_region_width - face.width*(kEyePercentSide/100.0),
                           eye_region_top,eye_region_width,eye_region_height);
 
+
+  cout << leftEyeRegion.height << endl;
+
   //-- Find Eye Centers
   cv::Point leftPupil = findEyeCenter(faceROI,leftEyeRegion);
   cv::Point rightPupil = findEyeCenter(faceROI,rightEyeRegion);
@@ -223,7 +226,7 @@ cv::Point findEyes(cv::Mat frame_gray, cv::Rect face) {
 //  cv::Mat destinationROI = debugImage( roi );
 //  faceROI.copyTo( destinationROI );
  
-cout<<gaze.x<<" "<<gaze.y<<" "<<endl;
+//cout<<gaze.x<<" "<<gaze.y<<" "<<endl;
 return gaze;
 
 
@@ -261,6 +264,7 @@ cv::Point detectAndDisplay( cv::Mat frame ) {
   std::vector<cv::Mat> rgbChannels(3);
   cv::split(frame, rgbChannels);
   cv::Mat frame_gray = rgbChannels[2];
+
 
   //cvtColor( frame, frame_gray, CV_BGR2GRAY );
   //equalizeHist( frame_gray, frame_gray );
