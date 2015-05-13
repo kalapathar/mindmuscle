@@ -10,5 +10,6 @@ extern int GAME_HEIGHT;
 extern string FOLDER;
 extern b2World * world;
 extern MindInterface * mind;
+extern bool MIND_CONNECTED;
 
 #endif // _GLOBALS_

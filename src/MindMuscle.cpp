@@ -21,6 +21,7 @@ using namespace std;
 //Declare globals
 int GAME_WIDTH = 1024;
 int GAME_HEIGHT = 720;
+bool MIND_CONNECTED = true;//Assume true
 string FOLDER;
 b2World * world;
 MindInterface * mind;
@@ -56,6 +57,19 @@ double fps = 1.0/60.0;
 float32 timeStep = 1.0f / 60.0f;
 int32 velocityIterations = 6;
 int32 positionIterations = 2;
+
+string exec(char* cmd) {
+    FILE* pipe = popen(cmd, "r");
+    if (!pipe) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while(!feof(pipe)) {
+      if(fgets(buffer, 128, pipe) != NULL)
+        result += buffer;
+    }
+    pclose(pipe);
+    return result;
+}
 
 void MakeShiftMessageSystem(){
   if(fsm.activeState->sent){
@@ -114,14 +128,26 @@ void update(){
     //Render everything
 		render();
 
+<<<<<<< HEAD
     //mind->update();
+=======
+<<<<<<< HEAD
+    //mind->update();
+=======
+    if(MIND_CONNECTED)  mind->update();
+>>>>>>> a7acaa232573629bb1ad02ca31d4def57f87492d
+>>>>>>> 4f7a40b988422560ca69257a4d9151334b2139b0
 	} 
 }
 
 void keyboard( unsigned char c, int x, int y )
 {
 
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> 4f7a40b988422560ca69257a4d9151334b2139b0
 
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
@@ -139,7 +165,11 @@ void mouse_motion(int x,int y)
 
 void onClose(){
   cout << "NO MIND" << endl;
+<<<<<<< HEAD
   //delete mind;
+=======
+  if(MIND_CONNECTED) delete mind;
+>>>>>>> 4f7a40b988422560ca69257a4d9151334b2139b0
 }
 
 void init(){
@@ -166,7 +196,20 @@ void init(){
   b2Vec2 gravity(0.0f,10.0f);
   world = new b2World(gravity,true);
 
+<<<<<<< HEAD
   //mind = new MindInterface;
+=======
+<<<<<<< HEAD
+  //mind = new MindInterface;
+=======
+  //Check if the Neurosky usb is connected
+  string output = exec("lsusb");
+  size_t found = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
+  if (found == string::npos) MIND_CONNECTED = false;//dongle not connected!
+
+  if(MIND_CONNECTED) mind = new MindInterface;
+>>>>>>> a7acaa232573629bb1ad02ca31d4def57f87492d
+>>>>>>> 4f7a40b988422560ca69257a4d9151334b2139b0
 
 
 }

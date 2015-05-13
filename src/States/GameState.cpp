@@ -75,10 +75,12 @@ void GameState::update(){
 		force->x -= 1;
 	}
 	force->x = 0;
-	double focusValue = (mind->focusValue/100.0) * 10;
+	double focusValue = 0;
+	if(MIND_CONNECTED) focusValue = mind->focusValue;
+	double normalizedFocus = (focusValue/100.0) * 10;
 
-	if(mind->focusValue > 30) force->y = box2->body->GetLinearVelocity().y - focusValue;
-	cout << mind->focusValue << endl;
+	if(focusValue > 30) force->y = box2->body->GetLinearVelocity().y - normalizedFocus;
+	cout << focusValue << endl;
 
 	if(abs(force->x) > 25){
 		force->x = 25 * (abs(force->x)/force->x);
