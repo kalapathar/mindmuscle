@@ -17,6 +17,8 @@ GameObject * wallRight;
 GameObject * wallLeft;
 
 EyeInterface * eye2;
+int lastBlinkID;
+
 
 void GameState::onEnter(){
 	testobj = new GameObject("boxCrate",false);
@@ -33,6 +35,9 @@ void GameState::onEnter(){
 	testobj->x = GAME_WIDTH/2.0;
 	testobj->y = GAME_HEIGHT/2.0;
 
+	testobj->alpha = 0.5;
+
+	lastBlinkID = 0;
 }
 
 void GameState::onExit(){
@@ -75,6 +80,12 @@ void GameState::update(){
 
 	box2->body->SetLinearVelocity(*force);
 
+	if(testobj->alpha > 0.5) testobj->alpha += (0.5-testobj->alpha) / 20;
+
+	if(lastBlinkID != eye2->blinkCount){
+		lastBlinkID = eye2->blinkCount;
+		testobj->alpha = 1;
+	}
 }
 
 void GameState::render(){

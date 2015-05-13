@@ -7,7 +7,6 @@ using namespace std;
 const double d_sens=100;
 double gaze_x;
 double gaze_y;
-int blinkCount=0;
 
 /** Function Headers */
 void detectAndDisplay( cv::Mat frame );
@@ -22,6 +21,8 @@ cv::Mat debugImage;
 cv::Mat skinCrCbHist = cv::Mat::zeros(cv::Size(256, 256), CV_8UC1);
 
 EyeInterface::EyeInterface(){
+  blinkCount=0;
+
 	// Load the cascades
 	if( !face_cascade.load( face_cascade_name ) ){ 
 		printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n");  
@@ -170,7 +171,7 @@ bool blink;
 
 if(abs(rightPupil.y-leftPupil.y)>12 ){
   blink=true;
-  cout << blinkCount++ << endl;
+  blinkCount++;
 } 
 else{
   blink=false;
