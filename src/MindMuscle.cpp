@@ -114,28 +114,14 @@ void update(){
     //Render everything
 		render();
 
-    mind->update();
+    //mind->update();
 	} 
 }
 
 void keyboard( unsigned char c, int x, int y )
 {
 
-  if(c == 'c'){
-    mind->sendMSG("init_connect");
-  }
-  if(c == 't'){
-    mind->sendMSG("attempt_connect");
-  }
-  if(c == 's'){
-    mind->sendMSG("get_status");
-  }
-  // if(c == 'f'){
-  //   mind->sendMSG("get_focus");
-  // }
-  if(c == 'd'){
-    mind->sendMSG("disconnect");
-  }
+  
 
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
@@ -153,7 +139,7 @@ void mouse_motion(int x,int y)
 
 void onClose(){
   cout << "NO MIND" << endl;
-  delete mind;
+  //delete mind;
 }
 
 void init(){
@@ -180,7 +166,7 @@ void init(){
   b2Vec2 gravity(0.0f,10.0f);
   world = new b2World(gravity,true);
 
-  mind = new MindInterface;
+  //mind = new MindInterface;
 
 
 }
