@@ -60,7 +60,7 @@ void GameState::update(){
 
 	testobj->x += (eye2->x-testobj->x) / 30;
 	testobj->y += (eye2->y-testobj->y) / 30;
-	cout << "(" << testobj->x << "," << testobj->y << ")" << endl;
+	//cout << "(" << testobj->x << "," << testobj->y << ")" << endl;
 	
 
 	double focusValue = 0;
