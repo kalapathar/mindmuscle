@@ -27,4 +27,8 @@ void StateMachine::transition(string stateName){
 
 void StateMachine::destroy(){
 	//Loop through and destroy current state
+	if(activeState != 0){
+		activeState->onExit();
+		activeState = 0;
+	}
 }

@@ -11,51 +11,48 @@ using namespace std;
 #include <GL/glut.h>
 #endif
 
+#include <math.h>
+
 int results;
-double data[100];
+
 double maximumX, maximumY;
+double minX,minY;
 double factorX1,factorY1,factorX2,factorY2;
 double array_length;
+ofstream * outFile;
+int reading_counter;
+int reading_counter2;
+std::vector<int> mindData;
+
 
 void ResultsState::onEnter(){
 	results = loadTexture("Images/results.pam");
 
-	//Read file
+  //Set up output
+  outFile = new ofstream("data",std::ios_base::app);
+  reading_counter = 0;
+
+	//Read whatever is in the file right now, the rest are obtained from the reading below
 	ifstream f("data");
-  double x,y;
-  int i=0;
-  	
-  array_length = 0;
+  double x,y;  	
 
    while(f>>x && f>>y){
-    data[i]= y;
-    data[i+1]= x;
-    cout << x << "\t" << y << "\t" << i << "\t" << endl;
-    i=i+2;
-    array_length +=2;
+    mindData.push_back(x);
+    mindData.push_back(y);
+
+    reading_counter2 = x;
   }
+
+
   
     f.close();
      
-     //auto array_length = end(data) - begin(data);
-     //cout<<array_length;
-     
-    //array_length =(sizeof(data)/sizeof(double));
-
-    for(int i=0;i<array_length;i+=2){
-      if (data[i]>maximumX){
-        maximumX=data[i];
-      }
-      if (i+1 <= array_length-1 && data[i+1]>maximumY){
-        maximumY=data[i+1];
-      }
-
-    }
 
 }
 
 void ResultsState::onExit(){
-	
+	outFile->close();
+  delete outFile;
 }
 
 ResultsState::ResultsState(){
@@ -64,8 +61,37 @@ ResultsState::ResultsState(){
 
 
 void ResultsState::update(){
-	
+	if(reading_counter >= 30){
+    reading_counter = 0;
+    int X = reading_counter2;
+    int Y = sin(reading_counter2*0.1) * 200;
+    if(MIND_CONNECTED) {
+      Y = mind->focusValue;
+      cout << "Focus\t" << Y << endl;
+    }
+    (*outFile) << endl;
+    (*outFile) << X;
+    (*outFile) << " ";
+    (*outFile) << Y;
+    mindData.push_back(X);
+    mindData.push_back(Y);
+    reading_counter2++;
 
+    //Get min/max
+    for(int i=0;i<mindData.size()-1;i+=2){
+      if(mindData[i] > maximumX) maximumX = mindData[i];
+      if(mindData[i+1] > maximumY) maximumY = mindData[i+1];
+
+      if(mindData[i] < minX) minX = mindData[i];
+      if(mindData[i+1] < minY) minY = mindData[i+1];
+    }
+    cout << "size" << mindData.size() << endl;
+    cout << maximumY << endl;
+  }
+  reading_counter++;
+
+
+  
 }
 
 void ResultsState::render(){
@@ -90,23 +116,16 @@ void ResultsState::render(){
 
    glVertex3f(axisOffsetX,timeAxisY,0);
    glVertex3f(GAME_WIDTH-fixX,timeAxisY,0);
-   int num_points = (array_length/2);
+   int num_points = (mindData.size()/2);
 
    for(int i=0;i<(num_points-1) * 2;i+=2){
-
-
-  // cout<<data[i]<<endl;
-
-  // cout<<data[i+1]<<endl;
-  // cout<<data[i+2]<<endl;
-  // cout<<data[i+3]<<endl;
   
- factorX1=data[i]/maximumX;
- factorY1=data[i+1]/maximumY;
- factorX2=data[i+2]/maximumX;
- factorY2=data[i+3]/maximumY;
-   cout<<"maximumX::"<<maximumX<<endl;
-   cout<<"maximumY::"<<maximumY<<endl;
+ factorX1= (mindData[i]-minX)/(maximumX-minX);
+ factorY1= (mindData[i+1]-minY)/(maximumY-minY);
+ factorX2= (mindData[i+2]-minX)/(maximumX-minX);
+ factorY2= (mindData[i+3]-minY)/(maximumY-minY);
+   //cout<<"maximumX::"<<maximumX<<endl;
+   //cout<<"maximumY::"<<maximumY<<endl;
 
    float X1 = (GAME_WIDTH)* factorX1;
    float Y1 = (GAME_HEIGHT-fixY)* factorY1 * -1 + timeAxisY;
@@ -114,9 +133,9 @@ void ResultsState::render(){
    float X2 = (GAME_WIDTH)* factorX2;
    float Y2 = (GAME_HEIGHT-fixY)* factorY2 * -1 + timeAxisY;
 
-   glVertex3f(X1+axisOffsetX,Y1,0); cout << "First Point\t (" << X1 << " , " << Y1 << ")" << endl;
-   glVertex3f(X2+axisOffsetX,Y2,0); cout << "Second Point\t (" << X2<< " , " << Y2 << ")" << endl;
-   cout << "===========\t" << i << endl;
+   glVertex3f(X1+axisOffsetX,Y1,0); //cout << "First Point\t (" << X1 << " , " << Y1 << ")" << endl;
+   glVertex3f(X2+axisOffsetX,Y2,0); //cout << "Second Point\t (" << X2<< " , " << Y2 << ")" << endl;
+   //cout << "===========\t" << i << endl;
 	}
 	glEnd();
 }

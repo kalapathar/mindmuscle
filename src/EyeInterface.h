@@ -28,6 +28,7 @@ public:
 	CvCapture* capture;
   	cv::Mat frame;
   	int counter;
+  	int blinkCount;
 
 	EyeInterface();//initialize
 	~EyeInterface();

@@ -55,7 +55,7 @@ GameObject::GameObject(const char * filename,bool isBox2d,float w,float h,bool i
 	width = w;
 	height = h;
 	x = X; y = Y; angle = 0;
-	alpha = 1;
+	alpha = 1.0;
 	depth = numObjects;
 	numObjects++;//Increment object counter
 	initDelay = 0;
