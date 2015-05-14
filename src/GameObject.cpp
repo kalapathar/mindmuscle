@@ -105,5 +105,5 @@ void GameObject::draw(){
 		angle = -body->GetAngle();
 	}
 
-	drawTexture(textureID,  x-width/2,y-height/2, width,height,alpha,angle,rFactor,gFactor,bFactor);
+	drawTexture(textureID,  x-width/2 + Xoffset,y-height/2 + Yoffset, width,height,alpha,angle,rFactor,gFactor,bFactor);
 }

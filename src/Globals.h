@@ -12,5 +12,7 @@ extern b2World * world;
 extern MindInterface * mind;
 extern bool MIND_CONNECTED;
 extern bool CAM_CONNECTED;
+extern float Xoffset;
+extern float Yoffset;
 
 #endif // _GLOBALS_

@@ -26,19 +26,22 @@ bool CAM_CONNECTED = true;//Assume true
 string FOLDER;
 b2World * world;
 MindInterface * mind;
+float Xoffset = 0;
+float Yoffset = 0;
 
 ///Include all of our states
 #include "StateMachine.h"
 
 #include "States/SplashState.h"
 #include "States/MenuState.h"
-#include "States/GameState.h"
+#include "States/CalibrateState.h"
 #include "States/ResultsState.h"
 #include "States/AboutState.h"
 #include "States/ReadingState.h"
 
 #include <math.h>
 #include <cstring>
+#include <time.h>
 
 StateMachine fsm;
 
@@ -164,7 +167,7 @@ void init(){
   //Initialize our state machine by registering all of our states
   MenuState * menu = new MenuState;
   SplashState * splash = new SplashState;
-  GameState * game = new GameState;
+  CalibrateState * game = new CalibrateState;
   ReadingState * reading = new ReadingState;
   AboutState * about = new AboutState;
   ResultsState * results = new ResultsState;
@@ -202,8 +205,9 @@ void init(){
      cout << "\t==============" << endl;
   }
 
+  /* initialize random seed: */
+  srand (time(NULL));
 
-  
 
   mind = new MindInterface;
 

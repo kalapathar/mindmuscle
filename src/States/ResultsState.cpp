@@ -178,6 +178,8 @@ void ResultsState::keyboard(unsigned char c, int x, int y){
 		 msg = "trans_Menu";
          sent = 1;
 	}
+
+  
 }
 
 void ResultsState::mouse(int button, int state, int x, int y){
