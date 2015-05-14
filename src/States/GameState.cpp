@@ -17,6 +17,8 @@ GameObject * wallRight;
 GameObject * wallLeft;
 
 EyeInterface * eye2;
+int lastBlinkID;
+
 
 void GameState::onEnter(){
 	testobj = new GameObject("boxCrate",false);
@@ -30,6 +32,12 @@ void GameState::onEnter(){
 	force = new b2Vec2(0,0);
 	eye2 = new EyeInterface;
 
+	testobj->x = GAME_WIDTH/2.0;
+	testobj->y = GAME_HEIGHT/2.0;
+
+	testobj->alpha = 0.5;
+
+	lastBlinkID = 0;
 }
 
 void GameState::onExit(){
@@ -54,31 +62,30 @@ void GameState::update(){
 	eye2->update();
 
 	gameCounter +=0.05;
-	testobj->x = cos(gameCounter) * 200 + GAME_WIDTH/2.0;
-	testobj->y = GAME_HEIGHT - 100;
-	testobj->angle +=0.05;
+
+	testobj->x += (eye2->x-testobj->x) / 30;
+	testobj->y += (eye2->y-testobj->y) / 30;
+	cout << "(" << eye2->x << "," << eye2->y << ")" << endl;
+	
+
+	double focusValue = 0;
+	focusValue = mind->focusValue;
+	double normalizedFocus = (focusValue/100.0) * 10;
+
+	if(focusValue > 30) force->y = box2->body->GetLinearVelocity().y - normalizedFocus;
+	//cout << focusValue << endl;
 
 	
-	if(box2-> y < 200){
-		force->y +=1;
-	} else {
-		force->y -=1;
-	}
-	//cout << eye2->x << endl;
+	if(box2->y <= 0) force->y = box2->body->GetLinearVelocity().y;
 
-
-	if(eye2->x > 200){//45 is the center for pupil. 200 for the face
-		force->x += 1;
-	} else {
-		force->x -= 1;
-	}
-	if(abs(force->x) > 25){
-		force->x = 25 * (abs(force->x)/force->x);
-	}
-
-	
 	box2->body->SetLinearVelocity(*force);
 
+	if(testobj->alpha > 0.5) testobj->alpha += (0.5-testobj->alpha) / 20;
+
+	if(lastBlinkID != eye2->blinkCount){
+		lastBlinkID = eye2->blinkCount;
+		testobj->alpha = 1;
+	}
 }
 
 void GameState::render(){
@@ -100,9 +107,9 @@ void GameState::keyboard(unsigned char c, int x, int y){
 }
 
 void GameState::mouse(int button, int state, int x, int y){
-
+	eye2->mouse(button,state,x,y);
 }
 
 void GameState::mouse_motion(int x,int y){
-
+	eye2->mouse_motion(x,y);
 }

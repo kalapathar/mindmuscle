@@ -18,7 +18,10 @@ public:
 	float width,height;//Dimensions of image
 	b2Body * body;//Pointer to box2d body
 	int depth;//For drawing order
-	int alpha;//Transparency
+	float alpha;//Transparency
+	float rFactor;
+	float gFactor;
+	float bFactor;
 
 	static int numObjects;//Represents the number of objects created
 

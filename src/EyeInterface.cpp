@@ -2,6 +2,13 @@
 #include <iostream>
 using namespace std;
 
+#ifdef MACOSX
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
+
 #include "EyeInterface.h"
 
 const double d_sens=100;
@@ -21,30 +28,57 @@ cv::Mat debugImage;
 cv::Mat skinCrCbHist = cv::Mat::zeros(cv::Size(256, 256), CV_8UC1);
 
 EyeInterface::EyeInterface(){
-	// Load the cascades
-	if( !face_cascade.load( face_cascade_name ) ){ 
-		printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n");  
-	} else{
+  blinkCount=0;
+  counter = 0;
 
-		createCornerKernels();
-		ellipse(skinCrCbHist, cv::Point(113, 155.6), cv::Size(23.4, 15.2),
-		      43.0, 0.0, 360.0, cv::Scalar(255, 255, 255), -1);
+  if(CAM_CONNECTED){
+  	// Load the cascades
+  	if( !face_cascade.load( face_cascade_name ) ){ 
+  		printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n");  
+  	} else{
 
-		// Read the video stream
-		capture = cvCaptureFromCAM( -1 );
-    counter = 0;
-	}
+  		createCornerKernels();
+  		ellipse(skinCrCbHist, cv::Point(113, 155.6), cv::Size(23.4, 15.2),
+  		      43.0, 0.0, 360.0, cv::Scalar(255, 255, 255), -1);
+
+  		// Read the video stream
+  		capture = cvCaptureFromCAM( -1 );
+      
+  	}
+  }
 }
 
 EyeInterface::~EyeInterface(){
-	releaseCornerKernels();
+  if(CAM_CONNECTED){
+    cvReleaseCapture(&capture);
+  	releaseCornerKernels();
+  }
 }
+
+void EyeInterface::mouse(int button, int state, int x, int y){
+  if(!CAM_CONNECTED){
+  if ( GLUT_LEFT_BUTTON == button ) {
+        if ( GLUT_DOWN != state ) {
+          blinkCount++;
+        }
+      }
+    }
+}
+
+void EyeInterface::mouse_motion(int X,int Y){
+  if(!CAM_CONNECTED){
+    x = X;
+    y = Y;
+  }
+}
+
 
 void EyeInterface::update(){
   counter++;
+  if(CAM_CONNECTED){
 	if( capture  && counter > 10) {
     counter = 0;
-    cout << "Reading" << endl;
+    //cout << "Reading" << endl;
       frame = cvQueryFrame( capture );
       // mirror it
       cv::flip(frame, frame, 1);
@@ -53,13 +87,18 @@ void EyeInterface::update(){
       // Apply the classifier to the frame
       if( !frame.empty() ) {
           detectAndDisplay( frame );
+          }
       }
       else {
-        printf(" --(!) No captured frame -- Break!");
+        // printf(" --(!) No captured frame -- Break!");
       }
+  } else {
+    //Set the gaze to the mouse position if no cam is found, and blink is click
 
   }
+
 }
+ 
 
 void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
   cv::Mat faceROI = frame_gray(face);
@@ -110,23 +149,28 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
   rectangle(debugFace,rightLeftCornerRegion,200);
   rectangle(debugFace,rightRightCornerRegion,200);
   // change eye centers to face coordinates
-  rightPupil.x += rightEyeRegion.x;
-  rightPupil.y += rightEyeRegion.y;
-  leftPupil.x += leftEyeRegion.x;
-  leftPupil.y += leftEyeRegion.y;
+  // rightPupil.x += rightEyeRegion.x;
+  // rightPupil.y += rightEyeRegion.y;                                                                                                                                
+  // leftPupil.x += leftEyeRegion.x;                                                                                                                                    
+  // leftPupil.y += leftEyeRegion.y;
+// ((((leftPupil.x-(leftEyeRegion.x+leftEyeRegion.width/2))+(rightPupil.x-(rightEyeRegion.x+rightEyeRegion.width/2)))/2)+57)-
+// (face.x+face.width/2-300)*6
+  gaze_x=((face.x+face.width/2-260)*6)+((((leftPupil.x)+(rightPupil.x))/2)-27)*10;
+  gaze_y=((face.y+face.height/2)-240)*11+100;
+  x = gaze_x;
+  y = gaze_y;
+
+  // double gaze_y=((((leftPupil.y-(leftEyeRegion.y+leftEyeRegion.height/2))+(rightPupil.y-(rightEyeRegion.y+rightEyeRegion.height/2)))/2)+48);
+
+  // gaze_x-=(face.x-240);
+  // gaze_y-=(face.y-150);
+
+  // double d_x=gaze_x-(face.x+face.width/2);
+  // double d_y=gaze_y-(face.y+face.height/2);
 
 
-   gaze_x=(leftPupil.x+rightPupil.x)/2;
-   gaze_y=(leftPupil.y+rightPupil.y)/2;
-
-  gaze_x+=face.x;
-  gaze_y+=face.y;
-
-  double d_x=gaze_x-(face.x+face.width/2);
-  double d_y=gaze_y-(face.y+face.height/2);
-
-  gaze_x+=(d_x*D);
-  gaze_y+=(d_y*D);
+  // gaze_x*=(D);
+  // gaze_y*=(D);
 
 
 
@@ -160,7 +204,15 @@ void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {
 //  cv::Rect roi( cv::Point( 0, 0 ), faceROI.size());
 //  cv::Mat destinationROI = debugImage( roi );
 //  faceROI.copyTo( destinationROI );
- 
+bool blink;
+
+if(abs(rightPupil.y-leftPupil.y)>12 ){
+  blink=true;
+  blinkCount++;
+} 
+else{
+  blink=false;
+}
 
 
 }

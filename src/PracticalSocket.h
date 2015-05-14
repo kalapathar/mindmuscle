@@ -261,6 +261,7 @@ public:
      *   @exception SocketException thrown if unable to create UDP socket
      */
     UDPSocket() throw(SocketException);
+    int getSockDec();
     
     /**
      *   Construct a UDP socket with the given local port

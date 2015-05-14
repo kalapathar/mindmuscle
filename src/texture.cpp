@@ -216,14 +216,14 @@ pair<double, double> rotatePt(double x0, double y0, double x, double y, double t
   return pair<double,double>( x0+xp, y0+yp );
 }
 
-void drawTexture(int texNum, double x, double y, double width, double height, double alpha, double rotationAngle)
+void drawTexture(int texNum, double x, double y, double width, double height, double alpha, double rotationAngle, float rFactor,float gFactor,float bFactor)
 {
   glEnable(GL_TEXTURE_2D);
   int windowID = glutGetWindow();
   glBindTexture(GL_TEXTURE_2D, globalTexture[texNum].win2id[windowID]);
   double widthRatio = globalTexture[texNum].widthRatio;
   double heightRatio = globalTexture[texNum].heightRatio;
-  glColor4f(1.0, 1.0, 1.0, alpha);
+  glColor4f(rFactor,gFactor,bFactor, alpha);
   if ( 0 == rotationAngle ) {
     glBegin(GL_QUADS);
       glTexCoord2f(0, 0);                    glVertex2f(x, y);

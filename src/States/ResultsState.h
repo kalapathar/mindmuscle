@@ -3,6 +3,8 @@
 
 #include "../State.h"
 #include "../Globals.h"
+#include <vector>
+
 /* 
 Our menu state!
 

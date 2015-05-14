@@ -12,15 +12,20 @@ using namespace std;
 #endif
 
 #include "Box2D/Box2D.h"
+#include "MindInterface.h"
 
 #include "texture.h"
 #include "Globals.h"
 
+
 //Declare globals
 int GAME_WIDTH = 1024;
 int GAME_HEIGHT = 720;
+bool MIND_CONNECTED = true;//Assume true
+bool CAM_CONNECTED = true;//Assume true
 string FOLDER;
 b2World * world;
+MindInterface * mind;
 
 ///Include all of our states
 #include "StateMachine.h"
@@ -37,8 +42,7 @@ b2World * world;
 
 StateMachine fsm;
 
-#include "MindInterface.h"
-MindInterface * mind;
+
 
 //Initializing variables
 char programName[] = "Mind Muscle";
@@ -54,6 +58,19 @@ double fps = 1.0/60.0;
 float32 timeStep = 1.0f / 60.0f;
 int32 velocityIterations = 6;
 int32 positionIterations = 2;
+
+string exec(char* cmd) {
+    FILE* pipe = popen(cmd, "r");
+    if (!pipe) return "ERROR";
+    char buffer[128];
+    std::string result = "";
+    while(!feof(pipe)) {
+      if(fgets(buffer, 128, pipe) != NULL)
+        result += buffer;
+    }
+    pclose(pipe);
+    return result;
+}
 
 void MakeShiftMessageSystem(){
   if(fsm.activeState->sent){
@@ -113,24 +130,14 @@ void update(){
 		render();
 
     mind->update();
+
 	} 
 }
 
 void keyboard( unsigned char c, int x, int y )
 {
-  // if(c == 'c'){
-  //   mind->init_connect();
-  // }
-  // if(c == 't'){
-  //   mind->attempt_connect();
-  // }
-  // if(c == 's'){
-  //   mind->get_status();
-  // }
-  // if(c == 'd'){
-  //   mind->disconnect();
-  // }
 
+  mind->keyboard(c,x,y);
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
 
@@ -146,7 +153,11 @@ void mouse_motion(int x,int y)
 }
 
 void onClose(){
+  cout << "NO MIND" << endl;
+  //Close current state
+  fsm.destroy();
   delete mind;
+
 }
 
 void init(){
@@ -173,7 +184,30 @@ void init(){
   b2Vec2 gravity(0.0f,10.0f);
   world = new b2World(gravity,true);
 
+  //Check if the Neurosky usb is connected
+  string output = exec("lsusb");
+  size_t found_mind = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
+  CAM_CONNECTED = (output.find("Webcam") != string::npos ) || (output.find("webcam") != string::npos ) ;//Webcam not found!
+  if (found_mind == string::npos) MIND_CONNECTED = false;//dongle not connected!
+
+  if(!CAM_CONNECTED){
+    cout << "\t=== Warning ===" << endl;
+    cout << "\tNo webcam detected! \n\tReverting to mouse position instead of gaze position" << endl;
+    cout << "\t==============" << endl;
+  }
+
+  if(!MIND_CONNECTED){
+     cout << "\t=== Warning ===" << endl;
+     cout << "\tThe Neurosky headset was not detected! \n\tReverting to keypresses instead of EEG data" << endl;
+     cout << "\t==============" << endl;
+  }
+
+
+
+
   mind = new MindInterface;
+
+
 }
 
 void init_gl_window()
