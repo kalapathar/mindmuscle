@@ -187,9 +187,21 @@ void init(){
   //Check if the Neurosky usb is connected
   string output = exec("lsusb");
   size_t found_mind = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
-  size_t found_cam = output.find("Webcam") || output.find("webcam") ;
+  CAM_CONNECTED = (output.find("Webcam") != string::npos ) || (output.find("webcam") != string::npos ) ;//Webcam not found!
   if (found_mind == string::npos) MIND_CONNECTED = false;//dongle not connected!
-  if (found_cam == string::npos) CAM_CONNECTED = false;//Webcam not found!
+
+  if(!CAM_CONNECTED){
+    cout << "\t=== Warning ===" << endl;
+    cout << "\tNo webcam detected! \n\tReverting to mouse position instead of gaze position" << endl;
+    cout << "\t==============" << endl;
+  }
+
+  if(!MIND_CONNECTED){
+     cout << "\t=== Warning ===" << endl;
+     cout << "\tThe Neurosky headset was not detected! \n\tReverting to keypresses instead of EEG data" << endl;
+     cout << "\t==============" << endl;
+  }
+
 
 
 

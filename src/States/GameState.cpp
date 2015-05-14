@@ -65,7 +65,7 @@ void GameState::update(){
 
 	testobj->x += (eye2->x-testobj->x) / 30;
 	testobj->y += (eye2->y-testobj->y) / 30;
-	//cout << "(" << testobj->x << "," << testobj->y << ")" << endl;
+	cout << "(" << eye2->x << "," << eye2->y << ")" << endl;
 	
 
 	double focusValue = 0;
@@ -107,9 +107,9 @@ void GameState::keyboard(unsigned char c, int x, int y){
 }
 
 void GameState::mouse(int button, int state, int x, int y){
-
+	eye2->mouse(button,state,x,y);
 }
 
 void GameState::mouse_motion(int x,int y){
-
+	eye2->mouse_motion(x,y);
 }

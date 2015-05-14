@@ -16,6 +16,9 @@
 /** Constants **/
 #include "OpenCV/constants.h"
 
+#include "Globals.h"
+
+
 /* 
 Handles everything needed to do eye tracking.
 
@@ -33,6 +36,8 @@ public:
 	EyeInterface();//initialize
 	~EyeInterface();
 	void update();
+	void mouse(int button, int state, int x, int y);
+	void mouse_motion(int x,int y);
 	void findEyes(cv::Mat frame_gray, cv::Rect face);
 	void detectAndDisplay(cv::Mat frame );
 };
