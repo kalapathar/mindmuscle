@@ -1,107 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
 <?xml-stylesheet
-   href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
-   type="text/xsl"?>
+href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+type="text/xsl"?>
 
 <spec>
-   <title>GameObject Specification</title>
-   <header>This is the base class for all objects that are drawn on screen.</header>
-   <credits>Omar Shehata. May 3 2015. Richard Brown. XML version of specification written by Aubrey Barnard, Wednesday, April 10, 2002</credits>
+<title>GameObject Specification</title>
+<header>This is the base class for all objects that are drawn on screen.</header>
+<credits>Omar Shehata. May 3 2015. Richard Brown. XML version of specification written by Aubrey Barnard, Wednesday, April 10, 2002</credits>
 
 <class name="GameObject" visibility="public">
-   <desc>Represents an on-screen object.</desc>
+<desc>Represents an on-screen object.</desc>
 
-   <nosuperclass />
+<nosuperclass />
 
-   <variables>
-      <var name="x" type="float" visibility="public">x coordinate on screen</var>
-      <var name="y" type="float" visibility="public">y coordinate on screen</var>
+<variables>
+<var name="x" type="float" visibility="public">x coordinate on screen</var>
+<var name="y" type="float" visibility="public">y coordinate on screen</var>
 
-      <var name="angle" type="float" visibility="public">The angle at which to draw the image</var>
-      <var name="width" type="float" visibility="public">The width of the image</var>
-      <var name="height" type="float" visibility="public">The height of the image</var>
+<var name="angle" type="float" visibility="public">The angle at which to draw the image</var>
+<var name="width" type="float" visibility="public">The width of the image</var>
+<var name="height" type="float" visibility="public">The height of the image</var>
 
-      <var name="body" type="* b2Body" visibility="public">Pointer to physics body</var> 
-      <var name="texture" type="int" visibility="private">The ID of the texture associated with this object</var>
-      <var name="depth" type="int" visibility="private">An ID representing the order that objects get drawn on screen </var>
-      <var name="numObjects" type="static int" visibility="public">Static variable keeping track of how many objects were created</var>
-   </variables>
+<var name="body" type="* b2Body" visibility="public">Pointer to physics body</var> 
+<var name="texture" type="int" visibility="private">The ID of the texture associated with this object</var>
+<var name="depth" type="int" visibility="private">An ID representing the order that objects get drawn on screen </var>
+<var name="numObjects" type="static int" visibility="public">Static variable keeping track of how many objects were created</var>
+</variables>
 
-   <constructors-list>
-      <constructor visibility="public">
-         <desc>Regular constructor.</desc>
+<constructors-list>
+<constructor visibility="public">
+<desc>Regular constructor.</desc>
 
-         <arguments>
-            <arg name="filename" type="String">The filename to the image to be associated with this object</arg>
-            <arg name="attachPhysics" type="Boolean">Whether to attach a physics body</arg>
-         </arguments>
+<arguments>
+<arg name="filename" type="String">The filename to the image to be associated with this object</arg>
+<arg name="attachPhysics" type="Boolean">Whether to attach a physics body</arg>
+</arguments>
 
-         <statechange>
-            Initializes a GameObject by loading the texture given by filename,
-            sets x and y to 0, creates a physics body if attachPhysics is true,
-            and assigns it to body, otherwise assign it 0. Assigns width and height a default of 100.
-            Sets depth to numObjects and increments numObjects by 1.
-         </statechange>
-      </constructor>
+<statechange>
+Initializes a GameObject by loading the texture given by filename,
+sets x and y to 0, creates a physics body if attachPhysics is true,
+and assigns it to body, otherwise assign it 0. Assigns width and height a default of 100.
+Sets depth to numObjects and increments numObjects by 1.
+</statechange>
+</constructor>
 
-   </constructors-list>
+</constructors-list>
 
-   <destructor>
-      <desc>Destructor.</desc>
+<destructor>
+<desc>Destructor.</desc>
 
-      <statechange>
-         Deallocate the texture created and the physics body if exists.
-      </statechange>
-   </destructor>
+<statechange>
+Deallocate the texture created and the physics body if exists.
+</statechange>
+</destructor>
 
-   <methods-list>
-      
-      <method name="setDepth" returntype="void">
-         <desc>Changes the depth of the object</desc>
+<methods-list>
 
-         <arguments>
-            <arg name="d" type="int">An integer representing depth</arg>
-         </arguments>
+<method name="setDepth" returntype="void">
+<desc>Changes the depth of the object</desc>
 
-         <statechange>
-            Sets depth to d
-         </statechange>
+<arguments>
+<arg name="d" type="int">An integer representing depth</arg>
+</arguments>
 
-         <return>
-            No return value.
-         </return>
-      </method>
+<statechange>
+Sets depth to d
+</statechange>
 
-      <method name="draw" returntype="void">
-         <desc>Draws the object to screen</desc>
+<return>
+No return value.
+</return>
+</method>
 
-        <noarguments />
+<method name="draw" returntype="void">
+<desc>Draws the object to screen</desc>
 
-         <statechange>
-            Handles all the OpenGL code needed to draw this object at the correct location, angle and scale.
-         </statechange>
+<noarguments />
 
-         <return>
-            No return value.
-         </return>
-      </method>
+<statechange>
+Handles all the OpenGL code needed to draw this object at the correct location, angle and scale.
+</statechange>
 
-      <method name="update" returntype="void">
-         <desc>Binds the object to the physics body</desc>
+<return>
+No return value.
+</return>
+</method>
 
-        <noarguments />
+<method name="update" returntype="void">
+<desc>Binds the object to the physics body</desc>
 
-         <statechange>
-            Sets the x,y and angle to follow the attached physics body.
-         </statechange>
+<noarguments />
 
-         <return>
-            No return value.
-         </return>
-      </method>
+<statechange>
+Sets the x,y and angle to follow the attached physics body.
+</statechange>
 
-   </methods-list>
+<return>
+No return value.
+</return>
+</method>
+
+</methods-list>
 
 </class>
 
