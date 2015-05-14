@@ -40,7 +40,7 @@ void ResultsState::onEnter(){
     mindData.push_back(x);
     mindData.push_back(y);
 
-    reading_counter2 = x;
+    reading_counter2 = x + 1;
   }
 
 
@@ -59,8 +59,12 @@ void ResultsState::onEnter(){
 }
 
 void ResultsState::onExit(){
+
 	outFile->close();
   delete outFile;
+
+  //Empty the array
+  mindData.clear();
 }
 
 ResultsState::ResultsState(){
@@ -73,7 +77,8 @@ void ResultsState::update(){
     reading_counter = 0;
     int X = reading_counter2;
     int Y = mind->focusValue;
-    cout << "Focus\t" << Y << endl;
+    // cout << "X\t" << X << endl;
+    // cout << "Focus\t" << Y << endl;
     (*outFile) << endl;
     (*outFile) << X;
     (*outFile) << " ";
@@ -104,7 +109,7 @@ void ResultsState::render(){
 	drawTexture(results,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height,1.0,0.0,1.0,1.0,1.0); 
 
    glLineWidth(2);
-   glColor3f(0.0, 0.0, 0.0);
+   glColor3f(0/255.0, 208/255.0, 255/255.0);//Our graph's colors
    glBegin(GL_LINES);
 
    int axisOffsetX = 50;
