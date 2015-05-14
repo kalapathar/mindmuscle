@@ -12,6 +12,7 @@ using namespace std;
 #endif
 
 #include <math.h>
+#include "../GameObject.h"
 
 int results;
 
@@ -23,10 +24,17 @@ ofstream * outFile;
 int reading_counter;
 int reading_counter2;
 std::vector<int> mindData;
+int focus_average;
+
+GameObject * focusText;
 
 
 void ResultsState::onEnter(){
-	results = loadTexture("Images/results.pam");
+
+  focusText = new GameObject("boxCrate",false);
+  focusText->alpha = 0;
+
+	results = loadTexture("Images/Results_Header.pam");
 
   //Set up output
   outFile = new ofstream("data",std::ios_base::app);
@@ -48,13 +56,16 @@ void ResultsState::onEnter(){
     f.close();
    
    //Get min/max
+    focus_average = 0;
     for(int i=0;i<mindData.size()-1;i+=2){
       if(mindData[i] > maximumX) maximumX = mindData[i];
       if(mindData[i+1] > maximumY) maximumY = mindData[i+1];
 
       if(mindData[i] < minX) minX = mindData[i];
       if(mindData[i+1] < minY) minY = mindData[i+1];
-    }  
+      focus_average += mindData[i+1];
+    } 
+    focus_average /= (mindData.size()/2);
 
 }
 
@@ -88,13 +99,16 @@ void ResultsState::update(){
     reading_counter2++;
 
     //Get min/max
+    focus_average = 0;
     for(int i=0;i<mindData.size()-1;i+=2){
       if(mindData[i] > maximumX) maximumX = mindData[i];
       if(mindData[i+1] > maximumY) maximumY = mindData[i+1];
 
       if(mindData[i] < minX) minX = mindData[i];
       if(mindData[i+1] < minY) minY = mindData[i+1];
+      focus_average += mindData[i+1];
     }
+    focus_average /= (mindData.size()/2);
     
   }
   reading_counter++;
@@ -104,9 +118,7 @@ void ResultsState::update(){
 }
 
 void ResultsState::render(){
-	double width = 427;
-	double height = 147;
-	drawTexture(results,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height,1.0,0.0,1.0,1.0,1.0); 
+
 
    glLineWidth(2);
    glColor3f(0/255.0, 208/255.0, 255/255.0);//Our graph's colors
@@ -147,6 +159,17 @@ void ResultsState::render(){
    //cout << "===========\t" << i << endl;
 	}
 	glEnd();
+
+  focusText->drawText(60,170,"Focus %");
+  focusText->drawText(GAME_WIDTH - 200,GAME_HEIGHT-20,"Time /s");
+  double width = 807;
+  double height = 115;
+  drawTexture(results,  GAME_WIDTH/2-width/2,5, width,height,1.0,0.0,1.0,1.0,1.0); 
+  glColor3f(0/255.0, 0/255.0, 0/255.0);
+  string focusDisplay = string("Current Focus : ") + std::to_string(mind->focusValue);
+  string focus_avg_Display = string("Current Average : ") + std::to_string(focus_average);
+  focusText->drawText(GAME_WIDTH/2-100,150,focusDisplay.c_str());
+  focusText->drawText(GAME_WIDTH/2-100,170,focus_avg_Display.c_str());
 }
 void ResultsState::keyboard(unsigned char c, int x, int y){
 
@@ -155,6 +178,8 @@ void ResultsState::keyboard(unsigned char c, int x, int y){
 		 msg = "trans_Menu";
          sent = 1;
 	}
+
+  
 }
 
 void ResultsState::mouse(int button, int state, int x, int y){

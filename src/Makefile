@@ -2,7 +2,7 @@ OPTS = -Wall -g -std=c++11
 LIBS = -lGL -lglut -lm libBox2D.a -rdynamic /usr/lib64/libopencv_videostab.so.2.4.7 /usr/lib64/libopencv_video.so.2.4.7 /usr/lib64/libopencv_ts.so.2.4.7 /usr/lib64/libopencv_superres.so.2.4.7 /usr/lib64/libopencv_stitching.so.2.4.7 /usr/lib64/libopencv_photo.so.2.4.7 /usr/lib64/libopencv_ocl.so.2.4.7 /usr/lib64/libopencv_objdetect.so.2.4.7 /usr/lib64/libopencv_ml.so.2.4.7 /usr/lib64/libopencv_legacy.so.2.4.7 /usr/lib64/libopencv_imgproc.so.2.4.7 /usr/lib64/libopencv_highgui.so.2.4.7 /usr/lib64/libopencv_flann.so.2.4.7 /usr/lib64/libopencv_features2d.so.2.4.7 /usr/lib64/libopencv_core.so.2.4.7 /usr/lib64/libopencv_contrib.so.2.4.7 /usr/lib64/libopencv_calib3d.so.2.4.7 /usr/lib64/libopencv_video.so.2.4.7 /usr/lib64/libopencv_objdetect.so.2.4.7 /usr/lib64/libopencv_ml.so.2.4.7 /usr/lib64/libopencv_features2d.so.2.4.7 /usr/lib64/libopencv_highgui.so.2.4.7 /usr/lib64/libopencv_imgproc.so.2.4.7 /usr/lib64/libopencv_flann.so.2.4.7 /usr/lib64/libopencv_core.so.2.4.7 
 
 STATE_PATH = States/
-STATES = $(STATE_PATH)MenuState.o $(STATE_PATH)GameState.o $(STATE_PATH)SplashState.o $(STATE_PATH)AboutState.o $(STATE_PATH)ResultsState.o $(STATE_PATH)ReadingState.o
+STATES = $(STATE_PATH)MenuState.o $(STATE_PATH)CalibrateState.o $(STATE_PATH)SplashState.o $(STATE_PATH)AboutState.o $(STATE_PATH)ResultsState.o $(STATE_PATH)ReadingState.o
 EYELIBS = OpenCV/helpers.o OpenCV/findEyeCorner.o OpenCV/findEyeCenter.o
 PYLIBS = 
 
@@ -29,8 +29,8 @@ MindMuscle.o: Globals.h MindMuscle.cpp
 $(STATE_PATH)MenuState.o: $(STATE_PATH)MenuState.h $(STATE_PATH)MenuState.cpp
 	g++ -g -Wall -std=c++11 -o $(STATE_PATH)MenuState.o -c $(STATE_PATH)MenuState.cpp
 
-$(STATE_PATH)GameState.o: $(STATE_PATH)GameState.h $(STATE_PATH)GameState.cpp
-	g++ -g -Wall -std=c++11 -o $(STATE_PATH)GameState.o -c $(STATE_PATH)GameState.cpp
+$(STATE_PATH)CalibrateState.o: $(STATE_PATH)CalibrateState.h $(STATE_PATH)CalibrateState.cpp
+	g++ -g -Wall -std=c++11 -o $(STATE_PATH)CalibrateState.o -c $(STATE_PATH)CalibrateState.cpp
 
 $(STATE_PATH)SplashState.o: $(STATE_PATH)SplashState.h $(STATE_PATH)SplashState.cpp
 	g++ -g -Wall -std=c++11 -o $(STATE_PATH)SplashState.o -c $(STATE_PATH)SplashState.cpp

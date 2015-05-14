@@ -120,7 +120,8 @@ void MindInterface::sendMSG(const char * msg){
 void MindInterface::keyboard(unsigned char c, int x, int y){
 	if(!MIND_CONNECTED){
 		//If any key pressed, increase focus by 2
-		if(focusValue < 100) focusValue += 5;
+		focusValue += 5;
+		if(focusValue > 100) focusValue = 100; 
 	}
 }
 

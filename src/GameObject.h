@@ -4,6 +4,13 @@
 #include "Box2D/Box2D.h"
 #include "Globals.h"
 
+#ifdef MACOSX
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
+
 /* 
 Base class for every drawable on screen
 
@@ -36,6 +43,7 @@ public:
 	void draw();//Render at the correct position
 	//Helper functions
 	b2Body * createBox(float w,float h,bool bodyType);
+	void drawText(double x, double y, const char *text);
 
 	
 };
