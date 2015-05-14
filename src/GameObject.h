@@ -19,6 +19,9 @@ public:
 	b2Body * body;//Pointer to box2d body
 	int depth;//For drawing order
 	float alpha;//Transparency
+	float rFactor;
+	float gFactor;
+	float bFactor;
 
 	static int numObjects;//Represents the number of objects created
 

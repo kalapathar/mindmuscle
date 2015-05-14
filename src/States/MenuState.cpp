@@ -108,15 +108,15 @@ void MenuState::update(){
 
 void MenuState::render(){
 	if (calibrateB.active) {
-        drawTexture(calibrateT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(calibrateT, OffsetX,OffsetY, 1024, 512,1.0,0.0,1.0,1.0,1.0); // texID,   x,y,    width, height
     } else if (measureB.active) {
-        drawTexture(measureT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(measureT, OffsetX,OffsetY, 1024, 512,1.0,0.0,1.0,1.0,1.0);  // texID,   x,y,    width, height
     } else if (aboutB.active) {
-        drawTexture(aboutT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(aboutT, OffsetX,OffsetY, 1024, 512,1.0,0.0,1.0,1.0,1.0);  // texID,   x,y,    width, height
     } else if (resultsB.active) {
-        drawTexture(resultsT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(resultsT, OffsetX,OffsetY, 1024, 512,1.0,0.0,1.0,1.0,1.0);  // texID,   x,y,    width, height
     } else {
-        drawTexture(menuT, OffsetX,OffsetY, 1024, 512); // texID,   x,y,    width, height
+        drawTexture(menuT, OffsetX,OffsetY, 1024, 512,1.0,0.0,1.0,1.0,1.0);  // texID,   x,y,    width, height
     }
 }
 

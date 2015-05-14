@@ -34,7 +34,7 @@ void ReadingState::update(){
 void ReadingState::render(){
 	double width = 485;
 	double height = 147;
-	drawTexture(reading,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height);
+	drawTexture(reading,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height,1.0,0.0,1.0,1.0,1.0); 
 }
 
 void ReadingState::keyboard(unsigned char c, int x, int y){

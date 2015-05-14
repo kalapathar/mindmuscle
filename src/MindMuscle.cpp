@@ -22,6 +22,7 @@ using namespace std;
 int GAME_WIDTH = 1024;
 int GAME_HEIGHT = 720;
 bool MIND_CONNECTED = true;//Assume true
+bool CAM_CONNECTED = true;//Assume true
 string FOLDER;
 b2World * world;
 MindInterface * mind;
@@ -128,7 +129,7 @@ void update(){
     //Render everything
 		render();
 
-    if(MIND_CONNECTED)  mind->update();
+    mind->update();
 
 	} 
 }
@@ -136,7 +137,7 @@ void update(){
 void keyboard( unsigned char c, int x, int y )
 {
 
-
+  mind->keyboard(c,x,y);
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
 
@@ -155,7 +156,7 @@ void onClose(){
   cout << "NO MIND" << endl;
   //Close current state
   fsm.destroy();
-  if(MIND_CONNECTED) delete mind;
+  delete mind;
 
 }
 
@@ -185,10 +186,14 @@ void init(){
 
   //Check if the Neurosky usb is connected
   string output = exec("lsusb");
-  size_t found = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
-  if (found == string::npos) MIND_CONNECTED = false;//dongle not connected!
+  size_t found_mind = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
+  size_t found_cam = output.find("Webcam") || output.find("webcam") ;
+  if (found_mind == string::npos) MIND_CONNECTED = false;//dongle not connected!
+  if (found_cam == string::npos) CAM_CONNECTED = false;//Webcam not found!
 
-  if(MIND_CONNECTED) mind = new MindInterface;
+
+
+  mind = new MindInterface;
 
 
 }

@@ -69,14 +69,11 @@ ResultsState::ResultsState(){
 
 
 void ResultsState::update(){
-	if(reading_counter >= 30 && MIND_CONNECTED){
+	if(reading_counter >= 30){
     reading_counter = 0;
     int X = reading_counter2;
-    int Y = sin(reading_counter2*0.1) * 200;
-    if(MIND_CONNECTED) {
-      Y = mind->focusValue;
-      cout << "Focus\t" << Y << endl;
-    }
+    int Y = mind->focusValue;
+    cout << "Focus\t" << Y << endl;
     (*outFile) << endl;
     (*outFile) << X;
     (*outFile) << " ";
@@ -93,8 +90,7 @@ void ResultsState::update(){
       if(mindData[i] < minX) minX = mindData[i];
       if(mindData[i+1] < minY) minY = mindData[i+1];
     }
-    cout << "size" << mindData.size() << endl;
-    cout << maximumY << endl;
+    
   }
   reading_counter++;
 
@@ -105,7 +101,7 @@ void ResultsState::update(){
 void ResultsState::render(){
 	double width = 427;
 	double height = 147;
-	drawTexture(results,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height);
+	drawTexture(results,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height,1.0,0.0,1.0,1.0,1.0); 
 
    glLineWidth(2);
    glColor3f(0.0, 0.0, 0.0);

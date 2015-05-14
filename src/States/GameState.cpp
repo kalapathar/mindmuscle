@@ -69,7 +69,7 @@ void GameState::update(){
 	
 
 	double focusValue = 0;
-	if(MIND_CONNECTED) focusValue = mind->focusValue;
+	focusValue = mind->focusValue;
 	double normalizedFocus = (focusValue/100.0) * 10;
 
 	if(focusValue > 30) force->y = box2->body->GetLinearVelocity().y - normalizedFocus;

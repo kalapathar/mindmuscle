@@ -59,6 +59,9 @@ GameObject::GameObject(const char * filename,bool isBox2d,float w,float h,bool i
 	depth = numObjects;
 	numObjects++;//Increment object counter
 	initDelay = 0;
+	rFactor = 1.0;
+	gFactor = 1.0;
+	bFactor = 1.0;
 
 
 	if(isBox2d){
@@ -92,5 +95,5 @@ void GameObject::draw(){
 		angle = -body->GetAngle();
 	}
 
-	drawTexture(textureID,  x-width/2,y-height/2, width,height,alpha,angle);
+	drawTexture(textureID,  x-width/2,y-height/2, width,height,alpha,angle,rFactor,gFactor,bFactor);
 }

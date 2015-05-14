@@ -5,6 +5,7 @@
 
 #include "PracticalSocket.h" // For UDPSocket and SocketException
 
+
 /* 
 This class handles everything needed to 
 create a way to communicate with the 
@@ -25,6 +26,7 @@ private:
 
      int counter ;
      int initPython;
+     int fake_counter;
     
 
      int msgID;
@@ -40,6 +42,7 @@ public:
      MindInterface();
      ~MindInterface();
      void update();
+     void keyboard(unsigned char c, int x, int y);
      void sendMSG(const char * msg);
 
 };
