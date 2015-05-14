@@ -39,6 +39,7 @@ EyeInterface::EyeInterface(){
 }
 
 EyeInterface::~EyeInterface(){
+  cvReleaseCapture(&capture);
 	releaseCornerKernels();
 }
 

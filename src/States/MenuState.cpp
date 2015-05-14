@@ -19,6 +19,7 @@ int menuT, calibrateT, measureT, aboutT, resultsT; // Texture IDs
 int OffsetX = -20;
 int OffsetY = 110;
 
+
 // Button rects
 struct Button {
     int w, h, x, y;

@@ -46,7 +46,15 @@ void ResultsState::onEnter(){
 
   
     f.close();
-     
+   
+   //Get min/max
+    for(int i=0;i<mindData.size()-1;i+=2){
+      if(mindData[i] > maximumX) maximumX = mindData[i];
+      if(mindData[i+1] > maximumY) maximumY = mindData[i+1];
+
+      if(mindData[i] < minX) minX = mindData[i];
+      if(mindData[i+1] < minY) minY = mindData[i+1];
+    }  
 
 }
 
@@ -61,7 +69,7 @@ ResultsState::ResultsState(){
 
 
 void ResultsState::update(){
-	if(reading_counter >= 30){
+	if(reading_counter >= 30 && MIND_CONNECTED){
     reading_counter = 0;
     int X = reading_counter2;
     int Y = sin(reading_counter2*0.1) * 200;
