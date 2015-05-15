@@ -11,6 +11,9 @@ GameObject * level_cursorobj;
 GameObject * level_box;
 GameObject * level_ground;
 GameObject * level_ceiling;
+GameObject * ledgeOne;
+GameObject * ledgeTwo;
+
 float level_gameCounter = 0;
 b2Vec2 * level_force;
 
@@ -79,11 +82,68 @@ void destroyLevelOne(){
 }
 
 void initLevelTwo(){
+	levelStats[3] = 0;//Average focus
+	levelStats[4] = 0;//Highest focus
+	levelStats[5] = 0;//Time to complete the level
+	totalCount = 0;
 
+	instructions = new GameObject("leveltwo_instructions",false,379,35); level_objectArray.push_back(instructions);
+	instructions->x = GAME_WIDTH/2;
+	instructions->y = 100;
+
+	level_ground = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,GAME_HEIGHT); level_objectArray.push_back(level_ground);
+	level_ceiling = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,0); level_objectArray.push_back(level_ceiling);
+	level_wallRight = new GameObject("boxItem",true,10,GAME_HEIGHT,true,0,GAME_HEIGHT/2); level_objectArray.push_back(level_wallRight);
+	level_wallLeft = new GameObject("boxItem",true,10,GAME_HEIGHT,true,GAME_WIDTH,GAME_HEIGHT/2); level_objectArray.push_back(level_wallLeft);
+
+	level_box = new GameObject("boxCrate_double",true,100,100,false,50,GAME_HEIGHT/2 +100); level_objectArray.push_back(level_box);
+	level_boxArray.push_back(level_box);
+
+	//Create the ledges
+	ledgeOne = new GameObject("boxItem",true,200,10,true,100,GAME_HEIGHT/2 + 200); level_objectArray.push_back(ledgeOne);
+	ledgeTwo = new GameObject("boxItem",true,200,10,true,GAME_WIDTH - 100,GAME_HEIGHT/2 + 200); level_objectArray.push_back(ledgeTwo);
 }
 
 void destroyLevelTwo(){
+	levelStats[3] /= totalCount;
 
+	delete level_box;
+	delete level_ground;
+	delete level_ceiling;
+	delete level_wallLeft;
+	delete level_wallRight;
+	delete instructions;
+	delete ledgeOne;
+	delete ledgeTwo;
+	level_objectArray.clear();
+	level_boxArray.clear();
+
+	level_objectArray.push_back(level_cursorobj);
+}
+
+void initLevelThree(){
+	levelStats[6] = 0;//Average focus
+	levelStats[7] = 0;//Highest focus
+	levelStats[8] = 0;//Num of bombs exploded
+	totalCount = 0;
+
+	instructions = new GameObject("levelthree_instructions",false,379,35); level_objectArray.push_back(instructions);
+	instructions->x = GAME_WIDTH/2;
+	instructions->y = 100;
+
+	//Resuze the cursor
+	level_cursorobj->width = 50;
+	level_cursorobj->height = 50;
+}
+
+void destroyLevelThree(){
+	levelStats[6] /= totalCount;
+
+	delete instructions;
+	level_objectArray.clear();
+	level_boxArray.clear();
+
+	level_objectArray.push_back(level_cursorobj);
 }
 
 void LevelOne::onEnter(){
@@ -215,10 +275,38 @@ void LevelOne::update(){
 
 	if(level == 2){
 		//Level two update
+
+		//Calculate the stats
+		totalCount ++;
+		levelStats[0] += focusValue;
+		if(focusValue > levelStats[1]) levelStats[1] = focusValue;
+		levelStats[2]++;
+
+		//If they get to the other ledge, or close enough, go to the next level
+		int dy = 504 - level_boxArray[0]->y;
+		int dx = 910 - level_boxArray[0]->x;
+		int distance = sqrt(dx * dx + dy * dy);
+		if(distance < 50){
+			level++;
+			destroyLevelTwo();
+			initLevelThree();
+		}
+
 	}
 
 	if(level == 3){
 		//Level three update
+
+		//Spawn a bomb every second
+		if(levelone_timer < 0){
+			levelone_timer = 60;
+		}
+
+		//Check if cursor is hitting any bomb with a high enough focus
+			//Add explosion and do screenshake
+			//Increase count
+
+		//After thirty seconds, go to the final screen
 	}
 }
 
@@ -231,6 +319,11 @@ void LevelOne::render(){
 		string timeText = "Time left : " + std::to_string(levelone_timer/60);
 		level_box->drawText(GAME_WIDTH/2-70,170,timeText.c_str());
 	}
+	if(level == 3){
+		glColor3f(0/255.0, 0/255.0, 0/255.0);
+		string bombText = "Bombs destroyed : " + std::to_string(levelStats[8]);
+		instructions->drawText(GAME_WIDTH/2-70,170,bombText.c_str());
+	}
 }
 
 void LevelOne::keyboard(unsigned char c, int x, int y){
@@ -241,10 +334,10 @@ void LevelOne::keyboard(unsigned char c, int x, int y){
          sent = 1;
 	}
 
-	if(c == 's'){
-    	//Screenshake!
-    	level_shakePower = 30;
-  	}
+	// if(c == 's'){
+ //    	//Screenshake!
+ //    	level_shakePower = 30;
+ //  	}
 
  }
 
