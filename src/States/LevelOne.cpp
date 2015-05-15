@@ -26,6 +26,8 @@ int level_lastBlinkID;
 std::vector<GameObject *> level_objectArray;
 std::vector<GameObject *> level_boxArray;
 
+std::vector<GameObject *> bombArray;
+std::vector<GameObject *> explodeArray;
 
 float level_shakePower = 0;
 int level_prevCursorX;
@@ -41,6 +43,8 @@ GameObject * instructions;
 
 int levelStats[9];
 int totalCount;
+
+
 
 void initLevelOne(){
 
@@ -122,6 +126,7 @@ void destroyLevelTwo(){
 }
 
 void initLevelThree(){
+	levelone_timer = 0;
 	levelStats[6] = 0;//Average focus
 	levelStats[7] = 0;//Highest focus
 	levelStats[8] = 0;//Num of bombs exploded
@@ -132,8 +137,8 @@ void initLevelThree(){
 	instructions->y = 100;
 
 	//Resuze the cursor
-	level_cursorobj->width = 50;
-	level_cursorobj->height = 50;
+	level_cursorobj->width = 100;
+	level_cursorobj->height = 100;
 }
 
 void destroyLevelThree(){
@@ -236,7 +241,7 @@ void LevelOne::update(){
 		
 		if(activelevel_box->y > (1.0 - normalizedFocus) * GAME_HEIGHT) level_force->y = activelevel_box->body->GetLinearVelocity().y - 3;
                 else level_force->y = 0;
-		
+
 		//Move left/right with gaze
 		int Xspeed = 1;
 		if(level_eye2->x > activelevel_box->x) level_force->x += Xspeed; else  level_force->x -= Xspeed; 
@@ -272,7 +277,8 @@ void LevelOne::update(){
 		if(levelone_timer <= 0){
 			level++;
 			destroyLevelOne();
-			initLevelTwo();
+			initLevelThree(); level = 3;
+			//initLevelTwo();
 		}
 	}
 
@@ -303,11 +309,42 @@ void LevelOne::update(){
 		//Spawn a bomb every second
 		if(levelone_timer < 0){
 			levelone_timer = 60;
+			GameObject * bomb = new GameObject("bomb",false,64,64); level_objectArray.push_back(bomb);
+			bomb->x = rand() % GAME_WIDTH;
+			bomb->y = -50;
+			bombArray.push_back(bomb);
+		}
+		levelone_timer--;
+
+
+		//Bomb update
+		for(int i=0;i<bombArray.size();i++){
+			bombArray[i]->y +=2;
+			bombArray[i]->angle += 0.05;
+			//Check if cursor is hitting any bomb with a high enough focus
+			float dy = bombArray[i]->y - level_cursorobj->y;
+			float dx = bombArray[i]->x - level_cursorobj->x;
+			float distance = sqrt(dx * dx + dy * dy);
+			if(distance < 50 && focusValue > 50){
+				//Add explosion and do screenshake
+				//Increase count
+				bombArray[i]->alpha = 0;
+				
+				levelStats[8]++;
+				level_shakePower = 30;
+				GameObject * explode = new GameObject("explode",false,195,245); level_objectArray.push_back(explode);
+				explode->x = bombArray[i]->x;
+				explode->y = bombArray[i]->y;
+				explodeArray.push_back(explode);
+				bombArray[i]->x = -100;
+			}
 		}
 
-		//Check if cursor is hitting any bomb with a high enough focus
-			//Add explosion and do screenshake
-			//Increase count
+		for(int i=0;i<explodeArray.size();i++){
+			explodeArray[i]->alpha -= 0.02;
+		}
+
+		
 
 		//After thirty seconds, go to the final screen
 	}
