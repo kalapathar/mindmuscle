@@ -44,6 +44,8 @@ GameObject * instructions;
 int levelStats[9];
 int totalCount;
 
+int TIMER_COUNT = 60 *2;//60 * 30;
+
 
 
 void initLevelOne(){
@@ -53,7 +55,7 @@ void initLevelOne(){
 	levelStats[2] = 0;//Time above 50%
 	totalCount = 0;
 
-	levelone_timer = 60 * 30;
+	levelone_timer = TIMER_COUNT;
 
 	level_box = new GameObject("boxCrate_double",true,100,100,false,GAME_WIDTH/2+50,200); level_objectArray.push_back(level_box);
 	level_ground = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,GAME_HEIGHT); level_objectArray.push_back(level_ground);
@@ -106,6 +108,7 @@ void initLevelTwo(){
 	//Create the ledges
 	ledgeOne = new GameObject("boxItem",true,200,10,true,100,GAME_HEIGHT/2 + 200); level_objectArray.push_back(ledgeOne);
 	ledgeTwo = new GameObject("boxItem",true,200,10,true,GAME_WIDTH - 100,GAME_HEIGHT/2 + 200); level_objectArray.push_back(ledgeTwo);
+	activelevel_box = 0;
 }
 
 void destroyLevelTwo(){
@@ -141,6 +144,7 @@ void initLevelThree(){
 	//Resuze the cursor
 	level_cursorobj->width = 100;
 	level_cursorobj->height = 100;
+	activelevel_box = 0;
 }
 
 void destroyLevelThree(){
@@ -157,6 +161,7 @@ void initFinalScreen(){
 	instructions->alpha = 0;//Using instructions just to draw the text
 
 	level_cursorobj->alpha = 0;
+	activelevel_box = 0;
 }
 
 void LevelOne::onEnter(){
@@ -313,11 +318,14 @@ void LevelOne::update(){
 
 	if(level == 3){
 		//Level three update
-
+		//cout << "BEGIN UPDATE" << endl;
+ 
 		//Calculate the stats
 		levelStats[6] += focusValue;
 		totalCount ++;
 		if(focusValue > levelStats[7]) levelStats[7] = focusValue;
+
+		//cout << "timer\t" << levelone_timer << endl;
 
 		//Spawn a bomb every second
 		if(levelone_timer < 0){
@@ -330,6 +338,8 @@ void LevelOne::update(){
 		}
 		levelone_timer--;
 
+
+		//cout << "BOMB UPDATE" << endl;
 
 		//Bomb update
 		for(int i=bombArray.size()-1;i>=0;i--){
@@ -395,7 +405,6 @@ void LevelOne::update(){
 
 		//After thirty seconds, go to the final screen
 		if(level_gameCounter > 30){
-		//if(level_gameCounter > 2){
 			destroyLevelThree();
 			initFinalScreen();
 			level++;
