@@ -53,7 +53,7 @@ void initLevelOne(){
 	levelStats[2] = 0;//Time above 50%
 	totalCount = 0;
 
-	levelone_timer = 60 * 30;
+	levelone_timer = 60;//60 * 30;
 
 	level_box = new GameObject("boxCrate_double",true,100,100,false,GAME_WIDTH/2+50,200); level_objectArray.push_back(level_box);
 	level_ground = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,GAME_HEIGHT); level_objectArray.push_back(level_ground);
@@ -131,6 +131,8 @@ void initLevelThree(){
 	levelStats[7] = 0;//Highest focus
 	levelStats[8] = 0;//Num of bombs exploded
 	totalCount = 0;
+	level_gameCounter = 0;
+
 
 	instructions = new GameObject("levelthree_instructions",false,379,35); level_objectArray.push_back(instructions);
 	instructions->x = GAME_WIDTH/2;
@@ -176,6 +178,9 @@ void LevelOne::onExit(){
 	for(int i=0;i<level_objectArray.size();i++) delete level_objectArray[i];
 	level_objectArray.clear();
 	level_boxArray.clear();
+
+	bombArray.clear();
+	explodeArray.clear();
 
 	delete level_force;
 	delete level_eye2;
@@ -312,18 +317,20 @@ void LevelOne::update(){
 			bomb->x = rand() % GAME_WIDTH;
 			bomb->y = -50;
 			bombArray.push_back(bomb);
+			level_gameCounter ++;
 		}
 		levelone_timer--;
 
 
 		//Bomb update
-		for(int i=0;i<bombArray.size();i++){
+		for(int i=bombArray.size()-1;i>=0;i--){
 			bombArray[i]->y +=2;
 			bombArray[i]->angle += 0.05;
 			//Check if cursor is hitting any bomb with a high enough focus
 			float dy = bombArray[i]->y - level_cursorobj->y;
 			float dx = bombArray[i]->x - level_cursorobj->x;
 			float distance = sqrt(dx * dx + dy * dy);
+			bool removeBomb = false;
 			if(distance < 50 && focusValue > 50){
 				//Add explosion and do screenshake
 				//Increase count
@@ -337,15 +344,51 @@ void LevelOne::update(){
 				explodeArray.push_back(explode);
 				bombArray[i]->x = -100;
 			}
+
+			//Remove bomb if it's outside the screen
+			if(bombArray[i]->y > GAME_HEIGHT + bombArray[i]->height){
+				removeBomb = true;
+			}
+
+			if(removeBomb){
+				delete bombArray[i];
+				
+				//Remove it from object array too
+				for(int j=0;j<level_objectArray.size();j++){
+					if(level_objectArray[j] == bombArray[i]) {
+						level_objectArray.erase(level_objectArray.begin()+j);
+						break;
+					}
+				}
+				bombArray.erase(bombArray.begin()+i);//Remove it from the array
+			}
 		}
 
 		for(int i=0;i<explodeArray.size();i++){
 			explodeArray[i]->alpha -= 0.02;
+			//If the alpha is 0, remove it
+			if(explodeArray[i]->alpha <= 0){
+				delete explodeArray[i];
+				
+				//And from the object array
+				for(int j=0;j<level_objectArray.size();j++){
+					if(level_objectArray[j] == explodeArray[i]) {
+						level_objectArray.erase(level_objectArray.begin()+j);
+						break;
+					}
+				}
+				//From the explodeArray
+				explodeArray.erase(explodeArray.begin()+i);
+			}
 		}
 
-		
 
 		//After thirty seconds, go to the final screen
+		if(level_gameCounter > 30){
+			destroyLevelThree();
+			level++;
+			
+		}
 	}
 }
 
