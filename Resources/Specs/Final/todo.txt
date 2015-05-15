@@ -1,8 +1,3 @@
-
-
--ResultsState
--SplashState
-
 Done:
 =====
 -EyeInterface
@@ -15,3 +10,5 @@ Done:
 -CalibateState
 -LevelOne
 -MenuState
+-ResultsState
+-SplashState
