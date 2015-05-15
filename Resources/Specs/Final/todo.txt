@@ -1,8 +1,7 @@
--MindInterface
+
 -MindMuscle
 -PracticalSocket
 -State
-
 
 -AboutState
 -CalibateState
@@ -16,3 +15,4 @@ Done:
 -EyeInterface
 -GameObject
 -StateMachine
+-MindInterface

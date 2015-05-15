@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+   This document was automatically created using an XSLT stylesheet by Aubrey Barnard.
+   See www.stolaf.edu/people/barnard/xml/xml.html for additional information.
+   -->
+<html xmlns="http://www.w3.org/TR/xhtml1/strict">
+<head>
+<title>MindInterface</title>
+</head>
+<body bgcolor="white">
+<div class="specification">
+<center>
+<p>
+<big>
+<big>
+<big>
+<big>MindInterface</big>
+</big>
+</big>
+</big>
+</p>
+</center>
+<center>
+<p>
+<big>
+<big>
+<big>A class that communicates with the EEG headset via a python script, via UDP sockets, to provide brain data</big>
+</big>
+</big>
+</p>
+</center>
+<center>
+<p>Omar Shehata, 5/15</p>
+</center>
+<br/>
+<hr/>
+<br/>
+<br/>
+
+<dl class="class-spec">
+<p>
+<dt>
+<big>
+<strong>CLASS <code> MindInterface</code>
+</strong>
+</big>
+</dt>
+<dd>
+<dl class="inheritance">
+<p>
+<dt>
+<strong>No superclass.</strong>
+</dt>
+<dd/>
+</p>
+</dl>
+
+<dl class="variables">
+<p>
+<dt>
+<strong>State variables:</strong>
+</dt>
+<dd>
+<dl>
+<p>
+<dt class="var">
+<code>private  int ECHOMAX</code>
+</dt>
+<dd>The maximum size expected to be returned by the server</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  const unsigned short echoServPort</code>
+</dt>
+<dd>The port used to connect</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  UDPSocket * sock</code>
+</dt>
+<dd>A pointer to the UDP socket</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  char[255] echoBuffer</code>
+</dt>
+<dd>The buffer that accepts the message sent and recieved by the server</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  int recvMsgSize</code>
+</dt>
+<dd>The size of the recieved message</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  int sourceAddress</code>
+</dt>
+<dd>The address the message originated from</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  unsigned short sourcePort</code>
+</dt>
+<dd>The port the message originated from</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  int counter</code>
+</dt>
+<dd>Used to poll for messages once every half second</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  int initPython</code>
+</dt>
+<dd>Determines whether the python script has started yet</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  int fake_counter</code>
+</dt>
+<dd>Counter to be used when the EEG headset is not connected</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  int msgID</code>
+</dt>
+<dd>The ID of the message being sent</dd>
+</p>
+<p>
+<dt class="var">
+<code>private  char ** messages</code>
+</dt>
+<dd>An array holding the messages that can be sent</dd>
+</p>
+
+<p>
+<dt class="var">
+<code>public  bool connected</code>
+</dt>
+<dd>Is true when succesfully connected to the headset</dd>
+</p>
+<p>
+<dt class="var">
+<code>public  bool initialConnected</code>
+</dt>
+<dd>Is true after the initial attempt to connect</dd>
+</p>
+<p>
+<dt class="var">
+<code>public  int checkStatus</code>
+</dt>
+<dd>Used to re-attempt to connect every few seconds if connection unsuccessful</dd>
+</p>
+<p>
+<dt class="var">
+<code>public  char[255] current_status</code>
+</dt>
+<dd>The current state of the headset. Whether connected, or standby, or not found etc..</dd>
+</p>
+<p>
+<dt class="var">
+<code>public  int focusValue</code>
+</dt>
+<dd>The focus read out from the headset</dd>
+</p>
+</dl>
+</dd>
+</p>
+</dl>
+
+<dl class="constructors-list">
+<p>
+<dt>
+<strong>Constructors:</strong>
+</dt>
+<dd>
+<dl>
+
+<p>
+<dt class="constructor">
+<code>public MindInterface</code>
+</dt>
+<dd>
+<dl>
+Default Constructor
+
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+
+<p>
+<dt>State change:</dt>
+<dd>Initializes the UDP socket connection with the python script</dd>
+</p>
+</dl>
+</dd>
+</p>
+</dl>
+</dd>
+</p>
+</dl>
+
+<dl class="destructor">
+<p>
+<dt>
+<strong>Destructor:</strong>
+</dt>
+<dd>
+<dl>
+<dt class="destructor">
+<code> 
+      ~MindInterface</code>
+</dt>
+<dd>
+<dl>
+Exits gracefully
+<p>
+<dt>State change:</dt>
+<dd>Ensures that the python script disconnects from the headset before exiting</dd>
+</p>
+</dl>
+</dd>
+</dl>
+</dd>
+</p>
+</dl>
+
+<dl class="methods-list">
+<p>
+<dt>
+<strong>Methods:</strong>
+</dt>
+<dd>
+<dl>
+
+<p>
+<dt class="method">
+<code> void update</code>
+</dt>
+<dd>
+<dl>
+Handles sending and recieving of messages
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Increments counters and checks if any message is recieved. If it finds a message, executes the relevant code and responds to the server. Updates the focusValue to the value recieved from the server if connected.</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>None.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> void sendMSG</code>
+</dt>
+<dd>
+<dl>
+Sends a message to the server
+<p>
+<dt class="arguments">Arguments:</dt>
+<dd>
+<dl>
+<p>
+<dt class="arg">
+<code>const char* msg</code>
+</dt>
+<dd/>
+</p>
+</dl>
+</dd>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Takes a string, finds the ID of it in the messages array, and sends that to the server.</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>None.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> void keyboard</code>
+</dt>
+<dd>
+<dl>
+Used to activate keyboard controls when EEG is not plugged in
+<p>
+<dt class="arguments">Arguments:</dt>
+<dd>
+<dl>
+<p>
+<dt class="arg">
+<code>unsigned char c</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int x</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int y</code>
+</dt>
+<dd/>
+</p>
+</dl>
+</dd>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>The harder you mash the keyboard, the higher the focusValue goes up</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>None.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+
+</dl>
+</dd>
+</p>
+</dl>
+
+</dd>
+<dt>
+<hr/>
+</dt>
+<dd/>
+</p>
+</dl>
+
+</div>
+</body>
+</html>
