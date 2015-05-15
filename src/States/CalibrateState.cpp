@@ -22,15 +22,27 @@ EyeInterface * eye2;
 int lastBlinkID;
 
 std::vector<GameObject *> objectArray;
+std::vector<GameObject *> boxArray;
+
 
 float shakePower = 0;
+int prevCursorX;
+int prevCursorY;
+
+GameObject * activeBox;
+int liftThreshold = 30;
 
 void CalibrateState::onEnter(){
-	cursorobj = new GameObject("boxCrate",false); objectArray.push_back(cursorobj);
+	
 	box = new GameObject("boxCrate_double",true,100,100,false,GAME_WIDTH/2+50,200); objectArray.push_back(box);
 	box2 = new GameObject("boxCrate",true,100,100,false,GAME_WIDTH/2,50); objectArray.push_back(box2);
+	cursorobj = new GameObject("outline",false,185,185); objectArray.push_back(cursorobj);
 	ground = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,GAME_HEIGHT); objectArray.push_back(ground);
 	ceiling = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,0); objectArray.push_back(ceiling);
+
+	boxArray.push_back(box);
+	boxArray.push_back(box2);
+	activeBox = 0;
 
 	wallRight = new GameObject("boxItem",true,10,GAME_HEIGHT,true,0,GAME_HEIGHT/2); objectArray.push_back(wallRight);
 	wallLeft = new GameObject("boxItem",true,10,GAME_HEIGHT,true,GAME_WIDTH,GAME_HEIGHT/2); objectArray.push_back(wallLeft);
@@ -40,18 +52,24 @@ void CalibrateState::onEnter(){
 
 	cursorobj->x = GAME_WIDTH/2.0;
 	cursorobj->y = GAME_HEIGHT/2.0;
+	cursorobj->gFactor = 0;
+	cursorobj->bFactor = 0;
 
 	cursorobj->alpha = 0.5;
 
 	lastBlinkID = 0;
 
 	shakePower = 0;
+
+	prevCursorX = cursorobj->x;
+	prevCursorY = cursorobj->y;
 }
 
 void CalibrateState::onExit(){
 	//Delete all objects
 	for(int i=0;i<objectArray.size();i++) delete objectArray[i];
 	objectArray.clear();
+	boxArray.clear();
 
 	delete force;
 	delete eye2;
@@ -68,6 +86,9 @@ void CalibrateState::update(){
 
 	gameCounter +=0.05;
 
+
+	cursorobj->x = prevCursorX;
+	cursorobj->y = prevCursorY;
 	cursorobj->x += (eye2->x-cursorobj->x) / 30;
 	cursorobj->y += (eye2->y-cursorobj->y) / 30;
 	//Bind the cursor to screen
@@ -76,27 +97,53 @@ void CalibrateState::update(){
 
 	if(cursorobj->y < 0) cursorobj->y = 0;
 	if(cursorobj->y > GAME_HEIGHT) cursorobj->y = GAME_HEIGHT;
-	//cout << "(" << eye2->x << "," << eye2->y << ")" << endl;
-	
+	//Round the position to prevent artifacts
+	cursorobj->x = (int)cursorobj->x;
+	cursorobj->y = (int)cursorobj->y;
+	cursorobj->alpha = 1.0;
 
 	double focusValue = 0;
 	focusValue = mind->focusValue;
-	double normalizedFocus = (focusValue/100.0) * 10;
+	double normalizedFocus = (focusValue/100.0);
 
-	if(focusValue > 30) force->y = box2->body->GetLinearVelocity().y - normalizedFocus;
-	//cout << focusValue << endl;
+	//Change color of cursor based on focus:
+	cursorobj->rFactor = 1.0 - normalizedFocus;
+	cursorobj->gFactor = normalizedFocus;
 
-	
-	if(box2->y <= 0 || focusValue <= 30) force->y = box2->body->GetLinearVelocity().y;
+	prevCursorX = cursorobj->x;
+	prevCursorY = cursorobj->y;
 
-	box2->body->SetLinearVelocity(*force);
-
-	if(cursorobj->alpha > 0.5) cursorobj->alpha += (0.5-cursorobj->alpha) / 20;
-
-	if(lastBlinkID != eye2->blinkCount){
-		lastBlinkID = eye2->blinkCount;
-		cursorobj->alpha = 1;
+	//Snap the cursor to closest box
+	if(focusValue < liftThreshold) activeBox = 0;
+	for(int i=0;i<boxArray.size();i++){
+		float dy = boxArray[i]->y - cursorobj->y;
+		float dx = boxArray[i]->x - cursorobj->x;
+		float distance = sqrt(dx * dx + dy * dy);
+		if(distance < 50){//Radius of circle is 50
+			//If close enough, snap
+			
+			activeBox = boxArray[i];
+		}
 	}
+	
+
+	if(activeBox){
+		cursorobj->x = activeBox->x;
+		cursorobj->y = activeBox->y;
+		//Lift with focus
+		if(focusValue > liftThreshold) force->y = activeBox->body->GetLinearVelocity().y - normalizedFocus * 10;
+		if(activeBox->y <= 0 || focusValue <= liftThreshold) force->y = activeBox->body->GetLinearVelocity().y;
+		
+		//Move left/right with gaze
+		int Xspeed = 1;
+		if(eye2->x > activeBox->x) force->x += Xspeed; else  force->x -= Xspeed; 
+		if(force->x > 30) force->x = 30;
+		if(force->x < -30) force->x = -30;
+
+		activeBox->body->SetLinearVelocity(*force);
+
+	}
+
 
 
 	//Screenshake update
@@ -129,10 +176,10 @@ void CalibrateState::keyboard(unsigned char c, int x, int y){
          sent = 1;
 	}
 
-	// if(c == 's'){
- //    	//Screenshake!
- //    	shakePower = 10;
- //  	}
+	if(c == 's'){
+    	//Screenshake!
+    	shakePower = 30;
+  	}
 
  }
 

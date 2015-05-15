@@ -1,5 +1,5 @@
-#ifndef _CalibrateState_
-#define _CalibrateState_
+#ifndef _LevelOne_
+#define _LevelOne_
 
 #include "../State.h"
 
@@ -8,10 +8,10 @@ Our menu state!
 
 */
 
-class CalibrateState: public State {
+class LevelOne: public State {
 public:
 	
-	CalibrateState();
+	LevelOne();
 	void onEnter();
 	void onExit();
 
@@ -22,4 +22,4 @@ public:
 	void mouse_motion(int x,int y);
 };
 
-#endif // _CalibrateState_
+#endif // _LevelOne_

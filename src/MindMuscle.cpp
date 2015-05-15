@@ -38,6 +38,7 @@ float Yoffset = 0;
 #include "States/ResultsState.h"
 #include "States/AboutState.h"
 #include "States/ReadingState.h"
+#include "States/LevelOne.h"
 
 #include <math.h>
 #include <cstring>
@@ -171,6 +172,7 @@ void init(){
   ReadingState * reading = new ReadingState;
   AboutState * about = new AboutState;
   ResultsState * results = new ResultsState;
+  LevelOne * levelone = new LevelOne;
 
   fsm.registerState(menu);
   fsm.registerState(splash);
@@ -178,6 +180,7 @@ void init(){
   fsm.registerState(reading);
   fsm.registerState(about);
   fsm.registerState(results);
+  fsm.registerState(levelone);
 
   //Start menu state
   fsm.transition("Splash");

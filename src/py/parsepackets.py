@@ -8,7 +8,7 @@ headset = 0;
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 host = '127.0.0.1';
-port = 1442;
+port = 1443;
 
 s.sendto(b'idle', (host, port))
 
