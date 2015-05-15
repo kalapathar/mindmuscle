@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
+<?xml-stylesheet
+   href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+   type="text/xsl"?>
+
+<spec>
+<title>State Specification</title>
+<header>Abstract class used as a template to implement the states of the game.</header>
+<credits>Omar Shehata, 5/15</credits>
+
+<class name="State" visibility="public">
+	
+<nosuperclass/>
+
+<variables>
+<var name="name" type="string" visibility="public">The name of this state</var>
+<var name="msg" type="string" visibility="public">A message that can be set to transition to another state</var>
+<var name="sent" type="int" visibility="public">To ensure the message is sent only once</var>
+</variables>
+
+<methods-list>
+
+<method name="onEnter" returntype="virtual void">
+<desc>Runs when the state is activated</desc>
+<noarguments />
+<statechange>To be implemented by state</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="onExit" returntype="virtual void">
+<desc>Runs when the state is deactivated</desc>
+<noarguments />
+<statechange>To be implemented by state</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="render" returntype="virtual void">
+<desc>Provides an interface for rendering on screen</desc>
+<noarguments />
+<statechange>To be implemented by state</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="update" returntype="virtual void">
+<desc>Runs 60 times per second</desc>
+<noarguments />
+<statechange>To be implemented by state</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="keyboard" returntype="virtual void">
+<desc>Provides an interface for key presses</desc>
+<arguments>
+<arg name="c" type="unsigned char"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>To be implemented by state</statechange>
+<return>None.</return>
+</method>
+
+
+<method name="mouse" returntype="virtual void">
+<desc>Provides an interface for mouse presses</desc>
+<arguments>
+<arg name="button" type="int"></arg>
+<arg name="state" type="int"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>To be implemented by state</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="mouse_motion" returntype="virtual void">
+<desc>Provides an interface for the mouse movement</desc>
+<arguments>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>To be implemented by state</statechange>
+<return>No return value.</return>
+</method>
+
+</methods-list>
+
+</class>
+
+</spec>
