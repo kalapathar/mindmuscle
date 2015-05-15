@@ -8,6 +8,8 @@ using namespace std;
 #include <sys/socket.h>
 #include "MindInterface.h"
 #include "PracticalSocket.h" // For UDPSocket and SocketException
+#include "Globals.h"
+
 
 void cpy(const char * src,char * dest){
 	int index = 0;
@@ -38,76 +40,99 @@ void MindInterface::zeroBombBuffer(){
 }
 
 MindInterface::MindInterface(){
-	ECHOMAX = 255;//Max buffer size
-	sock = new UDPSocket(echoServPort);//initialze socket
-
-	struct timeval tv;
-	tv.tv_sec = 0;  
-	tv.tv_usec = 1; 
-	int sockDesc = sock->getSockDec();//Get the socket ID
-	setsockopt(sockDesc, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));//Set the timeout
-
-	counter = 0;//Initialize counter
-    initPython = 0;
- 	checkStatus = 0;
- 	msgID = 0;//idle is the default message
 
 
- 	focusValue = 0;
- 	// // //Some states
- 	connected = false;
+	if(MIND_CONNECTED){
+		ECHOMAX = 255;//Max buffer size
+		sock = new UDPSocket(echoServPort);//initialze socket
 
- 	messages = new char * [6];
- 	messages[0] = new char[strlen("idle")+1]; cpy("idle",messages[0]);
- 	messages[1] =  new char[strlen("init_connect")+1]; cpy("init_connect",messages[1]);
- 	messages[2] =  new char[strlen("attempt_connect")+1]; cpy("attempt_connect",messages[2]);
- 	messages[3] =  new char[strlen("get_status")+1]; cpy("get_status",messages[3]);
- 	messages[4] =  new char[strlen("get_focus")+1]; cpy("get_focus",messages[4]);
- 	messages[5] =  new char[strlen("disconnect")+1]; cpy("disconnect",messages[5]);
+		struct timeval tv;
+		tv.tv_sec = 0;  
+		tv.tv_usec = 1; 
+		int sockDesc = sock->getSockDec();//Get the socket ID
+		setsockopt(sockDesc, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));//Set the timeout
 
- 	current_status[0] = 'N';
- 	current_status[1] = '\0';
+		counter = 0;//Initialize counter
+	    initPython = 0;
+	 	checkStatus = 0;
+	 	msgID = 0;//idle is the default message
+
+
+	 	focusValue = 0;
+	 	// // //Some states
+	 	connected = false;
+
+	 	messages = new char * [6];
+	 	messages[0] = new char[strlen("idle")+1]; cpy("idle",messages[0]);
+	 	messages[1] =  new char[strlen("init_connect")+1]; cpy("init_connect",messages[1]);
+	 	messages[2] =  new char[strlen("attempt_connect")+1]; cpy("attempt_connect",messages[2]);
+	 	messages[3] =  new char[strlen("get_status")+1]; cpy("get_status",messages[3]);
+	 	messages[4] =  new char[strlen("get_focus")+1]; cpy("get_focus",messages[4]);
+	 	messages[5] =  new char[strlen("disconnect")+1]; cpy("disconnect",messages[5]);
+
+	 	current_status[0] = 'N';
+	 	current_status[1] = '\0';
+	 } else {
+	 	fake_counter = 0;
+	 	focusValue = 0;
+	 }
  }
 
 MindInterface::~MindInterface(){
-	//Send a final goodbye, to close the connection with the headset automatically
-	//This final reply has to be blocking
-	//Cannot let the game close without disconnecting properly
-	struct timeval tv;
-	tv.tv_sec = 0;  
-	tv.tv_usec = 0;  
-	int sockDesc = sock->getSockDec();//Get the socket ID
-	setsockopt(sockDesc, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));//Set the timeout
+	if(MIND_CONNECTED){
+		//Send a final goodbye, to close the connection with the headset automatically
+		//This final reply has to be blocking
+		//Cannot let the game close without disconnecting properly
+		struct timeval tv;
+		tv.tv_sec = 0;  
+		tv.tv_usec = 0;  
+		int sockDesc = sock->getSockDec();//Get the socket ID
+		setsockopt(sockDesc, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv,sizeof(struct timeval));//Set the timeout
 
-	sock->recvFrom(echoBuffer, ECHOMAX, sourceAddress,
-                                        sourcePort);//Recieve whatever the server is sending, we don't care
+		sock->recvFrom(echoBuffer, ECHOMAX, sourceAddress,
+	                                        sourcePort);//Recieve whatever the server is sending, we don't care
 
-	msgID = 5;//Go kill yourself! (The server, not you, beautiful grader!)
-	sock->sendTo(messages[msgID], strlen(messages[msgID]), sourceAddress, sourcePort);
-	cout << "C++ dead" << endl;
+		msgID = 5;//Go kill yourself! (The server, not you, beautiful grader!)
+		sock->sendTo(messages[msgID], strlen(messages[msgID]), sourceAddress, sourcePort);
+		cout << "C++ dead" << endl;
 
-	for(int i=0;i<6;i++){
-		delete messages[i];
+		for(int i=0;i<6;i++){
+			delete messages[i];
+		}
+		delete [] messages;
+		delete sock;
 	}
-	delete [] messages;
-	delete sock;
 
 }
 
 
 void MindInterface::sendMSG(const char * msg){
-
-	for(int i=0;i<6;i++){
-		if(goodEnoughCompare(messages[i],msg)){
-			msgID = i;
-			break;
+	if(MIND_CONNECTED){
+		for(int i=0;i<6;i++){
+			if(goodEnoughCompare(messages[i],msg)){
+				msgID = i;
+				break;
+			}
 		}
 	}
 }
 
+void MindInterface::keyboard(unsigned char c, int x, int y){
+	if(!MIND_CONNECTED){
+		//If any key pressed, increase focus by 2
+		focusValue += 5;
+		if(focusValue > 100) focusValue = 100; 
+	}
+}
+
 void MindInterface::update(){
+	if(!MIND_CONNECTED){
+		//Instead, the mind data is just how much you've mashed the keyboard
+		if(focusValue > 0 ) focusValue--;
+	}
+
 	//Check every few frames if a message was received 
-	counter ++;
+	if(MIND_CONNECTED) counter ++;//Don't do any of this if mind is connected
 	if(counter > 30){
 
 		//If not connected yet, keep trying to connect

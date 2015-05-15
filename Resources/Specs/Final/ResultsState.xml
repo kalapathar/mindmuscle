@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
+<?xml-stylesheet
+   href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+   type="text/xsl"?>
+
+<spec>
+<title>ResultsState Specification</title>
+<header>The implementation of the live reading and analysis mode.</header>
+<credits>Deepak Shah, 5/15</credits>
+
+<class name="ResultsState" visibility="public">
+	
+<superclass name="State"/>
+
+<novariables/>
+
+
+<constructors-list>
+<constructor visibility="public">
+<desc>Default Constructor</desc>
+<noarguments/>
+<statechange>Initializes the name of this state</statechange>
+</constructor>
+</constructors-list>
+
+<methods-list>
+
+<method name="onEnter" returntype="void">
+<desc>Runs when the state is activated</desc>
+<noarguments />
+<statechange>Reads the data from the file "data" and puts it in a vector</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="onExit" returntype="void">
+<desc>Runs when the state is deactivated</desc>
+<noarguments />
+<statechange>Appends the data recorded to the file and clears the screen</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="render" returntype="void">
+<desc>Provides an interface for rendering on screen</desc>
+<noarguments />
+<statechange>Loops through the data and draws the graph</statechange>
+<return>No return value.</return>
+</method>
+
+
+<method name="keyboard" returntype="void">
+<desc>Provides an interface for key presses</desc>
+<arguments>
+<arg name="c" type="unsigned char"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>Goes back to menu when escape is pressed</statechange>
+<return>None.</return>
+</method>
+
+<method name="update" returntype="void">
+<desc>Runs 60 times per second</desc>
+<noarguments />
+<statechange>Keeps reading focus values and appending to the data. Updates maximum and minimum values to keep the graph on screen.</statechange>
+<return>No return value.</return>
+</method>
+
+</methods-list>
+
+</class>
+
+</spec>

@@ -5,6 +5,7 @@
 
 #include "PracticalSocket.h" // For UDPSocket and SocketException
 
+
 /* 
 This class handles everything needed to 
 create a way to communicate with the 
@@ -16,7 +17,7 @@ python script that reads the mind data
 class MindInterface {
 private:
       int ECHOMAX;
-      const unsigned short echoServPort = 1442;//Port number
+      const unsigned short echoServPort = 1443;//Port number
       UDPSocket * sock;
       char echoBuffer[255];         // Buffer for echo string
      int recvMsgSize;                  // Size of received message
@@ -25,6 +26,7 @@ private:
 
      int counter ;
      int initPython;
+     int fake_counter;
     
 
      int msgID;
@@ -40,6 +42,7 @@ public:
      MindInterface();
      ~MindInterface();
      void update();
+     void keyboard(unsigned char c, int x, int y);
      void sendMSG(const char * msg);
 
 };

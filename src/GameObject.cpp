@@ -43,6 +43,18 @@ b2Body * GameObject::createBox(float w,float h,bool isStatic){
 	return body;
 }
 
+// the drawText function draws some text at location x, y
+//   note:  the text to be drawn is a C-style string!
+void GameObject::drawText(double x, double y, const char *text,int size)
+{
+  glRasterPos2f( x, y );
+  int length = strlen(text);
+  for (int i = 0; i < length; i++){
+    if(size == 0) glutBitmapCharacter(GLUT_BITMAP_9_BY_15, text[i]);
+	if(size == 1) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+  }
+}
+
 GameObject::GameObject(const char * filename,bool isBox2d,float w,float h,bool isStatic,float X,float Y) {
 	//Create texture from filename. Create box2d if isBox2d and assign defaults to everything else.
 	char fullname[200];
@@ -59,6 +71,9 @@ GameObject::GameObject(const char * filename,bool isBox2d,float w,float h,bool i
 	depth = numObjects;
 	numObjects++;//Increment object counter
 	initDelay = 0;
+	rFactor = 1.0;
+	gFactor = 1.0;
+	bFactor = 1.0;
 
 
 	if(isBox2d){
@@ -92,5 +107,5 @@ void GameObject::draw(){
 		angle = -body->GetAngle();
 	}
 
-	drawTexture(textureID,  x-width/2,y-height/2, width,height,alpha,angle);
+	drawTexture(textureID,  x-width/2 + Xoffset,y-height/2 + Yoffset, width,height,alpha,angle,rFactor,gFactor,bFactor);
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
+<?xml-stylesheet
+   href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+   type="text/xsl"?>
+
+<spec>
+<title>MenuState Specification</title>
+<header>The implementation of the menu state.</header>
+<credits>A. Chang, 5/15</credits>
+
+<class name="MenuState" visibility="public">
+	
+<superclass name="State"/>
+
+<novariables/>
+
+
+<constructors-list>
+<constructor visibility="public">
+<desc>Default Constructor</desc>
+<noarguments/>
+<statechange>Initializes the name of this state</statechange>
+</constructor>
+</constructors-list>
+
+<methods-list>
+
+<method name="onEnter" returntype="void">
+<desc>Runs when the state is activated</desc>
+<noarguments />
+<statechange>Loads and creates all the buttons</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="onExit" returntype="void">
+<desc>Runs when the state is deactivated</desc>
+<noarguments />
+<statechange>Destroys all buttons</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="render" returntype="void">
+<desc>Provides an interface for rendering on screen</desc>
+<noarguments />
+<statechange>Draws the button textures</statechange>
+<return>No return value.</return>
+</method>
+
+
+<method name="keyboard" returntype="void">
+<desc>Provides an interface for key presses</desc>
+<arguments>
+<arg name="c" type="unsigned char"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>Goes back to menu when escape is pressed</statechange>
+<return>None.</return>
+</method>
+
+
+<method name="mouse" returntype="void">
+<desc>Provides an interface for mouse presses</desc>
+<arguments>
+<arg name="button" type="int"></arg>
+<arg name="state" type="int"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>Switches the game to the correct state depending on which button is pressed</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="mouse_motion" returntype="void">
+<desc>Provides an interface for the mouse movement</desc>
+<arguments>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>Updates the hover states</statechange>
+<return>No return value.</return>
+</method>
+
+</methods-list>
+
+</class>
+
+</spec>

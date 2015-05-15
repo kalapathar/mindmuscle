@@ -22,22 +22,27 @@ using namespace std;
 int GAME_WIDTH = 1024;
 int GAME_HEIGHT = 720;
 bool MIND_CONNECTED = true;//Assume true
+bool CAM_CONNECTED = true;//Assume true
 string FOLDER;
 b2World * world;
 MindInterface * mind;
+float Xoffset = 0;
+float Yoffset = 0;
 
 ///Include all of our states
 #include "StateMachine.h"
 
 #include "States/SplashState.h"
 #include "States/MenuState.h"
-#include "States/GameState.h"
+#include "States/CalibrateState.h"
 #include "States/ResultsState.h"
 #include "States/AboutState.h"
 #include "States/ReadingState.h"
+#include "States/LevelOne.h"
 
 #include <math.h>
 #include <cstring>
+#include <time.h>
 
 StateMachine fsm;
 
@@ -128,7 +133,7 @@ void update(){
     //Render everything
 		render();
 
-    if(MIND_CONNECTED)  mind->update();
+    mind->update();
 
 	} 
 }
@@ -136,7 +141,7 @@ void update(){
 void keyboard( unsigned char c, int x, int y )
 {
 
-
+  mind->keyboard(c,x,y);
   if(fsm.activeState) fsm.activeState->keyboard(c,x,y);
 }
 
@@ -155,7 +160,7 @@ void onClose(){
   cout << "NO MIND" << endl;
   //Close current state
   fsm.destroy();
-  if(MIND_CONNECTED) delete mind;
+  delete mind;
 
 }
 
@@ -163,10 +168,11 @@ void init(){
   //Initialize our state machine by registering all of our states
   MenuState * menu = new MenuState;
   SplashState * splash = new SplashState;
-  GameState * game = new GameState;
+  CalibrateState * game = new CalibrateState;
   ReadingState * reading = new ReadingState;
   AboutState * about = new AboutState;
   ResultsState * results = new ResultsState;
+  LevelOne * levelone = new LevelOne;
 
   fsm.registerState(menu);
   fsm.registerState(splash);
@@ -174,6 +180,7 @@ void init(){
   fsm.registerState(reading);
   fsm.registerState(about);
   fsm.registerState(results);
+  fsm.registerState(levelone);
 
   //Start menu state
   fsm.transition("Splash");
@@ -185,10 +192,27 @@ void init(){
 
   //Check if the Neurosky usb is connected
   string output = exec("lsusb");
-  size_t found = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
-  if (found == string::npos) MIND_CONNECTED = false;//dongle not connected!
+  size_t found_mind = output.find("QinHeng Electronics HL-340 USB-Serial adapter");
+  CAM_CONNECTED = (output.find("Webcam") != string::npos ) || (output.find("webcam") != string::npos ) ;//Webcam not found!
+  if (found_mind == string::npos) MIND_CONNECTED = false;//dongle not connected!
 
-  if(MIND_CONNECTED) mind = new MindInterface;
+  if(!CAM_CONNECTED){
+    cout << "\t=== Warning ===" << endl;
+    cout << "\tNo webcam detected! \n\tReverting to mouse position instead of gaze position" << endl;
+    cout << "\t==============" << endl;
+  }
+
+  if(!MIND_CONNECTED){
+     cout << "\t=== Warning ===" << endl;
+     cout << "\tThe Neurosky headset was not detected! \n\tReverting to keypresses instead of EEG data" << endl;
+     cout << "\t==============" << endl;
+  }
+
+  /* initialize random seed: */
+  srand (time(NULL));
+
+
+  mind = new MindInterface;
 
 
 }

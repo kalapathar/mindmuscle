@@ -12,6 +12,7 @@ using namespace std;
 #endif
 
 #include <math.h>
+#include "../GameObject.h"
 
 int results;
 
@@ -23,10 +24,17 @@ ofstream * outFile;
 int reading_counter;
 int reading_counter2;
 std::vector<int> mindData;
+int focus_average;
+
+GameObject * focusText;
 
 
 void ResultsState::onEnter(){
-	results = loadTexture("Images/results.pam");
+
+  focusText = new GameObject("boxCrate",false);
+  focusText->alpha = 0;
+
+	results = loadTexture("Images/Results_Header.pam");
 
   //Set up output
   outFile = new ofstream("data",std::ios_base::app);
@@ -40,19 +48,34 @@ void ResultsState::onEnter(){
     mindData.push_back(x);
     mindData.push_back(y);
 
-    reading_counter2 = x;
+    reading_counter2 = x + 1;
   }
 
 
   
     f.close();
-     
+   
+   //Get min/max
+    focus_average = 0;
+    for(int i=0;i<mindData.size()-1;i+=2){
+      if(mindData[i] > maximumX) maximumX = mindData[i];
+      if(mindData[i+1] > maximumY) maximumY = mindData[i+1];
+
+      if(mindData[i] < minX) minX = mindData[i];
+      if(mindData[i+1] < minY) minY = mindData[i+1];
+      focus_average += mindData[i+1];
+    } 
+    focus_average /= (mindData.size()/2);
 
 }
 
 void ResultsState::onExit(){
+
 	outFile->close();
   delete outFile;
+
+  //Empty the array
+  mindData.clear();
 }
 
 ResultsState::ResultsState(){
@@ -64,11 +87,9 @@ void ResultsState::update(){
 	if(reading_counter >= 30){
     reading_counter = 0;
     int X = reading_counter2;
-    int Y = sin(reading_counter2*0.1) * 200;
-    if(MIND_CONNECTED) {
-      Y = mind->focusValue;
-      cout << "Focus\t" << Y << endl;
-    }
+    int Y = mind->focusValue;
+    // cout << "X\t" << X << endl;
+    // cout << "Focus\t" << Y << endl;
     (*outFile) << endl;
     (*outFile) << X;
     (*outFile) << " ";
@@ -78,15 +99,17 @@ void ResultsState::update(){
     reading_counter2++;
 
     //Get min/max
+    focus_average = 0;
     for(int i=0;i<mindData.size()-1;i+=2){
       if(mindData[i] > maximumX) maximumX = mindData[i];
       if(mindData[i+1] > maximumY) maximumY = mindData[i+1];
 
       if(mindData[i] < minX) minX = mindData[i];
       if(mindData[i+1] < minY) minY = mindData[i+1];
+      focus_average += mindData[i+1];
     }
-    cout << "size" << mindData.size() << endl;
-    cout << maximumY << endl;
+    focus_average /= (mindData.size()/2);
+    
   }
   reading_counter++;
 
@@ -95,12 +118,10 @@ void ResultsState::update(){
 }
 
 void ResultsState::render(){
-	double width = 427;
-	double height = 147;
-	drawTexture(results,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height);
+
 
    glLineWidth(2);
-   glColor3f(0.0, 0.0, 0.0);
+   glColor3f(0/255.0, 208/255.0, 255/255.0);//Our graph's colors
    glBegin(GL_LINES);
 
    int axisOffsetX = 50;
@@ -138,6 +159,17 @@ void ResultsState::render(){
    //cout << "===========\t" << i << endl;
 	}
 	glEnd();
+
+  focusText->drawText(60,170,"Focus %",0);
+  focusText->drawText(GAME_WIDTH - 200,GAME_HEIGHT-20,"Time /s",0);
+  double width = 807;
+  double height = 115;
+  drawTexture(results,  GAME_WIDTH/2-width/2,5, width,height,1.0,0.0,1.0,1.0,1.0); 
+  glColor3f(0/255.0, 0/255.0, 0/255.0);
+  string focusDisplay = string("Current Focus : ") + std::to_string(mind->focusValue);
+  string focus_avg_Display = string("Current Average : ") + std::to_string(focus_average);
+  focusText->drawText(GAME_WIDTH/2-100,150,focusDisplay.c_str(),0);
+  focusText->drawText(GAME_WIDTH/2-100,170,focus_avg_Display.c_str(),0);
 }
 void ResultsState::keyboard(unsigned char c, int x, int y){
 
@@ -146,6 +178,8 @@ void ResultsState::keyboard(unsigned char c, int x, int y){
 		 msg = "trans_Menu";
          sent = 1;
 	}
+
+  
 }
 
 void ResultsState::mouse(int button, int state, int x, int y){

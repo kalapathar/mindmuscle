@@ -28,7 +28,7 @@ void AboutState::update(){
 void AboutState::render(){
 	double width = 577;
 	double height = 267;
-	drawTexture(about,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height);
+	drawTexture(about,  GAME_WIDTH/2-width/2,GAME_HEIGHT/2-height/2, width,height,1.0,0.0,1.0,1.0,1.0);
 }
 
 void AboutState::keyboard(unsigned char c, int x, int y){

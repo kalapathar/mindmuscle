@@ -2,6 +2,13 @@
 #include <iostream>
 using namespace std;
 
+#ifdef MACOSX
+#include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
+
+
 #include "EyeInterface.h"
 
 const double d_sens=100;
@@ -22,28 +29,53 @@ cv::Mat skinCrCbHist = cv::Mat::zeros(cv::Size(256, 256), CV_8UC1);
 
 EyeInterface::EyeInterface(){
   blinkCount=0;
+  counter = 0;
 
-	// Load the cascades
-	if( !face_cascade.load( face_cascade_name ) ){ 
-		printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n");  
-	} else{
+  if(CAM_CONNECTED){
+  	// Load the cascades
+  	if( !face_cascade.load( face_cascade_name ) ){ 
+  		printf("--(!)Error loading face cascade, please change face_cascade_name in source code.\n");  
+  	} else{
 
-		createCornerKernels();
-		ellipse(skinCrCbHist, cv::Point(113, 155.6), cv::Size(23.4, 15.2),
-		      43.0, 0.0, 360.0, cv::Scalar(255, 255, 255), -1);
+  		createCornerKernels();
+  		ellipse(skinCrCbHist, cv::Point(113, 155.6), cv::Size(23.4, 15.2),
+  		      43.0, 0.0, 360.0, cv::Scalar(255, 255, 255), -1);
 
-		// Read the video stream
-		capture = cvCaptureFromCAM( -1 );
-    counter = 0;
-	}
+  		// Read the video stream
+  		capture = cvCaptureFromCAM( -1 );
+      
+  	}
+  }
 }
 
 EyeInterface::~EyeInterface(){
-	releaseCornerKernels();
+  if(CAM_CONNECTED){
+    cvReleaseCapture(&capture);
+  	releaseCornerKernels();
+  }
 }
+
+void EyeInterface::mouse(int button, int state, int x, int y){
+  if(!CAM_CONNECTED){
+  if ( GLUT_LEFT_BUTTON == button ) {
+        if ( GLUT_DOWN != state ) {
+          blinkCount++;
+        }
+      }
+    }
+}
+
+void EyeInterface::mouse_motion(int X,int Y){
+  if(!CAM_CONNECTED){
+    x = X;
+    y = Y;
+  }
+}
+
 
 void EyeInterface::update(){
   counter++;
+  if(CAM_CONNECTED){
 	if( capture  && counter > 10) {
     counter = 0;
     //cout << "Reading" << endl;
@@ -60,7 +92,12 @@ void EyeInterface::update(){
       else {
         // printf(" --(!) No captured frame -- Break!");
       }
-    }
+  } else {
+    //Set the gaze to the mouse position if no cam is found, and blink is click
+
+  }
+
+}
  
 
 void EyeInterface::findEyes(cv::Mat frame_gray, cv::Rect face) {

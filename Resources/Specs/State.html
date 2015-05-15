@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+   This document was automatically created using an XSLT stylesheet by Aubrey Barnard.
+   See www.stolaf.edu/people/barnard/xml/xml.html for additional information.
+   -->
+<html xmlns="http://www.w3.org/TR/xhtml1/strict">
+<head>
+<title>State Specification</title>
+</head>
+<body bgcolor="white">
+<div class="specification">
+<center>
+<p>
+<big>
+<big>
+<big>
+<big>State Specification</big>
+</big>
+</big>
+</big>
+</p>
+</center>
+<center>
+<p>
+<big>
+<big>
+<big>Abstract class used as a template to implement the states of the game.</big>
+</big>
+</big>
+</p>
+</center>
+<center>
+<p>Omar Shehata, 5/15</p>
+</center>
+<br/>
+<hr/>
+<br/>
+<br/>
+
+<dl class="class-spec">
+<p>
+<dt>
+<big>
+<strong>CLASS <code>public State</code>
+</strong>
+</big>
+</dt>
+<dd>
+	
+<dl class="inheritance">
+<p>
+<dt>
+<strong>No superclass.</strong>
+</dt>
+<dd/>
+</p>
+</dl>
+
+<dl class="variables">
+<p>
+<dt>
+<strong>State variables:</strong>
+</dt>
+<dd>
+<dl>
+<p>
+<dt class="var">
+<code>public  string name</code>
+</dt>
+<dd>The name of this state</dd>
+</p>
+<p>
+<dt class="var">
+<code>public  string msg</code>
+</dt>
+<dd>A message that can be set to transition to another state</dd>
+</p>
+<p>
+<dt class="var">
+<code>public  int sent</code>
+</dt>
+<dd>To ensure the message is sent only once</dd>
+</p>
+</dl>
+</dd>
+</p>
+</dl>
+
+<dl class="methods-list">
+<p>
+<dt>
+<strong>Methods:</strong>
+</dt>
+<dd>
+<dl>
+
+<p>
+<dt class="method">
+<code> virtual void onEnter</code>
+</dt>
+<dd>
+<dl>
+Runs when the state is activated
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>To be implemented by state</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> virtual void onExit</code>
+</dt>
+<dd>
+<dl>
+Runs when the state is deactivated
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>To be implemented by state</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> virtual void render</code>
+</dt>
+<dd>
+<dl>
+Provides an interface for rendering on screen
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>To be implemented by state</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> virtual void update</code>
+</dt>
+<dd>
+<dl>
+Runs 60 times per second
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>To be implemented by state</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> virtual void keyboard</code>
+</dt>
+<dd>
+<dl>
+Provides an interface for key presses
+<p>
+<dt class="arguments">Arguments:</dt>
+<dd>
+<dl>
+<p>
+<dt class="arg">
+<code>unsigned char c</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int x</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int y</code>
+</dt>
+<dd/>
+</p>
+</dl>
+</dd>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>To be implemented by state</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>None.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+
+<p>
+<dt class="method">
+<code> virtual void mouse</code>
+</dt>
+<dd>
+<dl>
+Provides an interface for mouse presses
+<p>
+<dt class="arguments">Arguments:</dt>
+<dd>
+<dl>
+<p>
+<dt class="arg">
+<code>int button</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int state</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int x</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int y</code>
+</dt>
+<dd/>
+</p>
+</dl>
+</dd>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>To be implemented by state</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> virtual void mouse_motion</code>
+</dt>
+<dd>
+<dl>
+Provides an interface for the mouse movement
+<p>
+<dt class="arguments">Arguments:</dt>
+<dd>
+<dl>
+<p>
+<dt class="arg">
+<code>int x</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int y</code>
+</dt>
+<dd/>
+</p>
+</dl>
+</dd>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>To be implemented by state</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+</dl>
+</dd>
+</p>
+</dl>
+
+</dd>
+<dt>
+<hr/>
+</dt>
+<dd/>
+</p>
+</dl>
+
+</div>
+</body>
+</html>
