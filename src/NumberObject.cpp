@@ -25,8 +25,8 @@ void NumberObject::initObjects(unsigned int number) {
     if (tensObj != NULL) delete tensObj;
     if (onesObj != NULL) delete onesObj;
     
-    tensObj = new GameObject(this->intToString(tens), false, w, h, true, X, Y);
-    onesObj = new GameObject(this->intToString(ones), false, w, h, true, X+w, Y);
+    tensObj = new GameObject(this->intToString(tens), false, w, h, false, X, Y);
+    onesObj = new GameObject(this->intToString(ones), false, w, h, false, X+w, Y);
 }
 
 void NumberObject::updateNumber(unsigned int number) {
