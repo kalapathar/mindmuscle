@@ -1,5 +1,3 @@
-
--CalibateState
 -LevelOne
 -MenuState
 -ResultsState
@@ -14,4 +12,5 @@ Done:
 -State
 
 -AboutState
+-CalibateState
 

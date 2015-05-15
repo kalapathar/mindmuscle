@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
+<?xml-stylesheet
+   href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+   type="text/xsl"?>
+
+<spec>
+<title>CalibrateState Specification</title>
+<header>The implementation of the calibrate mode.</header>
+<credits>Omar Shehata, 5/15</credits>
+
+<class name="CalibrateState" visibility="public">
+	
+<superclass name="State"/>
+
+<novariables/>
+
+
+<constructors-list>
+<constructor visibility="public">
+<desc>Default Constructor</desc>
+<noarguments/>
+<statechange>Initializes the name of this state</statechange>
+</constructor>
+</constructors-list>
+
+<methods-list>
+
+<method name="onEnter" returntype="void">
+<desc>Runs when the state is activated</desc>
+<noarguments />
+<statechange>Creates two boxes, the walls and a cursor object</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="onExit" returntype="void">
+<desc>Runs when the state is deactivated</desc>
+<noarguments />
+<statechange>Destroys all game objects</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="render" returntype="void">
+<desc>Provides an interface for rendering on screen</desc>
+<noarguments />
+<statechange>Runs the draw function for all objects</statechange>
+<return>No return value.</return>
+</method>
+
+
+<method name="keyboard" returntype="void">
+<desc>Provides an interface for key presses</desc>
+<arguments>
+<arg name="c" type="unsigned char"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>Goes back to menu when escape is pressed</statechange>
+<return>None.</return>
+</method>
+
+<method name="update" returntype="void">
+<desc>Runs 60 times per second</desc>
+<noarguments />
+<statechange>Runs the game logic, allowing the user to pick up boxes with the cursor</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="mouse" returntype="void">
+<desc>Provides an interface for mouse presses</desc>
+<arguments>
+<arg name="button" type="int"></arg>
+<arg name="state" type="int"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>Provides the mouse interface to the eye interface instance</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="mouse_motion" returntype="void">
+<desc>Provides an interface for the mouse movement</desc>
+<arguments>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>Provides the mouse interface to the eye interface instance</statechange>
+<return>No return value.</return>
+</method>
+
+</methods-list>
+
+</class>
+
+</spec>
