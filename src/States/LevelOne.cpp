@@ -231,8 +231,11 @@ void LevelOne::update(){
 		level_cursorobj->x = activelevel_box->x;
 		level_cursorobj->y = activelevel_box->y;
 		//Lift with focus
-		if(focusValue > level_liftThreshold) level_force->y = activelevel_box->body->GetLinearVelocity().y - normalizedFocus * 10;
-		if(activelevel_box->y <= 0 || focusValue <= level_liftThreshold) level_force->y = activelevel_box->body->GetLinearVelocity().y;
+		// if(focusValue > level_liftThreshold) level_force->y = activelevel_box->body->GetLinearVelocity().y - normalizedFocus * 3;
+		// if(activelevel_box->y <= 0 || focusValue <= level_liftThreshold) level_force->y = activelevel_box->body->GetLinearVelocity().y;
+		
+		if(activelevel_box->y > (1.0 - normalizedFocus) * GAME_HEIGHT) level_force->y = activelevel_box->body->GetLinearVelocity().y - 3;
+                else level_force->y = 0;
 		
 		//Move left/right with gaze
 		int Xspeed = 1;

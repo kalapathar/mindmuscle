@@ -131,9 +131,12 @@ void CalibrateState::update(){
 		cursorobj->x = activeBox->x;
 		cursorobj->y = activeBox->y;
 		//Lift with focus
-		if(focusValue > liftThreshold) force->y = activeBox->body->GetLinearVelocity().y - normalizedFocus * 10;
-		if(activeBox->y <= 0 || focusValue <= liftThreshold) force->y = activeBox->body->GetLinearVelocity().y;
+		// if(focusValue > liftThreshold) force->y = activeBox->body->GetLinearVelocity().y - normalizedFocus * 3;
+		// if(activeBox->y <= 0 || focusValue <= liftThreshold) force->y = activeBox->body->GetLinearVelocity().y;
 		
+		if(activeBox->y > (1.0 - normalizedFocus) * GAME_HEIGHT) force->y = activeBox->body->GetLinearVelocity().y - 3;
+                else force->y = 0;
+                
 		//Move left/right with gaze
 		int Xspeed = 1;
 		if(eye2->x > activeBox->x) force->x += Xspeed; else  force->x -= Xspeed; 
