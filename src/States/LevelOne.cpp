@@ -9,7 +9,6 @@ using namespace std;
 
 GameObject * level_cursorobj;
 GameObject * level_box;
-GameObject * level_box2;
 GameObject * level_ground;
 GameObject * level_ceiling;
 float level_gameCounter = 0;
@@ -32,35 +31,65 @@ int level_prevCursorY;
 GameObject * activelevel_box;
 int level_liftThreshold = 30;
 
+int level;
+int levelone_timer;
+
+GameObject * instructions;
+
+int levelStats[9];
+int totalCount;
+
 void initLevelOne(){
+
+	levelStats[0] = 0;//Average focus
+	levelStats[1] = 0;//Highest focus
+	levelStats[2] = 0;//Time above 50%
+	totalCount = 0;
+
+	levelone_timer = 60;//60 * 30;
+
 	level_box = new GameObject("boxCrate_double",true,100,100,false,GAME_WIDTH/2+50,200); level_objectArray.push_back(level_box);
-	level_box2 = new GameObject("boxCrate",true,100,100,false,GAME_WIDTH/2,50); level_objectArray.push_back(level_box2);
 	level_ground = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,GAME_HEIGHT); level_objectArray.push_back(level_ground);
 	level_ceiling = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,0); level_objectArray.push_back(level_ceiling);
 
 	level_boxArray.push_back(level_box);
-	level_boxArray.push_back(level_box2);
+
+	instructions = new GameObject("levelone_instructions",false,395,70); level_objectArray.push_back(instructions);
+	instructions->x = GAME_WIDTH/2;
+	instructions->y = 100;
 	
 
 	level_wallRight = new GameObject("boxItem",true,10,GAME_HEIGHT,true,0,GAME_HEIGHT/2); level_objectArray.push_back(level_wallRight);
 	level_wallLeft = new GameObject("boxItem",true,10,GAME_HEIGHT,true,GAME_WIDTH,GAME_HEIGHT/2); level_objectArray.push_back(level_wallLeft);
 }
 void destroyLevelOne(){
+	//Calculate the average
+	levelStats[0] /= totalCount;
+
 	delete level_box;
-	delete level_box2;
 	delete level_ground;
 	delete level_ceiling;
 	delete level_wallLeft;
 	delete level_wallRight;
+	delete instructions;
 	level_objectArray.clear();
 	level_boxArray.clear();
 
 	level_objectArray.push_back(level_cursorobj);
 }
 
+void initLevelTwo(){
+
+}
+
+void destroyLevelTwo(){
+
+}
+
 void LevelOne::onEnter(){
-	
 	initLevelOne();
+
+	level = 1;
 
 
 	level_cursorobj = new GameObject("outline",false,185,185); level_objectArray.push_back(level_cursorobj);
@@ -85,7 +114,6 @@ void LevelOne::onExit(){
 
 	delete level_force;
 	delete level_eye2;
-
 }
 
 LevelOne::LevelOne(){
@@ -165,19 +193,44 @@ void LevelOne::update(){
 		Xoffset = ((rand() % 100 - 50) / 100.0) * level_shakePower;
 		Yoffset = ((rand() % 100 - 50) / 100.0) * level_shakePower;
 	}
+
+	if(level == 1){
+		//Level one update
+		levelone_timer--;
+
+		//Calculate the stats
+		totalCount ++;
+		levelStats[0] += focusValue;
+		if(focusValue > levelStats[1]) levelStats[1] = focusValue;
+		if(focusValue > 50) levelStats[2]++;
+
+
+		//If timer runs out, go to next state
+		if(levelone_timer <= 0){
+			level++;
+			destroyLevelOne();
+			initLevelTwo();
+		}
+	}
+
+	if(level == 2){
+		//Level two update
+	}
+
+	if(level == 3){
+		//Level three update
+	}
 }
 
 void LevelOne::render(){
 	for(int i=0;i<level_objectArray.size();i++) level_objectArray[i]->draw();
 
-	//Draw focus text
+	if(level == 1){
+		//Timer text
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
-	string focusT = "Focus : " + std::to_string(mind->focusValue);
-	level_cursorobj->drawText(GAME_WIDTH/2-20,50,focusT.c_str());
-
-	//Draw gaze (x,y)
-	string eyeT = "Gaze : " + string("(") +  std::to_string(level_eye2->x) + string(",") + std::to_string(level_eye2->y) + string(")") ;
-	level_cursorobj->drawText(GAME_WIDTH/2-20,70,eyeT.c_str());
+		string timeText = "Time left : " + std::to_string(levelone_timer/60);
+		level_box->drawText(GAME_WIDTH/2-70,170,timeText.c_str());
+	}
 }
 
 void LevelOne::keyboard(unsigned char c, int x, int y){
