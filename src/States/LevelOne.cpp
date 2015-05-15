@@ -85,7 +85,7 @@ void destroyLevelOne(){
 	delete level_wallLeft;
 	delete level_wallRight;
 	delete instructions;
-    delete visualCounter;
+
 	level_objectArray.clear();
 	level_boxArray.clear();
 
@@ -493,7 +493,7 @@ void LevelOne::render(){
 
 		if(bestAverage == levelStats[3]) choice = secondBest;
 		if(bestAverage == levelStats[6]) choice = thirdBest;
-
+		glColor3f(0/255.0, 0/255.0, 0/255.0);
 		instructions->drawText(70,GAME_HEIGHT/2,choice.c_str(),1);
 
 		instructions->drawText(GAME_WIDTH/2-70,GAME_HEIGHT-100,"Press ESC to go back to menu",1);
