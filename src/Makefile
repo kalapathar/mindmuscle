@@ -14,13 +14,16 @@ else
 
 endif
 
-MindMuscle: MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o EyeInterface.o MindInterface.o PracticalSocket.o $(EYELIBS)
-	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o EyeInterface.o MindInterface.o PracticalSocket.o $(EYELIBS) $(LIBS) $(PYLIBS)
+MindMuscle: MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o NumberObject.o EyeInterface.o MindInterface.o PracticalSocket.o $(EYELIBS)
+	g++ $(OPTS) -o MindMuscle MindMuscle.o StateMachine.o $(STATES) texture.o GameObject.o NumberObject.o EyeInterface.o MindInterface.o PracticalSocket.o $(EYELIBS) $(LIBS) $(PYLIBS)
 StateMachine.o: StateMachine.cpp StateMachine.h
 	g++ -g -Wall -std=c++11 -c StateMachine.cpp
 
 GameObject.o: GameObject.cpp GameObject.h 
 	g++ -g -Wall -std=c++11 -c GameObject.cpp
+
+NumberObject.o: NumberObject.cpp NumberObject.h
+	g++ -g -Wall -std=c++11 -c NumberObject.cpp
 
 MindMuscle.o: Globals.h MindMuscle.cpp
 	g++ -g -Wall -std=c++11 -c MindMuscle.cpp
