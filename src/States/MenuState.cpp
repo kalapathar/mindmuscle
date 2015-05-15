@@ -141,7 +141,7 @@ void MenuState::mouse(int button, int state, int x, int y){
 
             if(measureB.active){
                 //Transition to reading state 
-                msg = "trans_Reading";
+                msg = "trans_LevelOne";
                 sent = 1;
             }
 
