@@ -53,7 +53,7 @@ void initLevelOne(){
 	levelStats[2] = 0;//Time above 50%
 	totalCount = 0;
 
-	levelone_timer = 60;//60 * 30;
+	levelone_timer = 60 * 30;
 
 	level_box = new GameObject("boxCrate_double",true,100,100,false,GAME_WIDTH/2+50,200); level_objectArray.push_back(level_box);
 	level_ground = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,GAME_HEIGHT); level_objectArray.push_back(level_ground);
@@ -277,8 +277,7 @@ void LevelOne::update(){
 		if(levelone_timer <= 0){
 			level++;
 			destroyLevelOne();
-			initLevelThree(); level = 3;
-			//initLevelTwo();
+			initLevelTwo();
 		}
 	}
 
