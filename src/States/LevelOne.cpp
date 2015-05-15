@@ -4,6 +4,7 @@ using namespace std;
 
 #include "LevelOne.h"
 #include "../GameObject.h"
+#include "../NumberObject.h"
 #include "../EyeInterface.h"
 #include <time.h> 
 
@@ -40,9 +41,12 @@ int level;
 int levelone_timer;
 
 GameObject * instructions;
+NumberObject * visualCounter;
 
 int levelStats[9];
 int totalCount;
+
+int TIMER_COUNT = 60 *2;//60 * 30;
 
 
 
@@ -53,7 +57,7 @@ void initLevelOne(){
 	levelStats[2] = 0;//Time above 50%
 	totalCount = 0;
 
-	levelone_timer = 60 * 30;
+	levelone_timer = TIMER_COUNT;
 
 	level_box = new GameObject("boxCrate_double",true,100,100,false,GAME_WIDTH/2+50,200); level_objectArray.push_back(level_box);
 	level_ground = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,GAME_HEIGHT); level_objectArray.push_back(level_ground);
@@ -65,6 +69,8 @@ void initLevelOne(){
 	instructions->x = GAME_WIDTH/2;
 	instructions->y = 100;
 	
+    visualCounter = new NumberObject(128, 256, GAME_WIDTH/2-128/2, GAME_HEIGHT/2-256/2, 64);
+    //level_numberObjectArray.push_back(visualCounter);
 
 	level_wallRight = new GameObject("boxItem",true,10,GAME_HEIGHT,true,0,GAME_HEIGHT/2); level_objectArray.push_back(level_wallRight);
 	level_wallLeft = new GameObject("boxItem",true,10,GAME_HEIGHT,true,GAME_WIDTH,GAME_HEIGHT/2); level_objectArray.push_back(level_wallLeft);
@@ -79,6 +85,7 @@ void destroyLevelOne(){
 	delete level_wallLeft;
 	delete level_wallRight;
 	delete instructions;
+
 	level_objectArray.clear();
 	level_boxArray.clear();
 
@@ -106,6 +113,7 @@ void initLevelTwo(){
 	//Create the ledges
 	ledgeOne = new GameObject("boxItem",true,200,10,true,100,GAME_HEIGHT/2 + 200); level_objectArray.push_back(ledgeOne);
 	ledgeTwo = new GameObject("boxItem",true,200,10,true,GAME_WIDTH - 100,GAME_HEIGHT/2 + 200); level_objectArray.push_back(ledgeTwo);
+	activelevel_box = 0;
 }
 
 void destroyLevelTwo(){
@@ -141,6 +149,7 @@ void initLevelThree(){
 	//Resuze the cursor
 	level_cursorobj->width = 100;
 	level_cursorobj->height = 100;
+	activelevel_box = 0;
 }
 
 void destroyLevelThree(){
@@ -155,8 +164,11 @@ void destroyLevelThree(){
 void initFinalScreen(){
 	instructions = new GameObject("levelthree_instructions",false,379,35); level_objectArray.push_back(instructions);
 	instructions->alpha = 0;//Using instructions just to draw the text
+    
+    cout << "FINAL STATE" << endl;
 
 	level_cursorobj->alpha = 0;
+	activelevel_box = 0;
 }
 
 void LevelOne::onEnter(){
@@ -190,6 +202,7 @@ void LevelOne::onExit(){
 
 	delete level_force;
 	delete level_eye2;
+    delete visualCounter;
 }
 
 LevelOne::LevelOne(){
@@ -313,11 +326,14 @@ void LevelOne::update(){
 
 	if(level == 3){
 		//Level three update
-
+		//cout << "BEGIN UPDATE" << endl;
+ 
 		//Calculate the stats
 		levelStats[6] += focusValue;
 		totalCount ++;
 		if(focusValue > levelStats[7]) levelStats[7] = focusValue;
+
+		//cout << "timer\t" << levelone_timer << endl;
 
 		//Spawn a bomb every second
 		if(levelone_timer < 0){
@@ -330,6 +346,8 @@ void LevelOne::update(){
 		}
 		levelone_timer--;
 
+
+		//cout << "BOMB UPDATE" << endl;
 
 		//Bomb update
 		for(int i=bombArray.size()-1;i>=0;i--){
@@ -391,11 +409,10 @@ void LevelOne::update(){
 			}
 		}
 
-		cout << level_gameCounter << endl;
+		//cout << level_gameCounter << endl;
 
 		//After thirty seconds, go to the final screen
 		if(level_gameCounter > 30){
-		//if(level_gameCounter > 2){
 			destroyLevelThree();
 			initFinalScreen();
 			level++;
@@ -410,17 +427,23 @@ void LevelOne::update(){
 
 void LevelOne::render(){
 	for(int i=0;i<level_objectArray.size();i++) level_objectArray[i]->draw();
-
+    
 	if(level == 1){
 		//Timer text
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
-		string timeText = "Time left : " + std::to_string(levelone_timer/60);
-		level_box->drawText(GAME_WIDTH/2-70,170,timeText.c_str(),0);
+		//string timeText = "Time left : " + std::to_string(levelone_timer/60);
+		//level_box->drawText(GAME_WIDTH/2-70,170,timeText.c_str(),0);
+        
+        visualCounter->updateNumber((unsigned int)levelone_timer/60);
+        visualCounter->draw();
 	}
 	if(level == 3){
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
-		string bombText = "Bombs destroyed : " + std::to_string(levelStats[8]);
-		instructions->drawText(GAME_WIDTH/2-70,170,bombText.c_str(),0);
+		//string bombText = "Bombs destroyed : " + std::to_string(levelStats[8]);
+		//instructions->drawText(GAME_WIDTH/2-70,170,bombText.c_str(),0);
+        
+        visualCounter->updateNumber((unsigned int)levelStats[8]);
+        visualCounter->draw();
 	}
 	if(level == 4){
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
@@ -451,14 +474,16 @@ void LevelOne::render(){
 		if(longestFocusPerf > bestPerf) bestPerf = longestFocusPerf;
 		if(fastestFinishPerf > bestPerf) bestPerf = fastestFinishPerf;
 
-		cout << "Best Average\t" << bestAverage << endl;
-		cout << "Highest Focus\t" << highestFocus << endl;
-		cout << "Best Peformance\t" << bestPerf << endl;
+		//cout << "Best Average\t" << bestAverage << endl;
+		//cout << "Highest Focus\t" << highestFocus << endl;
+		//cout << "Best Peformance\t" << bestPerf << endl;
 
 		int MindValue = (avgWeight * (bestAverage/100.0) + (highestFocus/100.0) * highWeight + bestPerf * perfWeight) * 100;
 
 		//Calculate mind muscle value
-		instructions->drawText(GAME_WIDTH/2,150,std::to_string(MindValue).c_str(),1);
+		//instructions->drawText(GAME_WIDTH/2,150,std::to_string(MindValue).c_str(),1);
+        visualCounter->updateNumber((unsigned int)MindValue);
+        visualCounter->draw();
 
 		//Check which level was best
 		string firstBest = "According to your performance, it seems that you have a knack for focusing for long periods of time!";
@@ -468,7 +493,7 @@ void LevelOne::render(){
 
 		if(bestAverage == levelStats[3]) choice = secondBest;
 		if(bestAverage == levelStats[6]) choice = thirdBest;
-
+		glColor3f(0/255.0, 0/255.0, 0/255.0);
 		instructions->drawText(70,GAME_HEIGHT/2,choice.c_str(),1);
 
 		instructions->drawText(GAME_WIDTH/2-70,GAME_HEIGHT-100,"Press ESC to go back to menu",1);
