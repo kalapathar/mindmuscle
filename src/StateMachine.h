@@ -16,7 +16,7 @@ public:
 	int numStates=0;
 
 	//My functions
-	void registerState(State * activeState);//Creates a new state and stores it in stateArray
+	void registerState(State * st);//Creates a new state and stores it in stateArray
 	void transition(string stateName);//Exits current state and calls new one
 	void destroy();//Exits current state
 

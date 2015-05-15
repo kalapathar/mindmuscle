@@ -43,7 +43,7 @@ public:
 	void draw();//Render at the correct position
 	//Helper functions
 	b2Body * createBox(float w,float h,bool bodyType);
-	void drawText(double x, double y, const char *text);
+	void drawText(double x, double y, const char *text,int size=0);
 
 	
 };

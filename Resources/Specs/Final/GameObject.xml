@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
+<?xml-stylesheet
+href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+type="text/xsl"?>
+
+<spec>
+<title>GameObject Specification</title>
+<header>This is the base class for all objects that are drawn on screen.</header>
+<credits>Omar Shehata. May 3 2015. Richard Brown. XML version of specification written by Aubrey Barnard, Wednesday, April 10, 2002</credits>
+
+<class name="GameObject" visibility="public">
+<desc>Represents an on-screen object.</desc>
+
+<nosuperclass />
+
+<variables>
+<var name="x" type="float" visibility="public">x coordinate on screen</var>
+<var name="y" type="float" visibility="public">y coordinate on screen</var>
+
+<var name="angle" type="float" visibility="public">The angle at which to draw the image</var>
+<var name="width" type="float" visibility="public">The width of the image</var>
+<var name="height" type="float" visibility="public">The height of the image</var>
+
+<var name="body" type="* b2Body" visibility="public">Pointer to physics body</var> 
+<var name="textureID" type="int" visibility="public">The ID of the texture associated with this object</var>
+<var name="depth" type="int" visibility="public">An ID representing the order that objects get drawn on screen </var>
+<var name="numObjects" type="static int" visibility="public">Static variable keeping track of how many objects were created</var>
+<var name="initDelay" type="int" visibility="public">simple delay to prevent flicker</var>
+<var name="alpha" type="float" visibility="public">A number from 0 to 1 representing transparency</var>
+<var name="rFactor" type="float" visibility="public">A number from 0 to 1 representing the red value to use when drawing. Default is 1.0</var>
+<var name="gFactor" type="float" visibility="public">Same as rFactor, but for green</var>
+<var name="bFactor" type="float" visibility="public">Same as rFactor, but for blue</var>
+</variables>
+
+<constructors-list>
+<constructor visibility="public">
+<desc>Regular constructor.</desc>
+
+<arguments>
+<arg name="filename" type="const char *">The filename to the image to be associated with this object</arg>
+<arg name="isBox2d" type="Boolean">Whether to attach a physics body</arg>
+<arg name="w" type="float">Width of the image. Default is 100</arg>
+<arg name="h" type="float">Height of the image. Default is 100</arg>
+<arg name="isStatic" type="Boolean">Is it a static (non-movable) physics body?</arg>
+<arg name="X" type="float">X coordinate to create the object at. Default is 0</arg>
+<arg name="Y" type="float">Y coordinate to create the object at. Default is 0</arg>
+</arguments>
+
+<statechange>
+Initializes a GameObject by loading the texture given by filename,
+sets x and y to 0, creates a physics body if isBox2d is true,
+and assigns it to body, otherwise assign it 0. Assigns width and height a default of 100.
+Sets depth to numObjects and increments numObjects by 1.
+</statechange>
+</constructor>
+
+</constructors-list>
+
+<destructor>
+<desc>Destructor.</desc>
+
+<statechange>
+Deallocate the texture created and the physics body if exists.
+</statechange>
+</destructor>
+
+<methods-list>
+
+
+<method name="draw" returntype="void">
+<desc>Draws the object to screen</desc>
+
+<noarguments />
+
+<statechange>
+Handles all the OpenGL code needed to draw this object at the correct location, angle and scale. Sets the x and y and angle to the physics body if it exists before drawing.
+</statechange>
+
+<return>
+No return value.
+</return>
+</method>
+
+
+<method name="createBox" returntype="b2Body *">
+<desc>A helper function to create a phyics body</desc>
+
+<arguments>
+<arg name="w" type="float">The width of the body</arg>
+<arg name="h" type="float">The height of the body</arg>
+<arg name="bodyType" type="bool">Whether it's static or dynamic</arg>
+</arguments>
+
+<statechange>
+Handles the box2d creation code, to create a physics body, attach it to the world, and sets the appropriate mass, friction and restutitution parameters. 
+</statechange>
+
+<return>
+No return value.
+</return>
+</method>
+
+<method name="drawText" returntype="void">
+<desc>A helper function to draw text on screen</desc>
+
+<arguments>
+<arg name="x" type="double">X coordinate to render the text at</arg>
+<arg name="y" type="double">Y coordinate to render the text at</arg>
+<arg name="text" type="const char *">The text to render</arg>
+</arguments>
+
+<statechange>
+Handles the GLUT code needed to render bitmap fonts on screen.
+</statechange>
+
+<return>
+No return value.
+</return>
+</method>
+
+</methods-list>
+
+</class>
+
+</spec>

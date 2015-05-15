@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
+<?xml-stylesheet
+href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+type="text/xsl"?>
+
+<spec>
+<title>MindInterface</title>
+<header>A class that communicates with the EEG headset via a python script, via UDP sockets, to provide brain data</header>
+<credits>Omar Shehata, 5/15</credits>
+
+<class name="MindInterface">
+<nosuperclass/>
+
+<variables>
+<var name="ECHOMAX" type="int" visibility="private">The maximum size expected to be returned by the server</var>
+<var name="echoServPort" type="const unsigned short" visibility="private">The port used to connect</var>
+<var name="sock" type="UDPSocket *" visibility="private">A pointer to the UDP socket</var>
+<var name="echoBuffer" type="char[255]" visibility="private">The buffer that accepts the message sent and recieved by the server</var>
+<var name="recvMsgSize" type="int" visibility="private">The size of the recieved message</var>
+<var name="sourceAddress" type="int" visibility="private">The address the message originated from</var>
+<var name="sourcePort" type="unsigned short" visibility="private">The port the message originated from</var>
+<var name="counter" type="int" visibility="private">Used to poll for messages once every half second</var>
+<var name="initPython" type="int" visibility="private">Determines whether the python script has started yet</var>
+<var name="fake_counter" type="int" visibility="private">Counter to be used when the EEG headset is not connected</var>
+<var name="msgID" type="int" visibility="private">The ID of the message being sent</var>
+<var name="messages" type="char **" visibility="private">An array holding the messages that can be sent</var>
+
+<var name="connected" type="bool" visibility="public">Is true when succesfully connected to the headset</var>
+<var name="initialConnected" type="bool" visibility="public">Is true after the initial attempt to connect</var>
+<var name="checkStatus" type="int" visibility="public">Used to re-attempt to connect every few seconds if connection unsuccessful</var>
+<var name="current_status" type="char[255]" visibility="public">The current state of the headset. Whether connected, or standby, or not found etc..</var>
+<var name="focusValue" type="int" visibility="public">The focus read out from the headset</var>
+</variables>
+
+<constructors-list>
+
+<constructor visibility="public">
+<desc>Default Constructor</desc>
+
+<noarguments/>
+
+<statechange>Initializes the UDP socket connection with the python script</statechange>
+</constructor>
+</constructors-list>
+
+<destructor>
+<desc>Exits gracefully</desc>
+<statechange>Ensures that the python script disconnects from the headset before exiting</statechange>
+</destructor>
+
+<methods-list>
+
+<method name="update" returntype="void">
+<desc>Handles sending and recieving of messages</desc>
+<noarguments/>
+<statechange>Increments counters and checks if any message is recieved. If it finds a message, executes the relevant code and responds to the server. Updates the focusValue to the value recieved from the server if connected.</statechange>
+<return>None.</return>
+</method>
+
+<method name="sendMSG" returntype="void">
+<desc>Sends a message to the server</desc>
+<arguments>
+<arg name="msg" type="const char*"></arg>
+</arguments>
+<statechange>Takes a string, finds the ID of it in the messages array, and sends that to the server.</statechange>
+<return>None.</return>
+</method>
+
+<method name="keyboard" returntype="void">
+<desc>Used to activate keyboard controls when EEG is not plugged in</desc>
+<arguments>
+<arg name="c" type="unsigned char"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>The harder you mash the keyboard, the higher the focusValue goes up</statechange>
+<return>None.</return>
+</method>
+
+
+</methods-list>
+
+</class>
+
+</spec>
