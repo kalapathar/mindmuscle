@@ -160,16 +160,16 @@ void ResultsState::render(){
 	}
 	glEnd();
 
-  focusText->drawText(60,170,"Focus %");
-  focusText->drawText(GAME_WIDTH - 200,GAME_HEIGHT-20,"Time /s");
+  focusText->drawText(60,170,"Focus %",0);
+  focusText->drawText(GAME_WIDTH - 200,GAME_HEIGHT-20,"Time /s",0);
   double width = 807;
   double height = 115;
   drawTexture(results,  GAME_WIDTH/2-width/2,5, width,height,1.0,0.0,1.0,1.0,1.0); 
   glColor3f(0/255.0, 0/255.0, 0/255.0);
   string focusDisplay = string("Current Focus : ") + std::to_string(mind->focusValue);
   string focus_avg_Display = string("Current Average : ") + std::to_string(focus_average);
-  focusText->drawText(GAME_WIDTH/2-100,150,focusDisplay.c_str());
-  focusText->drawText(GAME_WIDTH/2-100,170,focus_avg_Display.c_str());
+  focusText->drawText(GAME_WIDTH/2-100,150,focusDisplay.c_str(),0);
+  focusText->drawText(GAME_WIDTH/2-100,170,focus_avg_Display.c_str(),0);
 }
 void ResultsState::keyboard(unsigned char c, int x, int y){
 

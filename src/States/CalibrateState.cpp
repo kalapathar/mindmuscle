@@ -164,11 +164,11 @@ void CalibrateState::render(){
 	//Draw focus text
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
 	string focusT = "Focus : " + std::to_string(mind->focusValue);
-	cursorobj->drawText(GAME_WIDTH/2-20,50,focusT.c_str());
+	cursorobj->drawText(GAME_WIDTH/2-20,50,focusT.c_str(),0);
 
 	//Draw gaze (x,y)
 	string eyeT = "Gaze : " + string("(") +  std::to_string(eye2->x) + string(",") + std::to_string(eye2->y) + string(")") ;
-	cursorobj->drawText(GAME_WIDTH/2-20,70,eyeT.c_str());
+	cursorobj->drawText(GAME_WIDTH/2-20,70,eyeT.c_str(),0);
 }
 
 void CalibrateState::keyboard(unsigned char c, int x, int y){
