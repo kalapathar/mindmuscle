@@ -28,8 +28,12 @@ int focus_average;
 
 GameObject * focusText;
 
+int START_NUM;
+
 
 void ResultsState::onEnter(){
+
+  START_NUM = 0;
 
   focusText = new GameObject("boxCrate",false);
   focusText->alpha = 0;
@@ -100,7 +104,7 @@ void ResultsState::update(){
 
     //Get min/max
     focus_average = 0;
-    for(int i=0;i<mindData.size()-1;i+=2){
+    for(int i=START_NUM;i<mindData.size()-1;i+=2){
       if(mindData[i] > maximumX) maximumX = mindData[i];
       if(mindData[i+1] > maximumY) maximumY = mindData[i+1];
 
@@ -113,8 +117,14 @@ void ResultsState::update(){
   }
   reading_counter++;
 
+  cout<<"deepak see this!"<<endl;
+  cout<<"START NUM:: "<<START_NUM<<endl;
+  cout<<"mind data size"<<mindData.size()-100<<endl;
+  cout<<"Deepak see until here"<<endl;
 
-  
+  START_NUM = mindData.size() - 100;
+  if(START_NUM < 0 ) START_NUM = 0;
+
 }
 
 void ResultsState::render(){
@@ -139,7 +149,7 @@ void ResultsState::render(){
    glVertex3f(GAME_WIDTH-fixX,timeAxisY,0);
    int num_points = (mindData.size()/2);
 
-   for(int i=0;i<(num_points-1) * 2;i+=2){
+   for(int i=START_NUM;i<(num_points-1) * 2;i+=2){
   
  factorX1= (mindData[i]-minX)/(maximumX-minX);
  factorY1= (mindData[i+1]-minY)/(maximumY-minY);
@@ -153,6 +163,7 @@ void ResultsState::render(){
 
    float X2 = (GAME_WIDTH)* factorX2;
    float Y2 = (GAME_HEIGHT-fixY)* factorY2 * -1 + timeAxisY;
+
 
    glVertex3f(X1+axisOffsetX,Y1,0); //cout << "First Point\t (" << X1 << " , " << Y1 << ")" << endl;
    glVertex3f(X2+axisOffsetX,Y2,0); //cout << "Second Point\t (" << X2<< " , " << Y2 << ")" << endl;
