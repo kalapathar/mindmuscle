@@ -521,7 +521,7 @@ void LevelOne::render(){
 
 		//Generate QR code
 		if(QRpic == 0){
-			string QR = "?MindMuscle=" + std::to_string(MindValue) + "?Level1Avg=" + std::to_string(levelStats[0]/100.0) + "?Level1Highest=" + std::to_string(levelStats[1]/100.0) + 
+			string QR = "http://mm.stolaf.me/?MindMuscle=" + std::to_string(MindValue) + "?Level1Avg=" + std::to_string(levelStats[0]/100.0) + "?Level1Highest=" + std::to_string(levelStats[1]/100.0) +
 		"?Level1Score=" + std::to_string(levelStats[2] / 60.0)  + "?Level2Avg=" + std::to_string(levelStats[3]/100.0) + "?Level2Highest=" + std::to_string(levelStats[4]/100.0) + "?Level2Score="   + std::to_string(fastestFinishPerf) +
 		+ "?Level3Avg=" + std::to_string(levelStats[6]/100.0) + "?Level3Highest=" + std::to_string(levelStats[7]/100.0) + "?Level3Score=" + std::to_string(levelStats[8]);
 			string command = "python2 py/download.py " + QR;
