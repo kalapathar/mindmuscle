@@ -27,6 +27,7 @@ public:
     
     void initObjects(unsigned int number);
     void updateNumber(unsigned int number);
+    void updatePosition(float X=0, float Y=0);
     void draw();
     
     const char * intToString(unsigned int number);
