@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
+<?xml-stylesheet
+href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+type="text/xsl"?>
+
+<spec>
+<title>StateMachine</title>
+<header>The main class for managing GUI views and menu view states.</header>
+<credits>A. Chang, 5/15</credits>
+
+<class name="StateMachine">
+<nosuperclass/>
+
+<variables>
+<var name="activeState" type="State *">The activeState value indicates the currently selected state.</var>
+<var name="stateArray" type="std::vector">A vector collection of States that represent individual views.</var>
+<var name="numStates" type="int">The numStates value stores the total number of states accessible by the state machine.</var>
+</variables>
+
+<methods-list>
+
+<method name="registerState" returntype="">
+<desc>Creates a new state and stores it.</desc>
+<arguments>
+<arg name="st" type="State *">The state to be added to the stateArray.</arg>
+</arguments>
+<statechange>Adds the passed state to the stateArray vector collection.</statechange>
+<return>None.</return>
+</method>
+
+<method name="transition" returntype="">
+<desc>Exits current state and calls new one.</desc>
+<arguments>
+<arg name="stateName" type="string">A string value of the new state.</arg>
+</arguments>
+<statechange>Changes the activeState to the state with the passed stateName.</statechange>
+<return>None.</return>
+</method>
+
+<method name="destroy" returntype="">
+<desc>Exits current state.</desc>
+<noarguments/>
+<statechange>Loops through the states and dereferences the currently selected state.</statechange>
+<return>None.</return>
+</method>
+
+</methods-list>
+
+</class>
+
+</spec>

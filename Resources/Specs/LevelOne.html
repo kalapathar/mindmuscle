@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--
+   This document was automatically created using an XSLT stylesheet by Aubrey Barnard.
+   See www.stolaf.edu/people/barnard/xml/xml.html for additional information.
+   -->
+<html xmlns="http://www.w3.org/TR/xhtml1/strict">
+<head>
+<title>LevelOne Specification</title>
+</head>
+<body bgcolor="white">
+<div class="specification">
+<center>
+<p>
+<big>
+<big>
+<big>
+<big>LevelOne Specification</big>
+</big>
+</big>
+</big>
+</p>
+</center>
+<center>
+<p>
+<big>
+<big>
+<big>The implementation of the game's levels.</big>
+</big>
+</big>
+</p>
+</center>
+<center>
+<p>Omar Shehata, 5/15</p>
+</center>
+<br/>
+<hr/>
+<br/>
+<br/>
+
+<dl class="class-spec">
+<p>
+<dt>
+<big>
+<strong>CLASS <code>public LevelOne</code>
+</strong>
+</big>
+</dt>
+<dd>
+	
+<dl class="inheritance">
+<p>
+<dt>
+<strong>Superclass <code>State</code>
+</strong>
+</dt>
+<dd/>
+</p>
+</dl>
+
+<dl class="variables">
+<p>
+<dt>
+<strong>No variables.</strong>
+</dt>
+<dd/>
+</p>
+</dl>
+
+
+<dl class="constructors-list">
+<p>
+<dt>
+<strong>Constructors:</strong>
+</dt>
+<dd>
+<dl>
+<p>
+<dt class="constructor">
+<code>public LevelOne</code>
+</dt>
+<dd>
+<dl>
+Default Constructor
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Initializes the name of this state</dd>
+</p>
+</dl>
+</dd>
+</p>
+</dl>
+</dd>
+</p>
+</dl>
+
+<dl class="methods-list">
+<p>
+<dt>
+<strong>Methods:</strong>
+</dt>
+<dd>
+<dl>
+
+<p>
+<dt class="method">
+<code> void onEnter</code>
+</dt>
+<dd>
+<dl>
+Runs when the state is activated
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Initializes the first level</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> void onExit</code>
+</dt>
+<dd>
+<dl>
+Runs when the state is deactivated
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Destroys all game objects</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> void render</code>
+</dt>
+<dd>
+<dl>
+Provides an interface for rendering on screen
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Runs the draw function for all objects</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+
+<p>
+<dt class="method">
+<code> void keyboard</code>
+</dt>
+<dd>
+<dl>
+Provides an interface for key presses
+<p>
+<dt class="arguments">Arguments:</dt>
+<dd>
+<dl>
+<p>
+<dt class="arg">
+<code>unsigned char c</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int x</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int y</code>
+</dt>
+<dd/>
+</p>
+</dl>
+</dd>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Goes back to menu when escape is pressed</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>None.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> void update</code>
+</dt>
+<dd>
+<dl>
+Runs 60 times per second
+<p>
+<dt class="arguments">No arguments.</dt>
+<dd/>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Runs the game logic, running the update function of each level depending on which one the user is on</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> void mouse</code>
+</dt>
+<dd>
+<dl>
+Provides an interface for mouse presses
+<p>
+<dt class="arguments">Arguments:</dt>
+<dd>
+<dl>
+<p>
+<dt class="arg">
+<code>int button</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int state</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int x</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int y</code>
+</dt>
+<dd/>
+</p>
+</dl>
+</dd>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Provides the mouse interface to the eye interface instance</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+<p>
+<dt class="method">
+<code> void mouse_motion</code>
+</dt>
+<dd>
+<dl>
+Provides an interface for the mouse movement
+<p>
+<dt class="arguments">Arguments:</dt>
+<dd>
+<dl>
+<p>
+<dt class="arg">
+<code>int x</code>
+</dt>
+<dd/>
+</p>
+<p>
+<dt class="arg">
+<code>int y</code>
+</dt>
+<dd/>
+</p>
+</dl>
+</dd>
+</p>
+<p>
+<dt>State change:</dt>
+<dd>Provides the mouse interface to the eye interface instance</dd>
+</p>
+<p>
+<dt>Return value:</dt>
+<dd>No return value.</dd>
+</p>
+</dl>
+</dd>
+</p>
+
+</dl>
+</dd>
+</p>
+</dl>
+
+</dd>
+<dt>
+<hr/>
+</dt>
+<dd/>
+</p>
+</dl>
+
+</div>
+</body>
+</html>

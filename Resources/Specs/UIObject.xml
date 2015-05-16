@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
+<?xml-stylesheet
+   href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+   type="text/xsl"?>
+
+<spec>
+<title>UIObject Specification</title>
+<header>This class draws buttons on the screen</header>
+<credits>Deepak Shah. XML version of specification written by Aubrey Barnard, Wednesday, April 10, 2002</credits>
+
+<class name="UIObject" visibility="public">
+
+<superclass name="GameObject"/>
+
+<variables>
+<var name="overTexture" type="int" visibility="public"></var>
+<var name="pressedTexture" type="int"></var>
+<var name="overTexture" type="int"></var>
+
+</variables>
+
+<constructors-list>
+
+<constructor visibility="public">
+<desc>Default Constructor</desc>
+
+<noarguments/>
+
+<statechange> </statechange>
+</constructor>
+
+<constructor visibility="public">
+<desc>Regular Constructor</desc>
+<arguments>
+<arg name="over" type="const char*"></arg>
+<arg name="pressed" type="const char*"></arg>
+<arg name="normal" type="const char*"></arg>
+</arguments>
+<statechange>It loads the textures and assigns the values</statechange>
+</constructor>
+
+</constructors-list>
+
+<destructor>
+<desc>deletes the dynamically allocated memory</desc>
+<statechange>Deletes the pointers to over, pressed and normal</statechange>
+</destructor>
+
+<methods-list>
+
+<method name="mouseClick" returntype="void">
+<desc>When there is a mouseclick, the object changes its color</desc>
+<arguments>
+<arg name="button" type="int"></arg>
+<arg name="state" type="int"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+
+
+</arguments>
+<statechange>Carries out the button click functionality </statechange>
+<return>None</return>
+</method>
+
+<method name="mouseOver" returntype="void">
+<desc>As we hover the mouse on the object, it gets highlighted</desc>
+<arguments>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+
+</arguments>
+<statechange>Calculates if the mouse is inside or not and switches to the correct image</statechange>
+<return>None</return>
+</method>
+
+
+<method name="draw" returntype="void">
+<desc>Draws the texture</desc>
+<noarguments/>
+
+<statechange>Renders the correct texture correctly according to the x and y</statechange>
+<return>None</return>
+</method>
+
+
+
+</methods-list>
+
+</class>
+
+</spec>

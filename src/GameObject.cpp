@@ -45,12 +45,14 @@ b2Body * GameObject::createBox(float w,float h,bool isStatic){
 
 // the drawText function draws some text at location x, y
 //   note:  the text to be drawn is a C-style string!
-void GameObject::drawText(double x, double y, const char *text)
+void GameObject::drawText(double x, double y, const char *text,int size)
 {
   glRasterPos2f( x, y );
   int length = strlen(text);
-  for (int i = 0; i < length; i++)
-    glutBitmapCharacter(GLUT_BITMAP_9_BY_15, text[i]);
+  for (int i = 0; i < length; i++){
+    if(size == 0) glutBitmapCharacter(GLUT_BITMAP_9_BY_15, text[i]);
+	if(size == 1) glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+  }
 }
 
 GameObject::GameObject(const char * filename,bool isBox2d,float w,float h,bool isStatic,float X,float Y) {

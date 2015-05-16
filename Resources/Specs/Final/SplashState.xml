@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE spec SYSTEM "http://www.cs.stolaf.edu/lib/SpecML/SpecML.dtd">
+<?xml-stylesheet
+   href="http://www.cs.stolaf.edu/lib/SpecML/SpecMLToHTML.xsl"
+   type="text/xsl"?>
+
+<spec>
+<title>SplashState Specification</title>
+<header>The implementation of the splash screen.</header>
+<credits>Omar Shehata, 5/15</credits>
+
+<class name="SplashState" visibility="public">
+	
+<superclass name="State"/>
+
+<novariables/>
+
+
+<constructors-list>
+<constructor visibility="public">
+<desc>Default Constructor</desc>
+<noarguments/>
+<statechange>Initializes the name of this state</statechange>
+</constructor>
+</constructors-list>
+
+<methods-list>
+
+<method name="onEnter" returntype="void">
+<desc>Runs when the state is activated</desc>
+<noarguments />
+<statechange>Loads the splash image</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="onExit" returntype="void">
+<desc>Runs when the state is deactivated</desc>
+<noarguments />
+<statechange>Destroys the splash image</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="render" returntype="void">
+<desc>Provides an interface for rendering on screen</desc>
+<noarguments />
+<statechange>Draws the splash image</statechange>
+<return>No return value.</return>
+</method>
+
+
+<method name="mouse" returntype="void">
+<desc>Provides an interface for mouse presses</desc>
+<arguments>
+<arg name="button" type="int"></arg>
+<arg name="state" type="int"></arg>
+<arg name="x" type="int"></arg>
+<arg name="y" type="int"></arg>
+</arguments>
+<statechange>Skips the splash screen if mouse is clicked</statechange>
+<return>No return value.</return>
+</method>
+
+<method name="update" returntype="void">
+<desc>Runs 60 times per second</desc>
+<noarguments />
+<statechange>Makes the splash image fade in and out.</statechange>
+<return>No return value.</return>
+</method>
+
+</methods-list>
+
+</class>
+
+</spec>
