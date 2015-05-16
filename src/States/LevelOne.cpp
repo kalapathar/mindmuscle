@@ -528,8 +528,8 @@ void LevelOne::render(){
 			system(command.c_str());
 			system("convert Images/brain.png Images/brain.pam");
 			QRpic = new GameObject("brain",false,256,256); level_objectArray.push_back(QRpic);
-			QRpic->x = GAME_WIDTH/2;
-			QRpic->y = GAME_HEIGHT/2;
+			QRpic->x = 3*GAME_WIDTH/4-128/2;
+			QRpic->y = GAME_HEIGHT/2-256/2-40;
 		}
 	}
     
@@ -541,7 +541,7 @@ void LevelOne::render(){
         visualCounter->draw();
         
         // Draw table numbers
-        cout << "fuck fuck erfuck=" << endgameTable.size() << endl;
+
         if (endgameTable.size() == 0) { // init the table, since Omar put the stuff in the render loop....
             for (int i=0; i < 9; i++) {
                 float calcX = 0;
@@ -586,7 +586,7 @@ void LevelOne::render(){
                         calcY = 603;
                         break;
                 }
-                cout << "fuck fuck fuck: " << levelStats[i] << endl;
+
                 NumberObject * numObj = new NumberObject(27, 55, calcX, calcY+55/2, levelStats[i]);
                 endgameTable.push_back(numObj);
             }
