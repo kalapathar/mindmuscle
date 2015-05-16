@@ -43,12 +43,14 @@ int levelone_timer;
 GameObject * instructions;
 NumberObject * visualCounter;
 
+// Endgame screen stuff
+GameObject * endgameSummary;
+std::vector<NumberObject *> endgameTable;
+
 int levelStats[9];
 int totalCount;
 
 int TIMER_COUNT = 60 *2;//60 * 30;
-
-
 
 void initLevelOne(){
 
@@ -162,8 +164,21 @@ void destroyLevelThree(){
 }
 
 void initFinalScreen(){
-	instructions = new GameObject("EndScreen",false,1024,1024,false,GAME_WIDTH/2,GAME_HEIGHT/2); level_objectArray.push_back(instructions);
-	//instructions->alpha = 0;//Using instructions just to draw the text
+	instructions = new GameObject("EndScreen",false,1024,720,false,GAME_WIDTH/2,GAME_HEIGHT/2); level_objectArray.push_back(instructions);
+    
+    int bestAverage = levelStats[0];
+    string choice = "1";
+    if(levelStats[3] > bestAverage) {
+        bestAverage = levelStats[3];
+        choice = "2";
+    }
+    if(levelStats[6] > bestAverage) {
+        bestAverage = levelStats[6];
+        choice = "3";
+    }
+    
+    // Create the endgame summary
+    endgameSummary = new GameObject(("EndScreen_desc"+choice).c_str(),false,1024,64,false,GAME_WIDTH/2,GAME_HEIGHT/2); level_objectArray.push_back(endgameSummary);
     
     cout << "## FINAL STATE" << endl;
 
@@ -443,6 +458,9 @@ void LevelOne::render(){
         visualCounter->updateNumber((unsigned int)levelStats[8]);
         visualCounter->draw();
 	}
+    
+    int MindValue;
+    int bestPerf, highestFocus, bestAverage;
 	if(level == 4){
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
 		//instructions->drawText(GAME_WIDTH/2-70,100,"Your Mind Muscle is",1);
@@ -451,12 +469,12 @@ void LevelOne::render(){
 		float highWeight = 0.2;
 		float perfWeight = 0.3; 
 
-		int bestAverage = levelStats[0];
+        bestAverage = levelStats[0];
 		if(levelStats[3] > bestAverage) bestAverage = levelStats[3];
 		if(levelStats[6] > bestAverage) bestAverage = levelStats[6];
 
 
-		int highestFocus = levelStats[1];
+		highestFocus = levelStats[1];
 		if(levelStats[4] > highestFocus) highestFocus = levelStats[4];
 		if(levelStats[7] > highestFocus) highestFocus = levelStats[7];
 
@@ -468,7 +486,7 @@ void LevelOne::render(){
 
 		int fastestFinishPerf = 1.0 - (levelStats[5] / (60 * 15));//If you complete it in 0 seconds, it's 100%, if you complete it in 15 seconds, it's 0%
 
-		int bestPerf = bombPerf;
+		bestPerf = bombPerf;
 		if(longestFocusPerf > bestPerf) bestPerf = longestFocusPerf;
 		if(fastestFinishPerf > bestPerf) bestPerf = fastestFinishPerf;
 
@@ -476,28 +494,70 @@ void LevelOne::render(){
 		//cout << "Highest Focus\t" << highestFocus << endl;
 		//cout << "Best Peformance\t" << bestPerf << endl;
 
-		int MindValue = (avgWeight * (bestAverage/100.0) + (highestFocus/100.0) * highWeight + bestPerf * perfWeight) * 100;
-
-		//Calculate mind muscle value
-		//instructions->drawText(GAME_WIDTH/2,150,std::to_string(MindValue).c_str(),1);
-        visualCounter->updateNumber((unsigned int)MindValue);
-        visualCounter->draw();
-
-		//Check which level was best
-		//string firstBest = "According to your performance, it seems that you have a knack for focusing for long periods of time!";
-		//string secondBest = "It seems that you're able to complete demanding cognitive tasks while maintaining a high focus level!";
-		//string thirdBest = "According to your peformance, you are best at ignoring distractions and maintaining your focus!";
-		//string choice = firstBest;
-
-		//if(bestAverage == levelStats[3]) choice = secondBest;
-		//if(bestAverage == levelStats[6]) choice = thirdBest;
-		//glColor3f(0/255.0, 0/255.0, 0/255.0);
-		//instructions->drawText(70,GAME_HEIGHT/2,choice.c_str(),1);
-
-		//instructions->drawText(GAME_WIDTH/2-70,GAME_HEIGHT-100,"Press ESC to go back to menu",1);
+		MindValue = (avgWeight * (bestAverage/100.0) + (highestFocus/100.0) * highWeight + bestPerf * perfWeight) * 100;
 	}
     
     for(int i=0;i<level_objectArray.size();i++) level_objectArray[i]->draw();
+    
+    if (level == 4) {
+        visualCounter->updateNumber((unsigned int)MindValue);
+        visualCounter->updatePosition(GAME_WIDTH/4-128/2, GAME_HEIGHT/2-256/2-40);
+        visualCounter->draw();
+        
+        // Draw table numbers
+        cout << "fuck fuck erfuck=" << endgameTable.size() << endl;
+        if (endgameTable.size() == 0) { // init the table, since Omar put the stuff in the render loop....
+            for (int i=0; i < 9; i++) {
+                float calcX = 0;
+                float calcY = 0;
+                switch(i) {
+                    case 0:
+                        calcX = 310;
+                        calcY = 466;
+                        break;
+                    case 1:
+                        calcX = 310;
+                        calcY = 535;
+                        break;
+                    case 2:
+                        calcX = 310;
+                        calcY = 603;
+                        break;
+                        
+                    case 3:
+                        calcX = 600;
+                        calcY = 466;
+                        break;
+                    case 4:
+                        calcX = 600;
+                        calcY = 535;
+                        break;
+                    case 5:
+                        calcX = 600;
+                        calcY = 603;
+                        break;
+                        
+                    case 6:
+                        calcX = 880;
+                        calcY = 466;
+                        break;
+                    case 7:
+                        calcX = 880;
+                        calcY = 535;
+                        break;
+                    case 8:
+                        calcX = 880;
+                        calcY = 603;
+                        break;
+                }
+                cout << "fuck fuck fuck: " << levelStats[i] << endl;
+                NumberObject * numObj = new NumberObject(27, 55, calcX, calcY+55/2, levelStats[i]);
+                endgameTable.push_back(numObj);
+            }
+        }
+        
+        for (int i=0; i < endgameTable.size(); i++) endgameTable[i]->draw();
+    }
 }
 
 void LevelOne::keyboard(unsigned char c, int x, int y){

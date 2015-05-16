@@ -8,6 +8,8 @@ NumberObject::NumberObject(float w, float h, float X, float Y, unsigned int numb
     this->X = X;
     this->Y = Y;
     
+    if (number > 99) number = 99;
+    
     this->initObjects(number);
     this->updateNumber(number);
 }
@@ -34,6 +36,17 @@ void NumberObject::updateNumber(unsigned int number) {
         curNumber = number;
         // Recreate gameObject
         this->initObjects(number);
+    }
+}
+
+void NumberObject::updatePosition(float X, float Y) {
+    if (this->X != X || this->Y != Y) {
+        tensObj->x = X;
+        tensObj->y = Y;
+        onesObj->x = X+w;
+        onesObj->y = Y;
+        this->X = X;
+        this->Y = Y;
     }
 }
 
