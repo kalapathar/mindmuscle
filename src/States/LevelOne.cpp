@@ -35,7 +35,7 @@ int level_prevCursorX;
 int level_prevCursorY;
 
 GameObject * activelevel_box;
-int level_liftThreshold = 30;
+int level_liftThreshold = 10;
 
 int level;
 int levelone_timer;
@@ -58,6 +58,7 @@ void initLevelOne(){
 	totalCount = 0;
 
 	levelone_timer = TIMER_COUNT;
+
 
 	level_box = new GameObject("boxCrate_double",true,100,100,false,GAME_WIDTH/2+50,200); level_objectArray.push_back(level_box);
 	level_ground = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,GAME_HEIGHT); level_objectArray.push_back(level_ground);
@@ -260,8 +261,6 @@ void LevelOne::update(){
 		level_cursorobj->x = activelevel_box->x;
 		level_cursorobj->y = activelevel_box->y;
 		//Lift with focus
-		// if(focusValue > level_liftThreshold) level_force->y = activelevel_box->body->GetLinearVelocity().y - normalizedFocus * 3;
-		// if(activelevel_box->y <= 0 || focusValue <= level_liftThreshold) level_force->y = activelevel_box->body->GetLinearVelocity().y;
 		
 		if(activelevel_box->y > (1.0 - normalizedFocus) * GAME_HEIGHT) level_force->y = activelevel_box->body->GetLinearVelocity().y - 3;
                 else level_force->y = 0;
@@ -426,6 +425,7 @@ void LevelOne::update(){
 		//Final screen
 
 	}
+	cout<<normalizedFocus<<endl;
 }
 
 void LevelOne::render(){
