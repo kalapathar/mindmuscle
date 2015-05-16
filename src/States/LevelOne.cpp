@@ -35,7 +35,7 @@ int level_prevCursorX;
 int level_prevCursorY;
 
 GameObject * activelevel_box;
-int level_liftThreshold = 30;
+int level_liftThreshold = 10;
 
 int level;
 int levelone_timer;
@@ -48,7 +48,7 @@ int totalCount;
 
 int TIMER_COUNT = 60 *2;//60 * 30;
 
-
+GameObject * QRpic;
 
 void initLevelOne(){
 
@@ -58,6 +58,7 @@ void initLevelOne(){
 	totalCount = 0;
 
 	levelone_timer = TIMER_COUNT;
+
 
 	level_box = new GameObject("boxCrate_double",true,100,100,false,GAME_WIDTH/2+50,200); level_objectArray.push_back(level_box);
 	level_ground = new GameObject("boxItem",true,GAME_WIDTH,10,true,GAME_WIDTH/2,GAME_HEIGHT); level_objectArray.push_back(level_ground);
@@ -162,13 +163,15 @@ void destroyLevelThree(){
 }
 
 void initFinalScreen(){
-	instructions = new GameObject("levelthree_instructions",false,379,35); level_objectArray.push_back(instructions);
-	instructions->alpha = 0;//Using instructions just to draw the text
+	instructions = new GameObject("EndScreen",false,1024,1024,false,GAME_WIDTH/2,GAME_HEIGHT/2); level_objectArray.push_back(instructions);
+	//instructions->alpha = 0;//Using instructions just to draw the text
     
-    cout << "FINAL STATE" << endl;
+    cout << "## FINAL STATE" << endl;
 
 	level_cursorobj->alpha = 0;
 	activelevel_box = 0;
+
+	QRpic = 0;
 }
 
 void LevelOne::onEnter(){
@@ -233,8 +236,9 @@ void LevelOne::update(){
 	double normalizedFocus = (focusValue/100.0);
 
 	//Change color of cursor based on focus:
-	level_cursorobj->rFactor = 1.0 - normalizedFocus;
-	level_cursorobj->gFactor = normalizedFocus;
+	level_cursorobj->rFactor = (200 + (38-200)*(normalizedFocus) )/255.0;
+	level_cursorobj->gFactor = (200 + (201-200)*(normalizedFocus) )/255.0;
+	level_cursorobj->bFactor = (200 + (255-200)*(normalizedFocus) )/255.0;
 
 	level_prevCursorX = level_cursorobj->x;
 	level_prevCursorY = level_cursorobj->y;
@@ -257,8 +261,6 @@ void LevelOne::update(){
 		level_cursorobj->x = activelevel_box->x;
 		level_cursorobj->y = activelevel_box->y;
 		//Lift with focus
-		// if(focusValue > level_liftThreshold) level_force->y = activelevel_box->body->GetLinearVelocity().y - normalizedFocus * 3;
-		// if(activelevel_box->y <= 0 || focusValue <= level_liftThreshold) level_force->y = activelevel_box->body->GetLinearVelocity().y;
 		
 		if(activelevel_box->y > (1.0 - normalizedFocus) * GAME_HEIGHT) level_force->y = activelevel_box->body->GetLinearVelocity().y - 3;
                 else level_force->y = 0;
@@ -412,7 +414,7 @@ void LevelOne::update(){
 		//cout << level_gameCounter << endl;
 
 		//After thirty seconds, go to the final screen
-		if(level_gameCounter > 30){
+		if(level_gameCounter > 2){
 			destroyLevelThree();
 			initFinalScreen();
 			level++;
@@ -423,12 +425,11 @@ void LevelOne::update(){
 		//Final screen
 
 	}
+	cout<<normalizedFocus<<endl;
 }
 
 void LevelOne::render(){
-	for(int i=0;i<level_objectArray.size();i++) level_objectArray[i]->draw();
-    
-	if(level == 1){
+    if(level == 1){
 		//Timer text
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
 		//string timeText = "Time left : " + std::to_string(levelone_timer/60);
@@ -447,7 +448,7 @@ void LevelOne::render(){
 	}
 	if(level == 4){
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
-		instructions->drawText(GAME_WIDTH/2-70,100,"Your Mind Muscle is",1);
+		//instructions->drawText(GAME_WIDTH/2-70,100,"Your Mind Muscle is",1);
 
 		float avgWeight = 0.5;
 		float highWeight = 0.2;
@@ -486,18 +487,33 @@ void LevelOne::render(){
         visualCounter->draw();
 
 		//Check which level was best
-		string firstBest = "According to your performance, it seems that you have a knack for focusing for long periods of time!";
-		string secondBest = "It seems that you're able to complete demanding cognitive tasks while maintaining a high focus level!";
-		string thirdBest = "According to your peformance, you are best at ignoring distractions and maintaining your focus!";
-		string choice = firstBest;
+		//string firstBest = "According to your performance, it seems that you have a knack for focusing for long periods of time!";
+		//string secondBest = "It seems that you're able to complete demanding cognitive tasks while maintaining a high focus level!";
+		//string thirdBest = "According to your peformance, you are best at ignoring distractions and maintaining your focus!";
+		//string choice = firstBest;
 
-		if(bestAverage == levelStats[3]) choice = secondBest;
-		if(bestAverage == levelStats[6]) choice = thirdBest;
-		glColor3f(0/255.0, 0/255.0, 0/255.0);
-		instructions->drawText(70,GAME_HEIGHT/2,choice.c_str(),1);
+		//if(bestAverage == levelStats[3]) choice = secondBest;
+		//if(bestAverage == levelStats[6]) choice = thirdBest;
+		//glColor3f(0/255.0, 0/255.0, 0/255.0);
+		//instructions->drawText(70,GAME_HEIGHT/2,choice.c_str(),1);
 
-		instructions->drawText(GAME_WIDTH/2-70,GAME_HEIGHT-100,"Press ESC to go back to menu",1);
+		//instructions->drawText(GAME_WIDTH/2-70,GAME_HEIGHT-100,"Press ESC to go back to menu",1);
+
+		//Generate QR code
+		if(QRpic == 0){
+			string QR = "?MindMuscle=" + std::to_string(MindValue) + "?Level1Avg=" + std::to_string(levelStats[0]/100.0) + "?Level1Highest=" + std::to_string(levelStats[1]/100.0) + 
+		"?Level1Score=" + std::to_string(levelStats[2] / 60.0)  + "?Level2Avg=" + std::to_string(levelStats[3]/100.0) + "?Level2Highest=" + std::to_string(levelStats[4]/100.0) + "?Level2Score="   + std::to_string(fastestFinishPerf) +
+		+ "?Level3Avg=" + std::to_string(levelStats[6]/100.0) + "?Level3Highest=" + std::to_string(levelStats[7]/100.0) + "?Level3Score=" + std::to_string(levelStats[8]);
+			string command = "python2 py/download.py " + QR;
+			system(command.c_str());
+			system("convert Images/brain.png Images/brain.pam");
+			QRpic = new GameObject("brain",false,256,256); level_objectArray.push_back(QRpic);
+			QRpic->x = GAME_WIDTH/2;
+			QRpic->y = GAME_HEIGHT/2;
+		}
 	}
+    
+    for(int i=0;i<level_objectArray.size();i++) level_objectArray[i]->draw();
 }
 
 void LevelOne::keyboard(unsigned char c, int x, int y){
