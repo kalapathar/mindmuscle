@@ -107,8 +107,9 @@ void CalibrateState::update(){
 	double normalizedFocus = (focusValue/100.0);
 
 	//Change color of cursor based on focus:
-	cursorobj->rFactor = 1.0 - normalizedFocus;
-	cursorobj->gFactor = normalizedFocus;
+	cursorobj->rFactor = (200 + (38-200)*(normalizedFocus) )/255.0;
+	cursorobj->gFactor = (200 + (201-200)*(normalizedFocus) )/255.0;
+	cursorobj->bFactor = (200 + (255-200)*(normalizedFocus) )/255.0;
 
 	prevCursorX = cursorobj->x;
 	prevCursorY = cursorobj->y;
