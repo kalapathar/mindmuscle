@@ -474,14 +474,14 @@ void LevelOne::render(){
 		float highWeight = 0.2;
 		float perfWeight = 0.3; 
 
-        bestAverage = levelStats[0];
-		if(levelStats[3] > bestAverage) bestAverage = levelStats[3];
-		if(levelStats[6] > bestAverage) bestAverage = levelStats[6];
+        bestAverage = (levelStats[0] + levelStats[3] + levelStats[6]) / 3.0;
+		//if(levelStats[3] > bestAverage) bestAverage = levelStats[3];
+		//if(levelStats[6] > bestAverage) bestAverage = levelStats[6];
 
 
-		highestFocus = levelStats[1];
-		if(levelStats[4] > highestFocus) highestFocus = levelStats[4];
-		if(levelStats[7] > highestFocus) highestFocus = levelStats[7];
+		highestFocus = (levelStats[1] + levelStats[4] + levelStats[7]) / 3.0;
+		//if(levelStats[4] > highestFocus) highestFocus = levelStats[4];
+		//if(levelStats[7] > highestFocus) highestFocus = levelStats[7];
 
 		int bombPerf = levelStats[8] / 10;//You get 100% if you explode 10 bombs
 		if(bombPerf > 1) bombPerf = 1;
@@ -491,9 +491,9 @@ void LevelOne::render(){
 
 		int fastestFinishPerf = 1.0 - (levelStats[5] / (60 * 15));//If you complete it in 0 seconds, it's 100%, if you complete it in 15 seconds, it's 0%
 
-		bestPerf = bombPerf;
-		if(longestFocusPerf > bestPerf) bestPerf = longestFocusPerf;
-		if(fastestFinishPerf > bestPerf) bestPerf = fastestFinishPerf;
+		bestPerf = (bombPerf + longestFocusPerf + fastestFinishPerf) / 3.0;
+		//if(longestFocusPerf > bestPerf) bestPerf = longestFocusPerf;
+		//if(fastestFinishPerf > bestPerf) bestPerf = fastestFinishPerf;
 
 		//cout << "Best Average\t" << bestAverage << endl;
 		//cout << "Highest Focus\t" << highestFocus << endl;
