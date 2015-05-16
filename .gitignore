@@ -1,3 +1,5 @@
 *.o
 MindMuscle
 *.nfs*
+*.DS_Store
+*.sass-cache

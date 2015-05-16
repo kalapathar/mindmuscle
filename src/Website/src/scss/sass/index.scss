@@ -1,0 +1,178 @@
+@import "compass/reset";
+@import "partials/AvenirNext-UltraLight";
+@import "partials/AvenirNext-Regular";
+@import "partials/AvenirNext-DemiBold";
+@import "partials/AvenirNext-Bold";
+
+/**
+ * Color declarations
+ */
+$darkGrey: #4F4E4E;
+$lightGrey: #B3B3B3;
+
+$logoBlueColor: #0AC7FF;
+
+$redColor: #FC6F50;
+$greenColor: #77C7B0;
+$blueColor: #6AB1C5;
+
+/**
+ * For the appIcon module
+ */
+
+body {
+	background: #FFF;
+
+	font-family: "Avenir Next", "Avenir New", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	color: $darkGrey;
+
+	-webkit-font-smoothing: antialiased !important;
+	text-rendering: optimizeLegibility !important;
+	text-shadow: 0 0 0 rgba(255, 255, 255, 0.01);
+
+	-webkit-text-size-adjust: 100%;
+
+	min-width: 500px;
+
+	$logoWidth: 300px;
+	$logoOffset: -110px;
+
+	$logoWidth-mobile: 200px;
+	$logoOffset-mobile: -40px;
+	header {
+		text-align: center;
+		margin: 50px 0;
+
+		.mainIcon img {
+			width: $logoWidth;
+			height: auto;
+
+			margin-left: $logoOffset;
+
+			/*@media (max-width: $mobileBreakpoint) {
+				width: $logoWidth-mobile;
+				margin-left: $logoOffset-mobile;
+			}*/
+		}
+	}
+
+	.wrapper {
+		max-width: 500px;
+		margin: auto;
+
+		section.diagram {
+			position: relative;
+			width: 500px;
+			height: 500px;
+			margin: auto;
+
+			svg.circle {
+				position: absolute;
+				width: 100px;
+				height: 100px;
+				left: 50%;
+				overflow: visible;
+			}
+
+			svg.circle.level1 {
+				left: 50%;
+				top: 180px;
+			}
+			svg.circle.level2 {
+				left: 180px;
+				top: 63%;
+			}
+			svg.circle.level3 {
+				left: calc(100% - 180px);
+				top: 63%;
+			}
+
+			.overall {
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				color: #fff;
+				font-size: 55px;
+				text-align: center;
+				width: 70px;
+				height: 55px;
+				margin-left: -35px;
+				margin-top: -10px;
+			}
+		}
+
+		section.table {
+			margin: 40px auto;
+
+			display: flex;
+			align-items: center;
+			flex-flow: row;
+			justify-content: center;
+			align-content: center;
+
+			white-space: nowrap;
+
+			table th {
+				font-weight: 500;
+				color: $lightGrey;
+			}
+			table th,
+			table td {
+				padding: 0 25px;
+				text-align: left;
+			}
+
+			table td {
+				padding-top: 10px;
+			}
+
+			h1 {
+				font-weight: 500;
+				font-size: 1.5em;
+				margin-right: 25px;
+			}
+		}
+
+		section.table:last-child {
+			margin-bottom: 65px;
+		}
+
+		section.table.level1 {
+			h1 {
+				color: $redColor;
+			}
+
+			table {
+				border-left: 3px solid $redColor;
+				margin-left: 2px;
+			}
+		}
+		section.table.level2 {
+			h1 {
+				color: $greenColor;
+			}
+
+			table {
+				border-left: 3px solid $greenColor;
+				margin-left: 2px;
+			}
+		}
+		section.table.level3 {
+			h1 {
+				color: $blueColor;
+			}
+
+			table {
+				border-left: 3px solid $blueColor;
+				margin-left: 2px;
+			}
+		}
+	}
+}
+
+input, textarea {
+	-webkit-appearance: none !important;
+	-moz-appearance: none !important;
+	-o-appearance: none !important;
+	appearance: none !important;
+}
