@@ -117,11 +117,7 @@ void ResultsState::update(){
   }
   reading_counter++;
 
-  cout<<"deepak see this!"<<endl;
-  cout<<"START NUM:: "<<START_NUM<<endl;
-  cout<<"mind data size"<<mindData.size()-100<<endl;
-  cout<<"Deepak see until here"<<endl;
-
+ 
   START_NUM = mindData.size() - 100;
   if(START_NUM < 0 ) START_NUM = 0;
 
