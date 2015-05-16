@@ -162,10 +162,10 @@ void destroyLevelThree(){
 }
 
 void initFinalScreen(){
-	instructions = new GameObject("levelthree_instructions",false,379,35); level_objectArray.push_back(instructions);
-	instructions->alpha = 0;//Using instructions just to draw the text
+	instructions = new GameObject("EndScreen",false,1024,1024,false,GAME_WIDTH/2,GAME_HEIGHT/2); level_objectArray.push_back(instructions);
+	//instructions->alpha = 0;//Using instructions just to draw the text
     
-    cout << "FINAL STATE" << endl;
+    cout << "## FINAL STATE" << endl;
 
 	level_cursorobj->alpha = 0;
 	activelevel_box = 0;
@@ -412,7 +412,7 @@ void LevelOne::update(){
 		//cout << level_gameCounter << endl;
 
 		//After thirty seconds, go to the final screen
-		if(level_gameCounter > 30){
+		if(level_gameCounter > 2){
 			destroyLevelThree();
 			initFinalScreen();
 			level++;
@@ -426,9 +426,7 @@ void LevelOne::update(){
 }
 
 void LevelOne::render(){
-	for(int i=0;i<level_objectArray.size();i++) level_objectArray[i]->draw();
-    
-	if(level == 1){
+    if(level == 1){
 		//Timer text
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
 		//string timeText = "Time left : " + std::to_string(levelone_timer/60);
@@ -447,7 +445,7 @@ void LevelOne::render(){
 	}
 	if(level == 4){
 		glColor3f(0/255.0, 0/255.0, 0/255.0);
-		instructions->drawText(GAME_WIDTH/2-70,100,"Your Mind Muscle is",1);
+		//instructions->drawText(GAME_WIDTH/2-70,100,"Your Mind Muscle is",1);
 
 		float avgWeight = 0.5;
 		float highWeight = 0.2;
@@ -486,18 +484,20 @@ void LevelOne::render(){
         visualCounter->draw();
 
 		//Check which level was best
-		string firstBest = "According to your performance, it seems that you have a knack for focusing for long periods of time!";
-		string secondBest = "It seems that you're able to complete demanding cognitive tasks while maintaining a high focus level!";
-		string thirdBest = "According to your peformance, you are best at ignoring distractions and maintaining your focus!";
-		string choice = firstBest;
+		//string firstBest = "According to your performance, it seems that you have a knack for focusing for long periods of time!";
+		//string secondBest = "It seems that you're able to complete demanding cognitive tasks while maintaining a high focus level!";
+		//string thirdBest = "According to your peformance, you are best at ignoring distractions and maintaining your focus!";
+		//string choice = firstBest;
 
-		if(bestAverage == levelStats[3]) choice = secondBest;
-		if(bestAverage == levelStats[6]) choice = thirdBest;
-		glColor3f(0/255.0, 0/255.0, 0/255.0);
-		instructions->drawText(70,GAME_HEIGHT/2,choice.c_str(),1);
+		//if(bestAverage == levelStats[3]) choice = secondBest;
+		//if(bestAverage == levelStats[6]) choice = thirdBest;
+		//glColor3f(0/255.0, 0/255.0, 0/255.0);
+		//instructions->drawText(70,GAME_HEIGHT/2,choice.c_str(),1);
 
-		instructions->drawText(GAME_WIDTH/2-70,GAME_HEIGHT-100,"Press ESC to go back to menu",1);
+		//instructions->drawText(GAME_WIDTH/2-70,GAME_HEIGHT-100,"Press ESC to go back to menu",1);
 	}
+    
+    for(int i=0;i<level_objectArray.size();i++) level_objectArray[i]->draw();
 }
 
 void LevelOne::keyboard(unsigned char c, int x, int y){
