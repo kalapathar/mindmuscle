@@ -50,7 +50,7 @@ std::vector<NumberObject *> endgameTable;
 int levelStats[9];
 int totalCount;
 
-int TIMER_COUNT = 60 *2;//60 * 30;
+int TIMER_COUNT = 60 * 30;
 
 GameObject * QRpic;
 
@@ -431,7 +431,7 @@ void LevelOne::update(){
 		//cout << level_gameCounter << endl;
 
 		//After thirty seconds, go to the final screen
-		if(level_gameCounter > 2){
+		if(level_gameCounter > 30){
 			destroyLevelThree();
 			initFinalScreen();
 			level++;
