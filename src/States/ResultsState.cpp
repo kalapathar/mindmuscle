@@ -28,25 +28,21 @@ int focus_average;
 
 GameObject * focusText;
 
-int START_NUM;
-
 
 void ResultsState::onEnter(){
-
-  START_NUM = 0;
 
   focusText = new GameObject("boxCrate",false);
   focusText->alpha = 0;
 
-	results = loadTexture("Images/Results_Header.pam");
+  results = loadTexture("Images/Results_Header.pam");
 
   //Set up output
   outFile = new ofstream("data",std::ios_base::app);
   reading_counter = 0;
 
-	//Read whatever is in the file right now, the rest are obtained from the reading below
-	ifstream f("data");
-  double x,y;  	
+  //Read whatever is in the file right now, the rest are obtained from the reading below
+  ifstream f("data");
+  double x,y;   
 
    while(f>>x && f>>y){
     mindData.push_back(x);
@@ -75,7 +71,7 @@ void ResultsState::onEnter(){
 
 void ResultsState::onExit(){
 
-	outFile->close();
+  outFile->close();
   delete outFile;
 
   //Empty the array
@@ -83,12 +79,12 @@ void ResultsState::onExit(){
 }
 
 ResultsState::ResultsState(){
-	name = "Results";
+  name = "Results";
 }
 
 
 void ResultsState::update(){
-	if(reading_counter >= 30){
+  if(reading_counter >= 30){
     reading_counter = 0;
     int X = reading_counter2;
     int Y = mind->focusValue;
@@ -104,7 +100,7 @@ void ResultsState::update(){
 
     //Get min/max
     focus_average = 0;
-    for(int i=START_NUM;i<mindData.size()-1;i+=2){
+    for(int i=0;i<mindData.size()-1;i+=2){
       if(mindData[i] > maximumX) maximumX = mindData[i];
       if(mindData[i+1] > maximumY) maximumY = mindData[i+1];
 
@@ -117,10 +113,8 @@ void ResultsState::update(){
   }
   reading_counter++;
 
- 
-  START_NUM = mindData.size() - 100;
-  if(START_NUM < 0 ) START_NUM = 0;
 
+  
 }
 
 void ResultsState::render(){
@@ -145,7 +139,7 @@ void ResultsState::render(){
    glVertex3f(GAME_WIDTH-fixX,timeAxisY,0);
    int num_points = (mindData.size()/2);
 
-   for(int i=START_NUM;i<(num_points-1) * 2;i+=2){
+   for(int i=0;i<(num_points-1) * 2;i+=2){
   
  factorX1= (mindData[i]-minX)/(maximumX-minX);
  factorY1= (mindData[i+1]-minY)/(maximumY-minY);
@@ -160,12 +154,11 @@ void ResultsState::render(){
    float X2 = (GAME_WIDTH)* factorX2;
    float Y2 = (GAME_HEIGHT-fixY)* factorY2 * -1 + timeAxisY;
 
-
    glVertex3f(X1+axisOffsetX,Y1,0); //cout << "First Point\t (" << X1 << " , " << Y1 << ")" << endl;
    glVertex3f(X2+axisOffsetX,Y2,0); //cout << "Second Point\t (" << X2<< " , " << Y2 << ")" << endl;
    //cout << "===========\t" << i << endl;
-	}
-	glEnd();
+  }
+  glEnd();
 
   focusText->drawText(60,170,"Focus %",0);
   focusText->drawText(GAME_WIDTH - 200,GAME_HEIGHT-20,"Time /s",0);
@@ -180,11 +173,11 @@ void ResultsState::render(){
 }
 void ResultsState::keyboard(unsigned char c, int x, int y){
 
-	if((int)c == 27){//When escape is pressed
-		//Back to the menu
-		 msg = "trans_Menu";
+  if((int)c == 27){//When escape is pressed
+    //Back to the menu
+     msg = "trans_Menu";
          sent = 1;
-	}
+  }
 
   
 }
